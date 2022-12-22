@@ -1,0 +1,38 @@
+#!/bin/bash
+
+brew install cask
+
+brew install git
+
+brew install peco
+
+brew install postgresql
+
+brew install rbenv
+
+brew install nodenv
+
+brew install ag
+
+brew install --cask clipy
+
+brew install --cask emacs
+
+brew install --cask visual-studio-code
+
+brew install --cask google-chrome
+
+brew install --cask brave
+
+brew install --cask firefox
+
+brew install --cask docker
+
+brew install --cask spotify
+
+brew install --cask slack
+
+brew install --cask bitwarden
+
+brew install --cask iterm2
+
