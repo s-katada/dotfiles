@@ -9,7 +9,7 @@ export LANG=ja_JP.UTF-8
 # editor
 export EDITOR=emacs
 
-## LS_COLORS
+# LS_COLORS
 export LS_COLORS="di=34"
 
 # コマンドのスペルミスを指摘
@@ -23,7 +23,6 @@ setopt complete_in_word
 
 # tab + shift 逆戻り
 bindkey "\e[Z" reverse-menu-complete
-
 
 # git
 autoload -Uz vcs_info
