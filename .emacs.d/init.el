@@ -198,6 +198,12 @@
                  (insert "''")
                  (backward-char)))
 
+(bind-key "`" (lambda ()
+                "`を入力した時に``と出力する"
+                (interactive)
+                (insert "``")
+                (backward-char)))
+
 (bind-key "[" (lambda ()
                 "[ を入力した時に[]と出力する"
                 (interactive)
@@ -557,3 +563,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'upcase-region 'disabled nil)
