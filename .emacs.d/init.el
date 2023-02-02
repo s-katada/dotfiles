@@ -32,7 +32,7 @@
 
 ;; LGモニター
 (if (> (frame-width) 200)
-    (set-face-attribute 'default (selected-frame) :height 200))
+    (set-face-attribute 'default (selected-frame) :height 150))
 
 ;; ARZOPAモニター
 (if (eq (frame-width) 167)
@@ -369,6 +369,7 @@
   (sh-mode . nlinum-mode)
   (python-mode . nlinum-mode)
   (yaml-mode . nlinum-mode)
+  (haml-mode . nlinum-mode)
   (markdown-mode . nlinum-mode)))
 
 ;; Ruby
@@ -405,6 +406,13 @@
   :mode
   ("\\.yaml?\\'" . yaml-mode)
   ("\\.yml?\\'" . yaml-mode))
+
+;; haml-mode
+(use-package haml-mode
+  :ensure t
+  :mode
+  ("\\.haml?\\" . haml-mode)
+  ("\\.hml?\\" . haml-mode))
 
 ;;(defface my-face-r-1 '((t (:background "gray15"))) nil)
 (defface my-face-b-1 '((t (:background "gray"))) nil) ; color of zenkaku-space
@@ -556,7 +564,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(rubocop lsp-pyright which-key web-mode use-package typescript-mode recentf-ext nyan-mode nlinum neotree multiple-cursors multi-term mode-icons lsp-mode hide-mode-line flycheck find-file-in-project doom-modeline dockerfile-mode docker-compose-mode csharp-mode counsel company-quickhelp company-box beacon all-the-icons-ivy)))
+   '(haml-mode rubocop lsp-pyright which-key web-mode use-package typescript-mode recentf-ext nyan-mode nlinum neotree multiple-cursors multi-term mode-icons lsp-mode hide-mode-line flycheck find-file-in-project doom-modeline dockerfile-mode docker-compose-mode csharp-mode counsel company-quickhelp company-box beacon all-the-icons-ivy)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
