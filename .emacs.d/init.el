@@ -7,6 +7,12 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(use-package emacs
+  :custom
+  (backup-inhibited t)
+  :config
+  (electric-pair-mode t))
+
 (use-package modus-themes
   :ensure t
   :config
@@ -38,15 +44,37 @@
   :config
   (tool-bar-mode -1))
 
-(use-package emacs
-  :config
-  (electric-pair-mode 1))
-
 (use-package ivy
   :bind (("C-s" . swiper))
   :config
-  (ivy-mode 1))
+  (ivy-mode t))
+
+(use-package ivy-rich
+  :ensure t
+  :init
+  (ivy-rich-mode t))
 
 (use-package swiper
   :ensure t)
+
+(use-package counsel
+  :ensure t)
+
+(use-package company
+  :ensure t
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0)
+  :config
+  (global-company-mode t))
+
+(use-package company-quickhelp
+  :after company
+  :ensure t
+  :config
+  (company-quickhelp-mode t))
+
+(use-package company-box
+  :ensure t
+  :hook (company-mode . company-box-mode))
 
