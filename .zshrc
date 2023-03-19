@@ -66,6 +66,11 @@ function peco-history-selection() {
 zle -N peco-history-selection
 bindkey '^R' peco-history-selection
 
+# pip3のpathを通す
+# export PATH="$PATH:$HOME/Library/Python/3.9/bin"
+
+export PATH="`(pyenv root)`/shims:$PATH"
+
 # alias
 alias rm="rm -rf"
 alias sla="open -a slack"
@@ -85,7 +90,8 @@ alias ls="ls -GF"
 alias e="open -a Emacs ."
 alias g="git"
 alias gi="git"
-alias rails="bundle exec rails"
+# alias rails="bundle exec rails"
+alias ber="bundle exec rails"
 alias rspec="bundle exec rspec"
 alias 'git rebase --continue'='GIT_EDITOR=true git rebase --continue'
 alias setting="open 'x-apple.systempreferences:com.apple.preference'"
