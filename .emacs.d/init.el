@@ -28,6 +28,7 @@
    (web-mode . flycheck-mode)))
 
 (use-package smooth-scrolling
+  :ensure t
   :config
   (smooth-scrolling-mode 1)
   (setq smooth-scroll-margin 5))
@@ -165,8 +166,26 @@
   (lsp-ui-peek-enable t)
   (lsp-ui-peek-show-directory t)
   (lsp-ui-peek-peek-height 20)
+  (lsp-ui-sideline-enable nil)
   :bind (:map lsp-ui-mode-map
          ("M-." . lsp-ui-peek-find-definitions)
          ("M-?" . lsp-ui-peek-find-references)
          ("C-." . lsp-ui-peek-jump-forward)
          ("C-," . lsp-ui-peek-jump-backward)))
+
+(use-package flycheck-posframe
+  :ensure t
+  :hook (flycheck-mode . flycheck-posframe-mode)
+  :config
+  (setq flycheck-posframe-position 'point-max
+        flycheck-posframe-background-color "white"
+        flycheck-posframe-border-width 1
+        flycheck-posframe-border-color "black"
+        flycheck-posframe-parameters '((internal-border-width . 1)
+                                       (font . "Monospace-10")
+                                       (foreground-color . "#ffffff")
+                                       (background-color . "#1f1f1f")
+                                       (border-color . "#8b0000")
+                                       (border-width . 2))))
+
+(add-hook 'lsp-mode-hook #'lsp-ui-doc-glance-mode)
