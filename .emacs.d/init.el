@@ -7,10 +7,13 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+;; yes noで答えるのを y nにする
+(fset 'yes-or-no-p 'y-or-n-p)
+
 ;; ホットリロード的なことをする
 (use-package autorevert
   :init
-  (setq auto-revert-mode-text " Auto-Reload")
+  (setq auto-revert-mode-text "Auto-Reload")
   :config
   (global-auto-revert-mode t))
 
