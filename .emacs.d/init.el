@@ -17,6 +17,16 @@
   :config
   (global-auto-revert-mode t))
 
+(use-package flycheck
+  :ensure t
+  :custom
+  (flycheck-display-errors-delay 1.0)
+  :hook
+  ((typescript-mode . flycheck-mode)
+   (ruby-mode . flycheck-mode)
+   (csharp-mode . flycheck-mode)
+   (web-mode . flycheck-mode)))
+
 (use-package smooth-scrolling
   :config
   (smooth-scrolling-mode 1)
@@ -142,21 +152,19 @@
               ("C-x C-d" . lsp-ui-doc-glance))
   :custom
   (lsp-ui-doc-enable t)
+  (lsp-ui-doc-show-with-cursor t)
   (lsp-ui-doc-border "cyan")
   (lsp-ui-doc-position 'at-point)
   (lsp-ui-doc-alignment 'frame)
   (lsp-ui-doc-max-width 150)
   (lsp-ui-doc-max-height 80)
   (lsp-ui-doc-header t)
-  (lsp-ui-doc-delay 0.1)
+  (lsp-ui-doc-delay 1.0)
   (lsp-ui-doc-include-signature t)
   (lsp-ui-doc-use-webkit t)
   (lsp-ui-peek-enable t)
   (lsp-ui-peek-show-directory t)
   (lsp-ui-peek-peek-height 20)
-  (lsp-ui-sideline-enable t)
-  (lsp-ui-sideline-show-hover t)
-  (lsp-ui-sideline-delay 0.5)
   :bind (:map lsp-ui-mode-map
          ("M-." . lsp-ui-peek-find-definitions)
          ("M-?" . lsp-ui-peek-find-references)
