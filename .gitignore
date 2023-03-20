@@ -1,2 +1,5 @@
 .emacs.d/elpa
 .emacs.d/auto-save-list
+.emacs.d/recentf
+.emacs.d/.lsp*
+.emacs.d/projects

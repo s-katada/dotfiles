@@ -25,6 +25,7 @@
 (use-package emacs
   :custom
   (backup-inhibited t)
+  (ring-bell-function 'ignore)
   :config
   (electric-pair-mode t))
 
@@ -79,11 +80,6 @@
   (setq enable-recursive-minibuffers t)
   (setq ivy-height 25))
 
-(use-package ivy-rich
-  :ensure t
-  :init
-  (ivy-rich-mode t))
-
 (use-package swiper
   :ensure t)
 
@@ -128,11 +124,14 @@
   (setq lsp-solargraph-use-bundler nil)
   (setq lsp-solargraph-extra-options '("--plugin" "rubocop")))
 
+(use-package web-mode
+  :ensure t)
+
 (use-package lsp-mode
   :ensure t
-  :commands lsp
   :hook
-  ((ruby-mode . lsp)))
+  ((ruby-mode . lsp)
+   (web-mode . lsp)))
 
 (use-package lsp-ui
   :ensure t
@@ -141,20 +140,23 @@
   (lsp-mode . lsp-ui-mode)
   :bind (:map lsp-ui-mode-map
               ("C-x C-d" . lsp-ui-doc-glance))
-  :config
-  (setq lsp-ui-doc-enable t)
-  (setq lsp-ui-doc-border "cyan")
-  (setq lsp-ui-doc-position 'at-point)
-  (setq lsp-ui-doc-alignment 'frame)
-  (setq lsp-ui-doc-max-width 150)
-  (setq lsp-ui-doc-max-height 80)
-  (setq lsp-ui-doc-header t)
-  (setq lsp-ui-doc-delay 0.1)
-  (setq lsp-ui-doc-include-signature t)
-  (setq lsp-ui-doc-use-webkit t)
-  (setq lsp-ui-peek-enable t)
-  (setq lsp-ui-peek-show-directory t)
-  (setq lsp-ui-peek-peek-height 20)
+  :custom
+  (lsp-ui-doc-enable t)
+  (lsp-ui-doc-border "cyan")
+  (lsp-ui-doc-position 'at-point)
+  (lsp-ui-doc-alignment 'frame)
+  (lsp-ui-doc-max-width 150)
+  (lsp-ui-doc-max-height 80)
+  (lsp-ui-doc-header t)
+  (lsp-ui-doc-delay 0.1)
+  (lsp-ui-doc-include-signature t)
+  (lsp-ui-doc-use-webkit t)
+  (lsp-ui-peek-enable t)
+  (lsp-ui-peek-show-directory t)
+  (lsp-ui-peek-peek-height 20)
+  (lsp-ui-sideline-enable t)
+  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-sideline-delay 0.5)
   :bind (:map lsp-ui-mode-map
          ("M-." . lsp-ui-peek-find-definitions)
          ("M-?" . lsp-ui-peek-find-references)
