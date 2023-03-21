@@ -106,7 +106,7 @@
 (use-package company
   :ensure t
   :config
-  (global-company-mode t)
+  (global-company-mode 1)
   (setq company-minimum-prefix-length 1)
   (setq company-idle-delay 0.1)
   :bind
@@ -136,13 +136,55 @@
   (setq lsp-solargraph-extra-options '("--plugin" "rubocop")))
 
 (use-package web-mode
-  :ensure t)
+  :mode (("\\.html?\\'" . web-mode)
+	 ("\\.tsx\\'" . web-mode)
+         ("\\.phtml\\'" . web-mode)
+         ("\\.tpl\\.php\\'" . web-mode)
+         ("\\.jsp\\'" . web-mode)
+         ("\\.as[cp]x\\'" . web-mode)
+         ("\\.erb\\'" . web-mode)
+         ("\\.mustache\\'" . web-mode)
+         ("\\.djhtml\\'" . web-mode))
+  :config
+  (setq web-mode-markup-indent-offset 2
+        web-mode-code-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-script-padding 2
+        web-mode-block-padding 2
+        web-mode-comment-style 2)
+
+  ;; M-C-\で自動整形する場合に、スペース2でインデントするよう設定する
+  (defun my-web-mode-hook ()
+    (setq-local indent-tabs-mode nil)
+    (setq-local tab-width 2)
+    (setq-local web-mode-markup-indent-offset 2)
+    (setq-local web-mode-code-indent-offset 2))
+
+  (add-hook 'web-mode-hook 'my-web-mode-hook))
 
 (use-package lsp-mode
   :ensure t
   :hook
   ((ruby-mode . lsp)
-   (web-mode . lsp)))
+   (web-mode . lsp)
+   (typescript-mode . lsp))
+  :config
+  (setq lsp-eslint-package-manager "npm")
+  (setq lsp-eslint-server-command '("node" "/usr/local/bin/eslint-langserver"))
+  (setq lsp-eslint-disable-diagnostics t)
+  (setq lsp-eslint-configuration-sources '(".eslintrc.yml"))
+  (setq lsp-enable-snippet t))
+
+;; プロジェクトのEslintの設定を読み込む
+(add-hook 'lsp-after-initialize-hook
+          (lambda ()
+            (lsp--set-configuration `(:eslintConfig ,(expand-file-name ".eslintrc" (projectile-project-root))))))
+
+;; ;; ファイル保存時に自動で構文チェックを行う
+;; (defun setup-tide-mode ()
+;;   (interactive)
+;;   (tide-setup)
+;;   (flycheck
 
 (use-package lsp-ui
   :ensure t
@@ -188,4 +230,3 @@
                                        (border-color . "#8b0000")
                                        (border-width . 2))))
 
-(add-hook 'lsp-mode-hook #'lsp-ui-doc-glance-mode)
