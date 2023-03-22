@@ -19,6 +19,13 @@
 ;; yes noで答えるのを y nにする
 (fset 'yes-or-no-p 'y-or-n-p)
 
+(use-package emacs
+  :custom
+  (backup-inhibited t)
+  (ring-bell-function 'ignore)
+  :config
+  (electric-pair-mode t))
+
 ;; ホットリロード的なことをする
 (use-package autorevert
   :init
@@ -54,13 +61,6 @@
   :config
   (smooth-scrolling-mode 1)
   (setq smooth-scroll-margin 5))
-
-(use-package emacs
-  :custom
-  (backup-inhibited t)
-  (ring-bell-function 'ignore)
-  :config
-  (electric-pair-mode t))
 
 (use-package modus-themes
   :ensure t
