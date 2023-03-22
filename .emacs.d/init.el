@@ -26,6 +26,27 @@
   :config
   (electric-pair-mode t))
 
+(use-package modus-themes
+  :ensure t
+  :config
+  (load-theme 'modus-vivendi t))
+
+(use-package whitespace
+  :ensure nil
+  :hook (prog-mode . whitespace-mode)
+  :custom
+  (whitespace-normal-modes '(not emacs-lisp-mode))
+  :config
+  (setq whitespace-style '(face trailing))
+  (setq whitespace-display-mappings
+        '((tab-mark ?\t [?\u00BB ?\t] [?\t])))
+  (set-face-attribute 'whitespace-trailing nil
+                      :background "red"
+                      :foreground "white"
+                      :weight 'bold)
+  (setq whitespace-global-modes '(not org-mode))
+  :diminish whitespace-mode)
+
 ;; ホットリロード的なことをする
 (use-package autorevert
   :init
@@ -47,11 +68,11 @@
   (flycheck-posframe-background-color "white")
   (flycheck-posframe-border-color "black")
   (flycheck-posframe-parameters '((internal-border-width . 1)
-                                       (font . "Monospace-10")
-                                       (foreground-color . "#ffffff")
-                                       (background-color . "#1f1f1f")
-                                       (border-color . "#1f1f1f")
-                                       (border-width . 1)))
+                                  (font . "Monospace-10")
+                                  (foreground-color . "#ffffff")
+                                  (background-color . "#1f1f1f")
+                                  (border-color . "#1f1f1f")
+                                  (border-width . 1)))
   :config
   (setq flycheck-posframe-position 'point-max
         flycheck-posframe-border-width 1))
@@ -61,11 +82,6 @@
   :config
   (smooth-scrolling-mode 1)
   (setq smooth-scroll-margin 5))
-
-(use-package modus-themes
-  :ensure t
-  :config
-  (load-theme 'modus-vivendi t))
 
 (use-package dired
   :custom
