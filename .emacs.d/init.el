@@ -1,3 +1,7 @@
+;;; package --- Summary:
+;;; Commentary:
+
+;;; Code:
 (require 'package)
 (add-to-list 'package-archives
   '("melpa" . "https://melpa.org/packages/") t);; リストの先頭にmelpaを追加するためのt
@@ -6,6 +10,11 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+
+;; キーバインド
+(bind-key "C-h" 'backward-delete-char)
+(bind-key "s-z" 'undo)
+(bind-key "s-Z" 'undo-redo)
 
 ;; yes noで答えるのを y nにする
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -19,13 +28,26 @@
 
 (use-package flycheck
   :ensure t
+  :init
+  (global-flycheck-mode)
   :custom
-  (flycheck-display-errors-delay 1.0)
-  :hook
-  ((typescript-mode . flycheck-mode)
-   (ruby-mode . flycheck-mode)
-   (csharp-mode . flycheck-mode)
-   (web-mode . flycheck-mode)))
+  (flycheck-display-errors-delay 0.2))
+
+(use-package flycheck-posframe
+  :ensure t
+  :hook (flycheck-mode . flycheck-posframe-mode)
+  :custom
+  (flycheck-posframe-background-color "white")
+  (flycheck-posframe-border-color "black")
+  (flycheck-posframe-parameters '((internal-border-width . 1)
+                                       (font . "Monospace-10")
+                                       (foreground-color . "#ffffff")
+                                       (background-color . "#1f1f1f")
+                                       (border-color . "#1f1f1f")
+                                       (border-width . 1)))
+  :config
+  (setq flycheck-posframe-position 'point-max
+        flycheck-posframe-border-width 1))
 
 (use-package smooth-scrolling
   :ensure t
@@ -62,10 +84,6 @@
   :custom
   (cursor-type 'bar))
 
-(use-package bind-key
-  :ensure t
-  :bind (("C-h" . 'backward-delete-char)))
-
 (use-package tool-bar
   :if (display-graphic-p)
   :config
@@ -85,9 +103,10 @@
 (use-package ivy
   :bind
   (("C-s" . swiper))
+  :custom
+  (ivy-use-vertual-buffers t)
   :config
   (ivy-mode t)
-  (setq ivy-use-vertual-buffers t)
   (setq enable-recursive-minibuffers t)
   (setq ivy-height 25))
 
@@ -131,11 +150,12 @@
 (use-package ruby-mode
   :mode ("\\.rb\\'" . ruby-mode)
   :interpreter ("ruby" . ruby-mode)
-  :config
-  (setq lsp-solargraph-use-bundler nil)
-  (setq lsp-solargraph-extra-options '("--plugin" "rubocop")))
+  :custom
+  (lsp-solargraph-use-bundler nil)
+  (lsp-solargraph-extra-options '("--plugin" "rubocop")))
 
 (use-package web-mode
+  :ensure t
   :mode (("\\.html?\\'" . web-mode)
 	 ("\\.tsx\\'" . web-mode)
          ("\\.phtml\\'" . web-mode)
@@ -162,29 +182,24 @@
 
   (add-hook 'web-mode-hook 'my-web-mode-hook))
 
+(use-package yaml-mode
+  :ensure t)
+
+(use-package typescript-mode
+  :ensure t)
+
+
+(use-package js
+  :mode (("\\.js\\'" . js-mode)
+	 ("\\.json\\'" . js-mode))
+  :config
+  (setq-default js-indent-level 2))
+
 (use-package lsp-mode
-  :ensure t
   :hook
   ((ruby-mode . lsp)
    (web-mode . lsp)
-   (typescript-mode . lsp))
-  :config
-  (setq lsp-eslint-package-manager "npm")
-  (setq lsp-eslint-server-command '("node" "/usr/local/bin/eslint-langserver"))
-  (setq lsp-eslint-disable-diagnostics t)
-  (setq lsp-eslint-configuration-sources '(".eslintrc.yml"))
-  (setq lsp-enable-snippet t))
-
-;; プロジェクトのEslintの設定を読み込む
-(add-hook 'lsp-after-initialize-hook
-          (lambda ()
-            (lsp--set-configuration `(:eslintConfig ,(expand-file-name ".eslintrc" (projectile-project-root))))))
-
-;; ;; ファイル保存時に自動で構文チェックを行う
-;; (defun setup-tide-mode ()
-;;   (interactive)
-;;   (tide-setup)
-;;   (flycheck
+   (typescript-mode . lsp)))
 
 (use-package lsp-ui
   :ensure t
@@ -215,18 +230,17 @@
          ("C-." . lsp-ui-peek-jump-forward)
          ("C-," . lsp-ui-peek-jump-backward)))
 
-(use-package flycheck-posframe
-  :ensure t
-  :hook (flycheck-mode . flycheck-posframe-mode)
-  :config
-  (setq flycheck-posframe-position 'point-max
-        flycheck-posframe-background-color "white"
-        flycheck-posframe-border-width 1
-        flycheck-posframe-border-color "black"
-        flycheck-posframe-parameters '((internal-border-width . 1)
-                                       (font . "Monospace-10")
-                                       (foreground-color . "#ffffff")
-                                       (background-color . "#1f1f1f")
-                                       (border-color . "#8b0000")
-                                       (border-width . 2))))
-
+;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(lsp-ui yaml-mode web-mode use-package typescript-mode smooth-scrolling nyan-mode modus-themes flymake-eslint flycheck-posframe counsel company ace-window)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
