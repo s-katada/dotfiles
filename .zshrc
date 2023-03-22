@@ -43,15 +43,15 @@ PROMPT='
 fpath=(path/to/zsh-completions/src $fpath)
 
 # # rbenv
-export PATH="$HOME/.rbenv/bin:$PATH"
+# export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
 # # nodenv
 eval "$(nodenv init -)"
-export PATH="$HOME/.nodenv/bin:$PATH"
+# export PATH="$HOME/.nodenv/bin:$PATH"
 
 # fnm(nodeのバージョン管理ツール)
-# eval "$(fnm env)"
+eval "$(fnm env)"
 
 
 # #Flutter
