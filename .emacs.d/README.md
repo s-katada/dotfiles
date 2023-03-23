@@ -1,6 +1,11 @@
-# Emacs setting
-## 初回
-    ### M-x package-refresh-contents RET package-install RET use-package
-        - originalディレクトリにshellenv.elを配置する(emacsにterminalの環境変数を渡すため)
-    ### M-x all-the-icons-install-fonts
-        - fontをインストールする
+# メモ
+
+## web-mode
+  - lsp-install-serverでeslintを選択する
+  - 使用するnodeのバージョンで以下を実行
+    - npm install -g typescript typescript-language-server
+
+## ruby-mode
+  - 使用するrubyのバージョンごとに以下のコマンドを実行
+    - gem install solargraph
+	
