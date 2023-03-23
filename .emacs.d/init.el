@@ -19,6 +19,38 @@
 ;; yes noで答えるのを y nにする
 (fset 'yes-or-no-p 'y-or-n-p)
 
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
+
+(use-package doom-modeline
+  :ensure t
+  :hook (after-init . doom-modeline-mode)
+  :config
+  ;; 表示する情報を設定する
+  (setq doom-modeline-height 20
+        doom-modeline-bar-width 3
+        doom-modeline-buffer-file-name-style 'truncate-upto-project
+        doom-modeline-icon (display-graphic-p)
+        doom-modeline-major-mode-color-icon t
+        doom-modeline-major-mode-icon t
+        doom-modeline-modal-icon t
+        doom-modeline-enable-word-count t
+        doom-modeline-buffer-encoding t
+        doom-modeline-vcs-max-length 40
+        doom-modeline-env-version t
+	doom-modeline-env-enable-ruby t
+        doom-modeline-checker-simple-format t
+        doom-modeline-indent-info t)
+  (set-face-attribute 'mode-line nil
+		      :background "#4b0082"
+		      :foreground "white")
+  (set-face-attribute 'mode-line-inactive nil
+		      :background "black"
+		      :foreground "gray"))
+
 (use-package dashboard
   :ensure t
   :config
@@ -80,9 +112,9 @@
   (setq whitespace-display-mappings
         '((tab-mark ?\t [?\u00BB ?\t] [?\t])))
   (set-face-attribute 'whitespace-trailing nil
-                      :background "red"
-                      :foreground "white"
-                      :weight 'bold)
+		      :background "red"
+		      :foreground "white"
+		      :weight 'bold)
   (setq whitespace-global-modes '(not org-mode))
   :diminish whitespace-mode)
 
@@ -144,10 +176,10 @@
   :config
   (tool-bar-mode -1))
 
-(use-package nyan-mode
-  :ensure t
-  :config
-  (nyan-mode t))
+;; (use-package nyan-mode
+;;   :ensure t
+;;   :config
+;;   (nyan-mode t))
 
 (use-package recentf
   :config
@@ -253,7 +285,7 @@
   :config
   ;; LSPのフォーマット機能を無効にする
   (setq lsp-enable-on-type-formatting nil
-        lsp-enable-indentation nil))
+	lsp-enable-indentation nil))
 
 (use-package lsp-ui
   :ensure t
@@ -261,7 +293,7 @@
   :hook
   (lsp-mode . lsp-ui-mode)
   :bind (:map lsp-ui-mode-map
-              ("C-x C-d" . lsp-ui-doc-glance))
+	      ("C-x C-d" . lsp-ui-doc-glance))
   :custom
   (lsp-ui-doc-enable t)
   (lsp-ui-doc-show-with-cursor t)
@@ -279,9 +311,22 @@
   (lsp-ui-peek-peek-height 20)
   (lsp-ui-sideline-enable nil)
   :bind (:map lsp-ui-mode-map
-              ("M-." . lsp-ui-peek-find-definitions)
-              ("M-?" . lsp-ui-peek-find-references)
-              ("C-." . lsp-ui-peek-jump-forward)
-              ("C-," . lsp-ui-peek-jump-backward)))
+	      ("M-." . lsp-ui-peek-find-definitions)
+	      ("M-?" . lsp-ui-peek-find-references)
+	      ("C-." . lsp-ui-peek-jump-forward)
+	      ("C-," . lsp-ui-peek-jump-backward)))
 
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(exec-path-from-shell doom-modeline yaml-mode web-mode use-package typescript-mode treemacs smooth-scrolling nyan-mode modus-themes lsp-ui flycheck-posframe dashboard counsel-projectile company all-the-icons)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

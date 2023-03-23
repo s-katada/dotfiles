@@ -8,3 +8,4 @@
 ## ruby-mode
   - 使用するrubyのバージョンごとに以下のコマンドを実行
     - gem install solargraph
+	
