@@ -36,6 +36,22 @@
   (setq dashboard-set-footer nil)
   (setq dashboard-banner-logo-title "↑ My TellPhone Number! Call Me!"))
 
+(use-package treemacs
+  :ensure t
+  :defer t
+  :bind
+  ("s-b" . treemacs)
+  :custom
+  (treemacs-width 50)
+  :config
+  (progn
+    (setq treemacs-follow-mode t)
+    (setq treemacs-filewatch-mode t)
+    (setq treemacs-fringe-indicator-mode 'always)
+    (setq treemacs-show-cursor t)
+    (setq treemacs-show-hidden-files t)
+    (setq treemacs-silent-filewatch 'post-command-hook)))
+
 (use-package projectile
   :ensure t
   :config
@@ -160,6 +176,10 @@
    ("C-x b" . counsel-switch-buffer)
    ("C-x C-b" . counsel-recentf)
    ("C-x C-i" . counsel-git)))
+
+(use-package counsel-projectile
+  :config
+  (counsel-projectile-mode))
 
 (use-package company
   :ensure t
