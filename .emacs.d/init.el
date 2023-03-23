@@ -4,7 +4,7 @@
 ;;; Code:
 (require 'package)
 (add-to-list 'package-archives
-	     '("melpa" . "https://melpa.org/packages/") t);; リストの先頭にmelpaを追加するためのt
+             '("melpa" . "https://melpa.org/packages/") t);; リストの先頭にmelpaを追加するためのt
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
@@ -19,6 +19,16 @@
 
 ;; yes noで答えるのを y nにする
 (fset 'yes-or-no-p 'y-or-n-p)
+
+(use-package hydra
+  :ensure t)
+
+(defhydra hydra-hoge (global-map "C-x")
+  "hoge"
+  ("a" mc/mark-all-like-this "選択したワードをbuffer内の全て変更")
+  ("d" mc/mark-all-like-this-in-defun "選択した関数内のワードを変更")
+  ("e" mc/edit-ends-of-lines "選択した範囲の末尾を修正")
+  ("r" mc/mark-all-in-region-regexp "regexp"))
 
 (use-package multiple-cursors
   :ensure t
@@ -53,15 +63,15 @@
         doom-modeline-buffer-encoding t
         doom-modeline-vcs-max-length 40
         doom-modeline-env-version t
-	doom-modeline-env-enable-ruby t
+        doom-modeline-env-enable-ruby t
         doom-modeline-checker-simple-format t
         doom-modeline-indent-info t)
   (set-face-attribute 'mode-line nil
-		      :background "#4b0082"
-		      :foreground "white")
+                      :background "#4b0082"
+                      :foreground "white")
   (set-face-attribute 'mode-line-inactive nil
-		      :background "black"
-		      :foreground "gray"))
+                      :background "black"
+                      :foreground "gray"))
 
 (use-package dashboard
   :ensure t
@@ -124,9 +134,9 @@
   (setq whitespace-display-mappings
         '((tab-mark ?\t [?\u00BB ?\t] [?\t])))
   (set-face-attribute 'whitespace-trailing nil
-		      :background "red"
-		      :foreground "white"
-		      :weight 'bold)
+                      :background "red"
+                      :foreground "white"
+                      :weight 'bold)
   (setq whitespace-global-modes '(not org-mode))
   :diminish whitespace-mode)
 
@@ -230,7 +240,7 @@
   (setq company-idle-delay 0.1)
   :bind
   (:map company-active-map
-	("C-h" . 'backward-delete-char)))
+        ("C-h" . 'backward-delete-char)))
 
 (use-package ace-window
   :ensure t
@@ -248,16 +258,23 @@
           (?? aw-show-dispatch-help))))
 
 (use-package ruby-mode
+  :ensure t
   :mode ("\\.rb\\'" . ruby-mode)
   :custom
   (lsp-solargraph-use-bundler nil)
-  (lsp-solargraph-extra-options '("--plugin" "rubocop")))
+  (lsp-solargraph-extra-options '("--plugin" "rubocop"))
+  :config
+  ;; 自動インデントの設定
+  (add-hook 'before-save-hook (lambda ()
+                                (indent-region (point-min) (point-max))
+                                (untabify (point-min) (point-max))
+                                (whitespace-cleanup))))
 
 (use-package web-mode
   :ensure t
   :mode (("\\.html?\\'" . web-mode)
-	 ("\\.ts\\'" . web-mode)
-	 ("\\.tsx\\'" . web-mode)
+         ("\\.ts\\'" . web-mode)
+         ("\\.tsx\\'" . web-mode)
          ("\\.phtml\\'" . web-mode)
          ("\\.erb\\'" . web-mode))
   :config
@@ -267,10 +284,10 @@
         web-mode-script-padding 2
         web-mode-block-padding 2
         web-mode-comment-style 2
-	web-mode-enable-auto-closing t
-	web-mode-enable-auto-pairing t
-	web-mode-enable-css-colorization t
-	web-mode-enable-auto-indentation t)
+        web-mode-enable-auto-closing t
+        web-mode-enable-auto-pairing t
+        web-mode-enable-css-colorization t
+        web-mode-enable-auto-indentation t)
   (add-hook 'before-save-hook 'web-mode-buffer-indent))
 
 (use-package yaml-mode
@@ -279,10 +296,9 @@
 (use-package typescript-mode
   :ensure t)
 
-
 (use-package js
   :mode (("\\.js\\'" . js-mode)
-	 ("\\.json\\'" . js-mode))
+         ("\\.json\\'" . js-mode))
   :config
   (setq-default js-indent-level 2))
 
@@ -294,7 +310,7 @@
   :config
   ;; LSPのフォーマット機能を無効にする
   (setq lsp-enable-on-type-formatting nil
-	lsp-enable-indentation nil))
+        lsp-enable-indentation nil))
 
 (use-package lsp-ui
   :ensure t
@@ -302,7 +318,7 @@
   :hook
   (lsp-mode . lsp-ui-mode)
   :bind (:map lsp-ui-mode-map
-	      ("C-x C-d" . lsp-ui-doc-glance))
+              ("C-x C-d" . lsp-ui-doc-glance))
   :custom
   (lsp-ui-doc-enable t)
   (lsp-ui-doc-show-with-cursor t)
@@ -320,9 +336,22 @@
   (lsp-ui-peek-peek-height 20)
   (lsp-ui-sideline-enable nil)
   :bind (:map lsp-ui-mode-map
-	      ("M-." . lsp-ui-peek-find-definitions)
-	      ("M-?" . lsp-ui-peek-find-references)
-	      ("C-." . lsp-ui-peek-jump-forward)
-	      ("C-," . lsp-ui-peek-jump-backward)))
+              ("M-." . lsp-ui-peek-find-definitions)
+              ("M-?" . lsp-ui-peek-find-references)
+              ("C-." . lsp-ui-peek-jump-forward)
+              ("C-," . lsp-ui-peek-jump-backward)))
 
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(yaml-mode web-mode use-package typescript-mode treemacs smooth-scrolling multiple-cursors modus-themes mode-icons lsp-ui flycheck-posframe exec-path-from-shell doom-modeline dashboard counsel-projectile company all-the-icons)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
