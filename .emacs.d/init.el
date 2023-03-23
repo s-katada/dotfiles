@@ -67,7 +67,7 @@
   :ensure t
   :config
   (dashboard-setup-startup-hook)
-  (setq dashboard-startup-banner "~/.emacs.d//ascii-log.txt")
+  (setq dashboard-startup-banner "~/.emacs.d//ascii-logo.txt")
   (setq dashboard-items '((recents . 20)
                           (projects . 20)
                           (agenda . 20)
