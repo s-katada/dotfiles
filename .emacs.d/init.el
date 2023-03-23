@@ -15,9 +15,21 @@
 (bind-key "C-h" 'backward-delete-char)
 (bind-key "s-z" 'undo)
 (bind-key "s-Z" 'undo-redo)
+(bind-key "C-;" 'comment-line)
 
 ;; yes noで答えるのを y nにする
 (fset 'yes-or-no-p 'y-or-n-p)
+
+(use-package multiple-cursors
+  :ensure t
+  :bind (("C-x C-a" . mc/mark-all-like-this)
+         ("C-x C-d" . mc/mark-all-like-this-in-defun)
+         ("C-x C-e" . mc/edit-ends-of-lines)
+         ("C-x C-r" . mc/mark-all-in-region-regexp)))
+
+(use-package mode-icons
+  :ensure t
+  :config (mode-icons-mode))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -163,7 +175,9 @@
 (use-package frame
   :config
   (toggle-frame-maximized)
-  (set-frame-parameter nil 'alpha 85))
+  (set-frame-parameter nil 'alpha 85)
+  (if (>= (frame-width) 543)
+      (set-face-attribute 'default (selected-frame) :height 180)))
 
 (use-package display-line-numbers
   :config
@@ -175,11 +189,6 @@
   :if (display-graphic-p)
   :config
   (tool-bar-mode -1))
-
-;; (use-package nyan-mode
-;;   :ensure t
-;;   :config
-;;   (nyan-mode t))
 
 (use-package recentf
   :config
@@ -317,16 +326,3 @@
 	      ("C-," . lsp-ui-peek-jump-backward)))
 
 ;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(exec-path-from-shell doom-modeline yaml-mode web-mode use-package typescript-mode treemacs smooth-scrolling nyan-mode modus-themes lsp-ui flycheck-posframe dashboard counsel-projectile company all-the-icons)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
