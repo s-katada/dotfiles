@@ -6,4 +6,4 @@
 .emacs.d/.cache
 .emacs.d/.recentf
 .emacs.d/hoge/**
-
+.emacs.d/projectile-bookmarks.eld

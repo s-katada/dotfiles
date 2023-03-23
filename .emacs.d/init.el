@@ -19,12 +19,35 @@
 ;; yes noで答えるのを y nにする
 (fset 'yes-or-no-p 'y-or-n-p)
 
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-startup-banner "~/.emacs.d//ascii-log.txt")
+  (setq dashboard-items '((recents . 20)
+                        (projects . 20)
+                        (agenda . 20)
+                        (registers . 20)))
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-set-navigator t)
+  (setq dashboard-center-content t)
+  (setq dashboard-show-shortcuts nil)
+  (setq dashboard-set-footer nil)
+  (setq dashboard-banner-logo-title "↑ My TellPhone Number! Call Me!"))
+
+(use-package projectile
+  :ensure t
+  :config
+  (projectile-mode 1))
+
 (use-package emacs
   :custom
   (backup-inhibited t)
   (ring-bell-function 'ignore)
   :config
-  (electric-pair-mode t))
+  (electric-pair-mode t)
+  (setq inhibit-startup-message t))
 
 (use-package modus-themes
   :ensure t
@@ -247,16 +270,3 @@
          ("C-," . lsp-ui-peek-jump-backward)))
 
 ;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(lsp-ui yaml-mode web-mode use-package typescript-mode smooth-scrolling nyan-mode modus-themes flymake-eslint flycheck-posframe counsel company ace-window)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
