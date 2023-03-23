@@ -4,7 +4,7 @@
 ;;; Code:
 (require 'package)
 (add-to-list 'package-archives
-  '("melpa" . "https://melpa.org/packages/") t);; リストの先頭にmelpaを追加するためのt
+	     '("melpa" . "https://melpa.org/packages/") t);; リストの先頭にmelpaを追加するためのt
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
@@ -25,9 +25,9 @@
   (dashboard-setup-startup-hook)
   (setq dashboard-startup-banner "~/.emacs.d//ascii-log.txt")
   (setq dashboard-items '((recents . 20)
-                        (projects . 20)
-                        (agenda . 20)
-                        (registers . 20)))
+                          (projects . 20)
+                          (agenda . 20)
+                          (registers . 20)))
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-set-navigator t)
@@ -208,7 +208,6 @@
 
 (use-package ruby-mode
   :mode ("\\.rb\\'" . ruby-mode)
-  :interpreter ("ruby" . ruby-mode)
   :custom
   (lsp-solargraph-use-bundler nil)
   (lsp-solargraph-extra-options '("--plugin" "rubocop")))
@@ -216,30 +215,22 @@
 (use-package web-mode
   :ensure t
   :mode (("\\.html?\\'" . web-mode)
+	 ("\\.ts\\'" . web-mode)
 	 ("\\.tsx\\'" . web-mode)
          ("\\.phtml\\'" . web-mode)
-         ("\\.tpl\\.php\\'" . web-mode)
-         ("\\.jsp\\'" . web-mode)
-         ("\\.as[cp]x\\'" . web-mode)
-         ("\\.erb\\'" . web-mode)
-         ("\\.mustache\\'" . web-mode)
-         ("\\.djhtml\\'" . web-mode))
+         ("\\.erb\\'" . web-mode))
   :config
   (setq web-mode-markup-indent-offset 2
         web-mode-code-indent-offset 2
         web-mode-css-indent-offset 2
         web-mode-script-padding 2
         web-mode-block-padding 2
-        web-mode-comment-style 2)
-
-  ;; M-C-\で自動整形する場合に、スペース2でインデントするよう設定する
-  (defun my-web-mode-hook ()
-    (setq-local indent-tabs-mode nil)
-    (setq-local tab-width 2)
-    (setq-local web-mode-markup-indent-offset 2)
-    (setq-local web-mode-code-indent-offset 2))
-
-  (add-hook 'web-mode-hook 'my-web-mode-hook))
+        web-mode-comment-style 2
+	web-mode-enable-auto-closing t
+	web-mode-enable-auto-pairing t
+	web-mode-enable-css-colorization t
+	web-mode-enable-auto-indentation t)
+  (add-hook 'before-save-hook 'web-mode-buffer-indent))
 
 (use-package yaml-mode
   :ensure t)
@@ -258,7 +249,11 @@
   :hook
   ((ruby-mode . lsp)
    (web-mode . lsp)
-   (typescript-mode . lsp)))
+   (typescript-mode . lsp))
+  :config
+  ;; LSPのフォーマット機能を無効にする
+  (setq lsp-enable-on-type-formatting nil
+        lsp-enable-indentation nil))
 
 (use-package lsp-ui
   :ensure t
@@ -284,9 +279,9 @@
   (lsp-ui-peek-peek-height 20)
   (lsp-ui-sideline-enable nil)
   :bind (:map lsp-ui-mode-map
-         ("M-." . lsp-ui-peek-find-definitions)
-         ("M-?" . lsp-ui-peek-find-references)
-         ("C-." . lsp-ui-peek-jump-forward)
-         ("C-," . lsp-ui-peek-jump-backward)))
+              ("M-." . lsp-ui-peek-find-definitions)
+              ("M-?" . lsp-ui-peek-find-references)
+              ("C-." . lsp-ui-peek-jump-forward)
+              ("C-," . lsp-ui-peek-jump-backward)))
 
 ;;; init.el ends here
