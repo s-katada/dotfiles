@@ -276,7 +276,8 @@
          ("\\.ts\\'" . web-mode)
          ("\\.tsx\\'" . web-mode)
          ("\\.phtml\\'" . web-mode)
-         ("\\.erb\\'" . web-mode))
+         ("\\.erb\\'" . web-mode)
+	 ("\\?.haml\\')" . web-mode))
   :config
   (setq web-mode-markup-indent-offset 2
         web-mode-code-indent-offset 2
@@ -318,7 +319,7 @@
   :hook
   (lsp-mode . lsp-ui-mode)
   :bind (:map lsp-ui-mode-map
-              ("C-x C-d" . lsp-ui-doc-glance))
+	      ("C-x C-d" . lsp-ui-doc-glance))
   :custom
   (lsp-ui-doc-enable t)
   (lsp-ui-doc-show-with-cursor t)
@@ -336,10 +337,10 @@
   (lsp-ui-peek-peek-height 20)
   (lsp-ui-sideline-enable nil)
   :bind (:map lsp-ui-mode-map
-              ("M-." . lsp-ui-peek-find-definitions)
-              ("M-?" . lsp-ui-peek-find-references)
-              ("C-." . lsp-ui-peek-jump-forward)
-              ("C-," . lsp-ui-peek-jump-backward)))
+	      ("M-." . lsp-ui-peek-find-definitions)
+	      ("M-?" . lsp-ui-peek-find-references)
+	      ("C-." . lsp-ui-peek-jump-forward)
+	      ("C-," . lsp-ui-peek-jump-backward)))
 
 ;;; init.el ends here
 (custom-set-variables
