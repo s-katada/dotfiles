@@ -263,21 +263,20 @@
   :custom
   (lsp-solargraph-use-bundler nil)
   (lsp-solargraph-extra-options '("--plugin" "rubocop"))
+  ;; この設定をonにするとymlモードでも自動整形されて嫌な感じになる
   :config
   ;; 自動インデントの設定
   (add-hook 'before-save-hook (lambda ()
-                                (indent-region (point-min) (point-max))
-                                (untabify (point-min) (point-max))
-                                (whitespace-cleanup))))
+                                (when (eq major-mode 'ruby-mode)
+                                  (indent-region (point-min) (point-max))
+                                  (untabify (point-min) (point-max))
+                                  (whitespace-cleanup)))))
 
 (use-package web-mode
   :ensure t
   :mode (("\\.html?\\'" . web-mode)
          ("\\.ts\\'" . web-mode)
-         ("\\.tsx\\'" . web-mode)
-         ("\\.phtml\\'" . web-mode)
-         ("\\.erb\\'" . web-mode)
-	 ("\\?.haml\\')" . web-mode))
+         ("\\.tsx\\'" . web-mode))
   :config
   (setq web-mode-markup-indent-offset 2
         web-mode-code-indent-offset 2
@@ -292,6 +291,10 @@
   (add-hook 'before-save-hook 'web-mode-buffer-indent))
 
 (use-package yaml-mode
+  :ensure t)
+
+
+(use-package haml-mode
   :ensure t)
 
 (use-package typescript-mode
@@ -319,7 +322,7 @@
   :hook
   (lsp-mode . lsp-ui-mode)
   :bind (:map lsp-ui-mode-map
-	      ("C-x C-d" . lsp-ui-doc-glance))
+              ("C-x C-d" . lsp-ui-doc-glance))
   :custom
   (lsp-ui-doc-enable t)
   (lsp-ui-doc-show-with-cursor t)
@@ -337,22 +340,9 @@
   (lsp-ui-peek-peek-height 20)
   (lsp-ui-sideline-enable nil)
   :bind (:map lsp-ui-mode-map
-	      ("M-." . lsp-ui-peek-find-definitions)
-	      ("M-?" . lsp-ui-peek-find-references)
-	      ("C-." . lsp-ui-peek-jump-forward)
-	      ("C-," . lsp-ui-peek-jump-backward)))
+              ("M-." . lsp-ui-peek-find-definitions)
+              ("M-?" . lsp-ui-peek-find-references)
+              ("C-." . lsp-ui-peek-jump-forward)
+              ("C-," . lsp-ui-peek-jump-backward)))
 
 ;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(yaml-mode web-mode use-package typescript-mode treemacs smooth-scrolling multiple-cursors modus-themes mode-icons lsp-ui flycheck-posframe exec-path-from-shell doom-modeline dashboard counsel-projectile company all-the-icons)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
