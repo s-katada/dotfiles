@@ -4,12 +4,26 @@
 ;;; Code:
 (require 'package)
 (add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t);; リストの先頭にmelpaを追加するためのt
+      '("melpa" . "https://melpa.org/packages/") t);; リストの先頭にmelpaを追加するためのt
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+
+;; Install straight.el
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
 ;; キーバインド
 (bind-key "C-h" 'backward-delete-char)
@@ -19,6 +33,38 @@
 
 ;; yes noで答えるのを y nにする
 (fset 'yes-or-no-p 'y-or-n-p)
+
+(setq openai-key "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")
+
+; dep key (setq openai-key "[YOUR API KEY]")
+(use-package openai
+  :straight (:host github :repo "emacs-openai/openai"))
+
+(use-package chatgpt
+  :commands (chatgpt)
+  :straight (:host github :repo "emacs-openai/chatgpt")
+  :bind
+  ("C-x C-g" . chatgpt)
+  :init
+  (setq chatgpt-repo-path "~/.emacs.d/straight/repos/ChatGPT.el/")
+  (setq chatgpt-prompt ""))
+
+(add-hook 'window-size-change-functions 'my-resize-buffer)
+
+(use-package codegpt
+  :straight (:host github :repo "emacs-openai/codegpt"))
+(use-package dall-e
+  :straight (:host github :repo "emacs-openai/dall-e"))
+
+;; ChatGPT.elのバッファのheightを変更する
+(defun set-chatgpt-window-height ()
+  (let ((height 50))
+    (set-window-buffer
+     (split-window (frame-selected-window) (- height) 'above)
+     (other-buffer))))
+
+(with-eval-after-load 'chatgpt
+  (add-hook 'chatgpt-chat-mode-hook #'set-chatgpt-window-height))
 
 (use-package hydra
   :ensure t)
@@ -115,6 +161,7 @@
   :custom
   (backup-inhibited t)
   (ring-bell-function 'ignore)
+  (make-backup-files nil)
   :config
   (electric-pair-mode t)
   (setq inhibit-startup-message t))
@@ -152,7 +199,7 @@
   :init
   (global-flycheck-mode)
   :custom
-  (flycheck-display-errors-delay 0.2))
+  (flycheck-display-errors-delay 1.0))
 
 (use-package flycheck-posframe
   :ensure t
@@ -167,8 +214,8 @@
                                   (border-color . "#1f1f1f")
                                   (border-width . 1)))
   :config
-  (setq flycheck-posframe-position 'point-max
-        flycheck-posframe-border-width 1))
+  (setq flycheck-posframe-position 'window-center
+	flycheck-posframe-border-width 1))
 
 (use-package smooth-scrolling
   :ensure t
@@ -262,15 +309,16 @@
   :mode ("\\.rb\\'" . ruby-mode)
   :custom
   (lsp-solargraph-use-bundler nil)
-  (lsp-solargraph-extra-options '("--plugin" "rubocop"))
-  ;; この設定をonにするとymlモードでも自動整形されて嫌な感じになる
-  :config
-  ;; 自動インデントの設定
-  (add-hook 'before-save-hook (lambda ()
-                                (when (eq major-mode 'ruby-mode)
-                                  (indent-region (point-min) (point-max))
-                                  (untabify (point-min) (point-max))
-                                  (whitespace-cleanup)))))
+  (lsp-solargraph-extra-options '("--plugin" "rubocop")))
+;; この設定をonにするとymlモードでも自動整形されて嫌な感じになる
+;; :config
+;; ;; 自動インデントの設定
+;; (add-hook 'before-save-hook (lambda ()
+;;                               (when (eq major-mode 'ruby-mode)
+;; 				  ;; 整形機能があまり良くないので無駄なスペースを削除するだけにしておく
+;;                                 ;; (indent-region (point-min) (point-max))
+;;                                 ;; (untabify (point-min) (point-max))
+;;                                 (whitespace-cleanup)))))
 
 (use-package web-mode
   :ensure t
@@ -284,11 +332,17 @@
         web-mode-script-padding 2
         web-mode-block-padding 2
         web-mode-comment-style 2
+	web-mode-style-padding 2
         web-mode-enable-auto-closing t
         web-mode-enable-auto-pairing t
         web-mode-enable-css-colorization t
         web-mode-enable-auto-indentation t)
-  (add-hook 'before-save-hook 'web-mode-buffer-indent))
+  (add-hook 'before-save-hook (lambda ()
+	    (when (eq major-mode 'web-mode)
+	      (web-mode-buffer-indent))))
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (setq-local indent-tabs-mode nil))))
 
 (use-package yaml-mode
   :ensure t)
@@ -322,7 +376,7 @@
   :hook
   (lsp-mode . lsp-ui-mode)
   :bind (:map lsp-ui-mode-map
-              ("C-x C-d" . lsp-ui-doc-glance))
+	      ("C-x C-d" . lsp-ui-doc-glance))
   :custom
   (lsp-ui-doc-enable t)
   (lsp-ui-doc-show-with-cursor t)
@@ -340,9 +394,22 @@
   (lsp-ui-peek-peek-height 20)
   (lsp-ui-sideline-enable nil)
   :bind (:map lsp-ui-mode-map
-              ("M-." . lsp-ui-peek-find-definitions)
-              ("M-?" . lsp-ui-peek-find-references)
-              ("C-." . lsp-ui-peek-jump-forward)
-              ("C-," . lsp-ui-peek-jump-backward)))
+	      ("M-." . lsp-ui-peek-find-definitions)
+	      ("M-?" . lsp-ui-peek-find-references)
+	      ("C-." . lsp-ui-peek-jump-forward)
+	      ("C-," . lsp-ui-peek-jump-backward)))
 
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(chatgpt yaml-mode web-mode use-package typescript-mode treemacs smooth-scrolling request multiple-cursors modus-themes mode-icons lsp-ui haml-mode flycheck-posframe exec-path-from-shell doom-modeline dashboard counsel-projectile company all-the-icons)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
