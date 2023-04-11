@@ -34,20 +34,57 @@
 ;; yes noで答えるのを y nにする
 (fset 'yes-or-no-p 'y-or-n-p)
 
-(setq openai-key "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")
+; C# modeの設定
+(use-package csharp-mode
+  :ensure t
+  :mode ("\\.cs\\'" . csharp-mode)
+  :hook (csharp-mode . my-csharp-mode-hook)
+  :config
+  (defun my-csharp-mode-hook ()
+    ;; indentの設定
+    (setq c-basic-offset 4)
+    (c-set-offset 'substatement-open 0)
+    (c-set-offset 'brace-list-open '+)
+    (c-set-offset 'arglist-intro '+)
+    (c-set-offset 'arglist-close 0)
+
+    ;; company-modeの設定
+    (require 'company)
+    (setq-local company-minimum-prefix-length 1)
+    (setq-local company-idle-delay 0.3)
+    (setq-local company-backends '(company-capf))
+
+    ;; flycheckの設定
+    (flycheck-mode)
+    (setq-local flycheck-checker 'csharp-omnisharp)
+
+    ;; omnisharpの設定
+    (require 'omnisharp)
+    (setq-local omnisharp-server-executable-path "omnisharp")
+    (setq-local omnisharp--curl-executable-path "curl")
+    (setq-local omnisharp--curl-timeout 30)
+    (setq-local omnisharp-company-do-template-completion t)
+    (setq-local omnisharp-company-prompt-on-single-candidate nil)
+    (setq-local omnisharp-company-sort-results nil)
+    (setq-local omnisharp-company-strip-trailing-whitespace nil)
+    (setq-local omnisharp-imenu-support nil)
+    (setq-local omnisharp-auto-complete-want-documentation nil)
+    (setq-local omnisharp-auto-complete-want-importable-types nil)
+    (setq-local omnisharp-auto-complete-want-snippets nil)
+    (setq-local omnisharp-find-usages-ignore-generated-code t)
+    (setq-local omnisharp-hover-info t)
+    (setq-local omnisharp-eldoc-support nil)))
+
+(setq openai-key "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")
 
 ; dep key (setq openai-key "[YOUR API KEY]")
 (use-package openai
   :straight (:host github :repo "emacs-openai/openai"))
 
 (use-package chatgpt
-  :commands (chatgpt)
   :straight (:host github :repo "emacs-openai/chatgpt")
   :bind
-  ("C-x C-g" . chatgpt)
-  :init
-  (setq chatgpt-repo-path "~/.emacs.d/straight/repos/ChatGPT.el/")
-  (setq chatgpt-prompt ""))
+  ("C-x C-g" . chatgpt))
 
 (add-hook 'window-size-change-functions 'my-resize-buffer)
 
@@ -55,16 +92,6 @@
   :straight (:host github :repo "emacs-openai/codegpt"))
 (use-package dall-e
   :straight (:host github :repo "emacs-openai/dall-e"))
-
-;; ChatGPT.elのバッファのheightを変更する
-(defun set-chatgpt-window-height ()
-  (let ((height 50))
-    (set-window-buffer
-     (split-window (frame-selected-window) (- height) 'above)
-     (other-buffer))))
-
-(with-eval-after-load 'chatgpt
-  (add-hook 'chatgpt-chat-mode-hook #'set-chatgpt-window-height))
 
 (use-package hydra
   :ensure t)
@@ -337,16 +364,17 @@
         web-mode-enable-auto-pairing t
         web-mode-enable-css-colorization t
         web-mode-enable-auto-indentation t)
-  (add-hook 'before-save-hook (lambda ()
-	    (when (eq major-mode 'web-mode)
-	      (web-mode-buffer-indent))))
+  ;; 一時保存ごとにインデントが入るのが嫌な時があるのでOff
+  ;; (add-hook 'before-save-hook (lambda ()
+  ;; 	    (when (eq major-mode 'web-mode)
+  ;; 	      (web-mode-buffer-indent))))
   (add-hook 'web-mode-hook
             (lambda ()
+	      (setq web-mode-enable-auto-indentation nil)
               (setq-local indent-tabs-mode nil))))
 
 (use-package yaml-mode
   :ensure t)
-
 
 (use-package haml-mode
   :ensure t)
@@ -364,7 +392,8 @@
   :hook
   ((ruby-mode . lsp)
    (web-mode . lsp)
-   (typescript-mode . lsp))
+   (typescript-mode . lsp)
+   (csharp-mode . lsp))
   :config
   ;; LSPのフォーマット機能を無効にする
   (setq lsp-enable-on-type-formatting nil
@@ -406,7 +435,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(chatgpt yaml-mode web-mode use-package typescript-mode treemacs smooth-scrolling request multiple-cursors modus-themes mode-icons lsp-ui haml-mode flycheck-posframe exec-path-from-shell doom-modeline dashboard counsel-projectile company all-the-icons)))
+   '(chatgpt yaml-mode web-mode use-package typescript-mode treemacs smooth-scrolling request multiple-cursors modus-themes mode-icons lsp-ui haml-mode flycheck-posframe exec-path-from-shell doom-modeline dashboard counsel-projectile company all-the-icons))
+ '(warning-suppress-log-types '((lsp-mode) (lsp-mode)))
+ '(warning-suppress-types '((lsp-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

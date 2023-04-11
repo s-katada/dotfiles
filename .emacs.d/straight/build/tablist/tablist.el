@@ -1,0 +1,1 @@
+/Users/s-katada/.emacs.d/straight/repos/tablist/tablist.el
