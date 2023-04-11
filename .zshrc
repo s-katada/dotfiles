@@ -50,9 +50,7 @@ eval "$(rbenv init -)"
 eval "$(nodenv init -)"
 # export PATH="$HOME/.nodenv/bin:$PATH"
 
-# fnm(nodeのバージョン管理ツール)
-eval "$(fnm env)"
-
+export OPENAI_API_KEY=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
 
 # #Flutter
 export PATH="$HOME/fvm/default/bin:$PATH"
