@@ -25,6 +25,11 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+;; 現在行にハイライトを設定
+(global-hl-line-mode t)
+(custom-set-faces
+ '(hl-line ((t (:background "grey20")))))
+
 ;; キーバインド
 (bind-key "C-h" 'backward-delete-char)
 (bind-key "s-z" 'undo)
@@ -241,7 +246,7 @@
                                   (border-color . "#1f1f1f")
                                   (border-width . 1)))
   :config
-  (setq flycheck-posframe-position 'window-center
+  (setq flycheck-posframe-position 'window-top-center
 	flycheck-posframe-border-width 1))
 
 (use-package smooth-scrolling
@@ -312,6 +317,7 @@
   (global-company-mode 1)
   (setq company-minimum-prefix-length 1)
   (setq company-idle-delay 0.1)
+  (setq company-dabbrev-downcase nil)
   :bind
   (:map company-active-map
         ("C-h" . 'backward-delete-char)))
@@ -363,7 +369,8 @@
         web-mode-enable-auto-closing t
         web-mode-enable-auto-pairing t
         web-mode-enable-css-colorization t
-        web-mode-enable-auto-indentation t)
+        web-mode-enable-auto-indentation t
+	web-mode-enable-auto-quoting nil)
   ;; 一時保存ごとにインデントが入るのが嫌な時があるのでOff
   ;; (add-hook 'before-save-hook (lambda ()
   ;; 	    (when (eq major-mode 'web-mode)
