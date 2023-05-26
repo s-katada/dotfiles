@@ -6,7 +6,13 @@
 ;;;### (autoloads nil "openai" "openai.el" (0 0 0 0))
 ;;; Generated autoloads from openai.el
 
-(register-definition-prefixes "openai" '("openai-"))
+(autoload 'openai-key-auth-source "openai" "\
+Retrieve the OpenAI API key from auth-source given a BASE-URL.
+If BASE-URL is not specified, it defaults to `openai-base-url'.
+
+\(fn &optional BASE-URL)" nil nil)
+
+(register-definition-prefixes "openai" '("open"))
 
 ;;;***
 
@@ -20,29 +26,30 @@ Argument FILE is audio file to transcribe, in one of these formats: mp3, mp4,
 mpeg, mpga, m4a, wav, or webm.  CALLBACK is the execuation after request is
 made.
 
-Arguments KEY is global options; however, you can overwrite the value by passing
-it in.
+Arguments BASE-URL, PARAMETERS, CONTENT-TYPE, KEY and ORG-ID are global
+options; however, you can overwrite the value by passing it in.
 
 The rest of the arugments are optional, please see OpenAI API reference page
 for more information.  Arguments here refer to MODEL PROMPT, RESPONSE-FORMAT,
 TEMPERATURE, and LANGUAGE.
 
-\(fn FILE CALLBACK &key (KEY openai-key) (MODEL \"whisper-1\") PROMPT RESPONSE-FORMAT TEMPERATURE LANGUAGE)" nil nil)
+\(fn FILE CALLBACK &key (BASE-URL openai-base-url) (PARAMETERS openai-parameters) (CONTENT-TYPE \"application/json\") (KEY openai-key) ORG-ID (MODEL \"whisper-1\") PROMPT RESPONSE-FORMAT TEMPERATURE LANGUAGE)" nil nil)
 
 (autoload 'openai-audio-create-translation "openai-audio" "\
 Send translate audio request.
 
-Argument FILE is the audio file to translate, in one of these formats: mp3, mp4,
-mpeg, mpga, m4a, wav, or webm. CALLBACK is the execuation after request is made.
+Argument FILE is the audio file to translate, in one of these formats: mp3,
+mp4, mpeg, mpga, m4a, wav, or webm.  CALLBACK is the execuation after request
+is made.
 
-Arguments KEY is global options; however, you can overwrite the value by passing
-it in.
+Arguments BASE-URL, PARAMETERS, CONTENT-TYPE, KEY and ORG-ID are global
+options; however, you can overwrite the value by passing it in.
 
 The rest of the arugments are optional, please see OpenAI API reference page
 for more information.  Arguments here refer to MODEL PROMPT, RESPONSE-FORMAT,
 and TEMPERATURE.
 
-\(fn FILE CALLBACK &key (KEY openai-key) (MODEL \"whisper-1\") PROMPT RESPONSE-FORMAT TEMPERATURE)" nil nil)
+\(fn FILE CALLBACK &key (BASE-URL openai-base-url) (PARAMETERS openai-parameters) (CONTENT-TYPE \"application/json\") (KEY openai-key) ORG-ID (MODEL \"whisper-1\") PROMPT RESPONSE-FORMAT TEMPERATURE)" nil nil)
 
 ;;;***
 
@@ -52,17 +59,18 @@ and TEMPERATURE.
 (autoload 'openai-chat "openai-chat" "\
 Send chat request.
 
-Arguments MESSAGES and CALLBACK are required for this type of request.  MESSAGES
-is the conversation data.  CALLBACK is the execuation after request is made.
+Arguments MESSAGES and CALLBACK are required for this type of request.
+MESSAGES is the conversation data.  CALLBACK is the execuation after request is
+made.
 
-Arguments KEY and USER are global options; however, you can overwrite the value
-by passing it in.
+Arguments BASE-URL, PARAMETERS, CONTENT-TYPE, KEY, ORG-ID and USER are global
+options; however, you can overwrite the value by passing it in.
 
 The rest of the arugments are optional, please see OpenAI API reference page
 for more information.  Arguments here refer to MODEL,  TEMPERATURE, TOP-P, N,
 STREAM, STOP, MAX-TOKENS, PRESENCE-PENALTY, FREQUENCY-PENALTY, and LOGIT-BIAS.
 
-\(fn MESSAGES CALLBACK &key (KEY openai-key) (MODEL \"gpt-3.5-turbo\") TEMPERATURE TOP-P N STREAM STOP MAX-TOKENS PRESENCE-PENALTY FREQUENCY-PENALTY LOGIT-BIAS (USER openai-user))" nil nil)
+\(fn MESSAGES CALLBACK &key (BASE-URL openai-base-url) (PARAMETERS openai-parameters) (CONTENT-TYPE \"application/json\") (KEY openai-key) ORG-ID (MODEL \"gpt-3.5-turbo\") TEMPERATURE TOP-P N STREAM STOP MAX-TOKENS PRESENCE-PENALTY FREQUENCY-PENALTY LOGIT-BIAS (USER openai-user))" nil nil)
 
 (autoload 'openai-chat-say "openai-chat" "\
 Start making a conversation to OpenAI.
@@ -81,18 +89,18 @@ This is a ping pong message, so you will only get one response." t nil)
 Send completion request.
 
 Arguments PROMPT and CALLBACK are required for this type of request.  PROMPT is
-either the question or instruction to OpenAI.  CALLBACK is the execuation after
+either the question or instruction to OpenAI.  CALLBACK is the execution after
 request is made.
 
-Arguments KEY and USER are global options; however, you can overwrite the value
-by passing it in.
+Arguments BASE-URL, PARAMETERS, CONTENT-TYPE, KEY, ORG-ID and USER are global
+options; however, you can overwrite the value by passing it in.
 
 The rest of the arugments are optional, please see OpenAI API reference page
 for more information.  Arguments here refer to MODEL, SUFFIX, MAX-TOKENS,
 TEMPERATURE, TOP-P, N, STREAM, LOGPROBS, ECHO, STOP, PRESENCE-PENALTY,
 FREQUENCY-PENALTY, BEST-OF, and LOGIT-BIAS.
 
-\(fn PROMPT CALLBACK &key (KEY openai-key) (MODEL \"text-davinci-003\") SUFFIX MAX-TOKENS TEMPERATURE TOP-P N STREAM LOGPROBS ECHO STOP PRESENCE-PENALTY FREQUENCY-PENALTY BEST-OF LOGIT-BIAS (USER openai-user))" nil nil)
+\(fn PROMPT CALLBACK &key (BASE-URL openai-base-url) (PARAMETERS openai-parameters) (CONTENT-TYPE \"application/json\") (KEY openai-key) ORG-ID (MODEL \"text-davinci-003\") SUFFIX MAX-TOKENS TEMPERATURE TOP-P N STREAM LOGPROBS ECHO STOP PRESENCE-PENALTY FREQUENCY-PENALTY BEST-OF LOGIT-BIAS (USER openai-user))" nil nil)
 
 (autoload 'openai-completion-select-insert "openai-completion" "\
 Send the region to OpenAI and insert the result to the next paragraph.

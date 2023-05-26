@@ -1,1 +1,0 @@
-/Users/s-katada/.emacs.d/straight/repos/emacs-deferred/deferred.el

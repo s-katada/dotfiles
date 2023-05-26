@@ -4,7 +4,7 @@
 ;;; Code:
 (require 'package)
 (add-to-list 'package-archives
-      '("melpa" . "https://melpa.org/packages/") t);; リストの先頭にmelpaを追加するためのt
+	     '("melpa" . "https://melpa.org/packages/") t);; リストの先頭にmelpaを追加するためのt
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
@@ -35,52 +35,84 @@
 (bind-key "s-z" 'undo)
 (bind-key "s-Z" 'undo-redo)
 (bind-key "C-;" 'comment-line)
+(bind-key "C-c C-c" 'scroll-down-command)
 
 ;; yes noで答えるのを y nにする
 (fset 'yes-or-no-p 'y-or-n-p)
 
-; C# modeの設定
-(use-package csharp-mode
-  :ensure t
-  :mode ("\\.cs\\'" . csharp-mode)
-  :hook (csharp-mode . my-csharp-mode-hook)
+;; markdown-modeの設定
+(use-package markdown-mode
+  :mode ("\\.md\\'" . markdown-mode))
+
+;; mermaid-modeの設定
+(use-package mermaid-mode
+  :mode (("\\.mmd\\'" . mermaid-mode))
+	 ;; ("\\.md\\'" . mermaid-mode))
   :config
-  (defun my-csharp-mode-hook ()
-    ;; indentの設定
-    (setq c-basic-offset 4)
-    (c-set-offset 'substatement-open 0)
-    (c-set-offset 'brace-list-open '+)
-    (c-set-offset 'arglist-intro '+)
-    (c-set-offset 'arglist-close 0)
+  (setq mermaid-mode-map
+	(let ((map mermaid-mode-map))
+	  (define-key map (kbd "C-c C-c") nil)
+	  (define-key map (kbd "C-c C-f") nil)
+	  (define-key map (kbd "C-c C-b") nil)
+	  (define-key map (kbd "C-c C-r") nil)
+	  (define-key map (kbd "C-c C-o") nil)
+	  (define-key map (kbd "C-c C-d") nil)
+	  (define-key map (kbd "C-c C-d c") 'mermaid-compile)
+	  (define-key map (kbd "C-c C-d c") 'mermaid-compile)
+	  (define-key map (kbd "C-c C-d f") 'mermaid-compile-file)
+	  (define-key map (kbd "C-c C-d b") 'mermaid-compile-buffer)
+	  (define-key map (kbd "C-c C-d r") 'mermaid-compile-region)
+	  (define-key map (kbd "C-c C-d o") 'mermaid-open-browser)
+	  (define-key map (kbd "C-c C-d d") 'mermaid-open-doc)
+	  map)))
 
-    ;; company-modeの設定
-    (require 'company)
-    (setq-local company-minimum-prefix-length 1)
-    (setq-local company-idle-delay 0.3)
-    (setq-local company-backends '(company-capf))
+(use-package fish-mode
+  :ensure t
+  :mode "\\.fish\\'"
+  :config
+  (add-hook 'fish-mode-hook
+	    (lambda ()
+	      (setq indent-tabs-mode nil)
+	      (setq fish-indent-offset 2))))
 
-    ;; flycheckの設定
-    (flycheck-mode)
-    (setq-local flycheck-checker 'csharp-omnisharp)
+(use-package prog-mode
+  :hook(prog-mode . copilot-mode))
 
-    ;; omnisharpの設定
-    (require 'omnisharp)
-    (setq-local omnisharp-server-executable-path "omnisharp")
-    (setq-local omnisharp--curl-executable-path "curl")
-    (setq-local omnisharp--curl-timeout 30)
-    (setq-local omnisharp-company-do-template-completion t)
-    (setq-local omnisharp-company-prompt-on-single-candidate nil)
-    (setq-local omnisharp-company-sort-results nil)
-    (setq-local omnisharp-company-strip-trailing-whitespace nil)
-    (setq-local omnisharp-imenu-support nil)
-    (setq-local omnisharp-auto-complete-want-documentation nil)
-    (setq-local omnisharp-auto-complete-want-importable-types nil)
-    (setq-local omnisharp-auto-complete-want-snippets nil)
-    (setq-local omnisharp-find-usages-ignore-generated-code t)
-    (setq-local omnisharp-hover-info t)
-    (setq-local omnisharp-eldoc-support nil)))
+;; copilotの設定
+(use-package copilot
+  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :ensure t
+  :init
+  (defun my-tab ()
+    (interactive "*")
+    (or (copilot-accept-completion)
+	(company-indent-or-complete-common nil)))
+  (bind-key "TAB" 'my-tab)
+  :bind(("M-]" . copilot-next-completion)
+	("M-[" . copilot-previous-completion)))
 
-(setq openai-key "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")
+;; pytonの設定
+(use-package elpy
+  :ensure t
+  :init
+  (elpy-enable)
+  (setq elpy-rpc-backend "jedi"))
+
+(use-package company-jedi
+  :ensure t
+  :init
+  (add-to-list 'company-backends 'company-jedi))
+
+(use-package python
+  :ensure t
+  :init
+  (add-hook 'python-mode-hook
+            (lambda ()
+              (setq indent-tabs-mode nil)
+              (setq python-indent-offset 2))))
+
+;; 定期的に変えないといけない
+(setq openai-key "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")
 
 ; dep key (setq openai-key "[YOUR API KEY]")
 (use-package openai
@@ -91,7 +123,7 @@
   :bind
   ("C-x C-g" . chatgpt))
 
-(add-hook 'window-size-change-functions 'my-resize-buffer)
+;; (add-hook 'window-size-change-functions 'my-resize-buffer)
 
 (use-package codegpt
   :straight (:host github :repo "emacs-openai/codegpt"))
@@ -110,10 +142,12 @@
 
 (use-package multiple-cursors
   :ensure t
-  :bind (("C-x C-a" . mc/mark-all-like-this)
-         ("C-x C-d" . mc/mark-all-like-this-in-defun)
-         ("C-x C-e" . mc/edit-ends-of-lines)
-         ("C-x C-r" . mc/mark-all-in-region-regexp)))
+  :config
+  (define-key mc/keymap (kbd "C-h") 'delete-backward-char)
+  (define-key global-map (kbd "C-x C-a") 'mc/mark-all-like-this)
+  (define-key global-map (kbd "C-x C-d") 'mc/mark-all-like-this-in-defun)
+  (define-key global-map (kbd "C-x C-e") 'mc/edit-ends-of-lines)
+  (define-key global-map (kbd "C-x C-r") 'mc/mark-all-in-region-regexp))
 
 (use-package mode-icons
   :ensure t
@@ -151,22 +185,28 @@
                       :background "black"
                       :foreground "gray"))
 
-(use-package dashboard
-  :ensure t
-  :config
-  (dashboard-setup-startup-hook)
-  (setq dashboard-startup-banner "~/.emacs.d//ascii-logo.txt")
-  (setq dashboard-items '((recents . 20)
-                          (projects . 20)
-                          (agenda . 20)
-                          (registers . 20)))
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
-  (setq dashboard-set-navigator t)
-  (setq dashboard-center-content t)
-  (setq dashboard-show-shortcuts nil)
-  (setq dashboard-set-footer nil)
-  (setq dashboard-banner-logo-title "↑ My TellPhone Number! Call Me!"))
+;; (use-package dashboard
+;;   :ensure t
+;;   :config
+;;   (dashboard-setup-startup-hook)
+;;   (setq dashboard-startup-banner "~/.emacs.d//ascii-logo.txt")
+;;   (setq dashboard-items '((recents . 20)
+;;                           (projects . 20)
+;;                           (agenda . 20)
+;;                           (registers . 20)))
+;;   (setq dashboard-set-heading-icons t)
+;;   (setq dashboard-set-file-icons t)
+;;   (setq dashboard-set-navigator t)
+;;   (setq dashboard-center-content t)
+;;   (setq dashboard-show-shortcuts nil)
+;;   (setq dashboard-set-footer nil)
+;;   (setq dashboard-banner-logo-title "↑ My TellPhone Number! Call Me!"))
+
+;; ファイルを選択したらtreemacsを閉じる設定を追加したい
+(add-to-list 'image-types 'svg)
+(defun treemacs-active-p ()
+  "Return non-nil if the active window is a treemacs window."
+  (eq (selected-window) (treemacs-get-local-window)))
 
 (use-package treemacs
   :ensure t
@@ -182,7 +222,15 @@
     (setq treemacs-fringe-indicator-mode 'always)
     (setq treemacs-show-cursor t)
     (setq treemacs-show-hidden-files t)
-    (setq treemacs-silent-filewatch 'post-command-hook)))
+    (setq treemacs-silent-filewatch 'post-command-hook))
+  (treemacs-git-mode 'extended))
+
+(use-package treemacs-icons-dired
+  :ensure t)
+
+(use-package dired
+  :config
+  (add-hook 'dired-mode-hook 'treemacs-icons-dired-mode))
 
 (use-package projectile
   :ensure t
@@ -246,7 +294,7 @@
                                   (border-color . "#1f1f1f")
                                   (border-width . 1)))
   :config
-  (setq flycheck-posframe-position 'window-top-center
+  (setq flycheck-posframe-position 'window-bottom-center
 	flycheck-posframe-border-width 1))
 
 (use-package smooth-scrolling
@@ -254,12 +302,6 @@
   :config
   (smooth-scrolling-mode 1)
   (setq smooth-scroll-margin 5))
-
-(use-package dired
-  :custom
-  (dired-use-ls-dired nil)
-  :hook
-  (dired-mode . (lambda () (display-line-numbers-mode -1))))
 
 (use-package frame
   :config
@@ -287,7 +329,8 @@
 
 (use-package ivy
   :bind
-  (("C-s" . swiper))
+  (("C-s" . swiper)
+   ("C-h" . ivy-backward-delete-char))
   :custom
   (ivy-use-vertual-buffers t)
   :config
@@ -305,7 +348,11 @@
    ("C-x C-f" . counsel-find-file)
    ("C-x b" . counsel-switch-buffer)
    ("C-x C-b" . counsel-recentf)
-   ("C-x C-i" . counsel-git)))
+   ("C-x C-i" . counsel-git))
+  :config
+  (define-key counsel-find-file-map (kbd "C-h") 'delete-backward-char)
+  (define-key counsel-find-file-map (kbd "C-b") 'counsel-up-directory)
+  (define-key counsel-find-file-map (kbd "C-f") 'counsel-down-directory))
 
 (use-package counsel-projectile
   :config
@@ -318,6 +365,7 @@
   (setq company-minimum-prefix-length 1)
   (setq company-idle-delay 0.1)
   (setq company-dabbrev-downcase nil)
+  (yas-global-mode 1)
   :bind
   (:map company-active-map
         ("C-h" . 'backward-delete-char)))
@@ -339,7 +387,8 @@
 
 (use-package ruby-mode
   :ensure t
-  :mode ("\\.rb\\'" . ruby-mode)
+  :mode (("\\.rb\\'" . ruby-mode)
+	 ("\\.ruby\\'" . ruby-mode))
   :custom
   (lsp-solargraph-use-bundler nil)
   (lsp-solargraph-extra-options '("--plugin" "rubocop")))
@@ -436,18 +485,3 @@
 	      ("C-," . lsp-ui-peek-jump-backward)))
 
 ;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(chatgpt yaml-mode web-mode use-package typescript-mode treemacs smooth-scrolling request multiple-cursors modus-themes mode-icons lsp-ui haml-mode flycheck-posframe exec-path-from-shell doom-modeline dashboard counsel-projectile company all-the-icons))
- '(warning-suppress-log-types '((lsp-mode) (lsp-mode)))
- '(warning-suppress-types '((lsp-mode))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )

@@ -32,7 +32,11 @@ is used for the value of SOURCES. ACTION may be `copy' (copy
 recipe to the kill ring), `insert' (insert at point), or nil (no
 action, just return it).
 
-\(fn &optional SOURCES ACTION)" t nil)
+Optional arg FILTER must be a unary function.
+It takes a package name as its sole argument.
+If it returns nil the candidate is excluded.
+
+\(fn &optional SOURCES ACTION FILTER)" t nil)
 
 (autoload 'straight-visit-package-website "straight" "\
 Visit the package RECIPE's website.
@@ -79,8 +83,7 @@ non-nil if the function has been called interactively. It is for
 internal use only, and is used to determine whether to show a
 hint about how to install the package permanently.
 
-Return non-nil if package was actually installed, and nil
-otherwise (this can only happen if NO-CLONE is non-nil).
+Return non-nil when package is initially installed, nil otherwise.
 
 \(fn MELPA-STYLE-RECIPE &optional NO-CLONE NO-BUILD CAUSE INTERACTIVE)" t nil)
 

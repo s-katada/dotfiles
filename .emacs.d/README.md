@@ -8,4 +8,7 @@
 ## ruby-mode
   - 使用するrubyのバージョンごとに以下のコマンドを実行
     - gem install solargraph
+
+## ascii-logo.txtを追加する
+  - dashboardに表示するascii文字ファイルを用意しておく
 	

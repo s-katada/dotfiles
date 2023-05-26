@@ -3,7 +3,7 @@
 
 "28.2"
 
-#s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ("straight" ("2023-04-19 14:57:30" ("emacs") (:type git :host github :repo "radian-software/straight.el" :files ("straight*.el") :branch "master" :package "straight" :local-repo "straight.el")) "org-elpa" ("2023-04-19 14:57:30" nil (:local-repo nil :package "org-elpa" :type git)) "melpa" ("2023-04-19 14:57:30" nil (:type git :host github :repo "melpa/melpa" :build nil :package "melpa" :local-repo "melpa")) "gnu-elpa-mirror" ("2023-04-19 14:57:30" nil (:type git :host github :repo "emacs-straight/gnu-elpa-mirror" :build nil :package "gnu-elpa-mirror" :local-repo "gnu-elpa-mirror")) "nongnu-elpa" ("2023-04-19 14:57:30" nil (:type git :repo "https://git.savannah.gnu.org/git/emacs/nongnu.git" :local-repo "nongnu-elpa" :build nil :package "nongnu-elpa")) "el-get" ("2023-04-19 14:57:30" nil (:type git :host github :repo "dimitri/el-get" :build nil :files ("*.el" ("recipes" "recipes/el-get.rcp") "methods" "el-get-pkg.el") :flavor melpa :package "el-get" :local-repo "el-get")) "emacsmirror-mirror" ("2023-04-19 14:57:30" nil (:type git :host github :repo "emacs-straight/emacsmirror-mirror" :build nil :package "emacsmirror-mirror" :local-repo "emacsmirror-mirror")) "chatgpt" ("2023-04-19 14:57:30" ("emacs" "openai" "lv" "ht" "markdown-mode" "spinner") (:host github :repo "emacs-openai/chatgpt" :package "chatgpt" :type git :local-repo "chatgpt")) "epc" ("2023-04-04 19:53:15" ("concurrent" "ctable") (:type git :flavor melpa :files ("epc.el" "epcs.el" "epc-pkg.el") :host github :repo "kiwanami/emacs-epc" :package "epc" :local-repo "emacs-epc")) "concurrent" ("2023-04-04 19:53:15" ("emacs" "deferred") (:type git :flavor melpa :files ("concurrent.el" "concurrent-pkg.el") :host github :repo "kiwanami/emacs-deferred" :package "concurrent" :local-repo "emacs-deferred")) "deferred" ("2023-04-04 19:53:15" ("emacs") (:flavor melpa :files ("deferred.el" "deferred-pkg.el") :package "deferred" :local-repo "emacs-deferred" :type git :repo "kiwanami/emacs-deferred" :host github)) "ctable" ("2023-04-04 19:53:15" ("emacs" "cl-lib") (:type git :flavor melpa :files ("ctable.el" "ctable-pkg.el") :host github :repo "kiwanami/emacs-ctable" :package "ctable" :local-repo "emacs-ctable")) "openai" ("2023-04-19 14:57:30" ("emacs" "request" "tblui") (:host github :repo "emacs-openai/openai" :package "openai" :type git :local-repo "openai")) "request" ("2023-04-19 14:57:30" ("emacs") (:type git :flavor melpa :files ("request.el" "request-pkg.el") :host github :repo "tkf/emacs-request" :package "request" :local-repo "emacs-request")) "tblui" ("2023-04-19 14:57:30" ("dash" "magit-popup" "tablist" "cl-lib") (:type git :flavor melpa :host github :repo "Yuki-Inoue/tblui.el" :package "tblui" :local-repo "tblui.el")) "dash" ("2023-04-19 14:57:30" ("emacs") (:type git :flavor melpa :files ("dash.el" "dash.texi" "dash-pkg.el") :host github :repo "magnars/dash.el" :package "dash" :local-repo "dash.el")) "magit-popup" ("2023-04-19 14:57:30" ("emacs" "dash") (:type git :flavor melpa :host github :repo "magit/magit-popup" :package "magit-popup" :local-repo "magit-popup")) "tablist" ("2023-04-19 14:57:30" ("emacs") (:type git :flavor melpa :host github :repo "emacsorphanage/tablist" :package "tablist" :local-repo "tablist")) "codegpt" ("2023-04-19 14:57:30" ("emacs" "openai" "markdown-mode" "spinner") (:host github :repo "emacs-openai/codegpt" :package "codegpt" :type git :local-repo "codegpt")) "markdown-mode" ("2023-04-19 14:57:30" ("emacs") (:type git :flavor melpa :host github :repo "jrblevin/markdown-mode" :package "markdown-mode" :local-repo "markdown-mode")) "spinner" ("2023-04-19 14:57:30" ("emacs") (:type git :host github :repo "emacs-straight/spinner" :files ("*" (:exclude ".git")) :package "spinner" :local-repo "spinner")) "dall-e" ("2023-04-19 14:57:30" ("emacs" "openai" "lv" "ht" "spinner" "reveal-in-folder" "async") (:host github :repo "emacs-openai/dall-e" :package "dall-e" :type git :local-repo "dall-e")) "lv" ("2023-04-19 14:57:30" nil (:type git :flavor melpa :files ("lv.el" "lv-pkg.el") :host github :repo "abo-abo/hydra" :package "lv" :local-repo "hydra")) "ht" ("2023-04-19 14:57:30" ("dash") (:type git :flavor melpa :host github :repo "Wilfred/ht.el" :package "ht" :local-repo "ht.el")) "reveal-in-folder" ("2023-04-19 14:57:30" ("emacs" "f" "s") (:type git :flavor melpa :host github :repo "jcs-elpa/reveal-in-folder" :package "reveal-in-folder" :local-repo "reveal-in-folder")) "f" ("2023-04-19 14:57:30" ("emacs" "s" "dash") (:type git :flavor melpa :host github :repo "rejeep/f.el" :package "f" :local-repo "f.el")) "s" ("2023-04-19 14:57:30" nil (:type git :flavor melpa :host github :repo "magnars/s.el" :package "s" :local-repo "s.el")) "async" ("2023-04-19 14:57:30" ("emacs") (:type git :flavor melpa :host github :repo "jwiegley/emacs-async" :package "async" :local-repo "emacs-async"))))
+#s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ("straight" ("2023-05-26 16:47:24" ("emacs") (:type git :host github :repo "radian-software/straight.el" :files ("straight*.el") :branch "master" :package "straight" :local-repo "straight.el")) "org-elpa" ("2023-05-26 16:47:24" nil (:local-repo nil :package "org-elpa" :type git)) "melpa" ("2023-05-26 16:47:24" nil (:type git :host github :repo "melpa/melpa" :build nil :package "melpa" :local-repo "melpa")) "gnu-elpa-mirror" ("2023-05-26 16:47:24" nil (:type git :host github :repo "emacs-straight/gnu-elpa-mirror" :build nil :package "gnu-elpa-mirror" :local-repo "gnu-elpa-mirror")) "nongnu-elpa" ("2023-05-26 16:47:24" nil (:type git :repo "https://git.savannah.gnu.org/git/emacs/nongnu.git" :depth (full single-branch) :local-repo "nongnu-elpa" :build nil :package "nongnu-elpa")) "el-get" ("2023-05-26 16:47:24" nil (:type git :host github :repo "dimitri/el-get" :build nil :files ("*.el" ("recipes" "recipes/el-get.rcp") "methods" "el-get-pkg.el") :flavor melpa :package "el-get" :local-repo "el-get")) "emacsmirror-mirror" ("2023-05-26 16:47:24" nil (:type git :host github :repo "emacs-straight/emacsmirror-mirror" :build nil :package "emacsmirror-mirror" :local-repo "emacsmirror-mirror")) "copilot" ("2023-05-26 16:47:24" ("emacs" "s" "dash" "editorconfig" "jsonrpc") (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el") :package "copilot" :type git :local-repo "copilot.el")) "s" ("2023-05-26 16:47:24" nil (:type git :flavor melpa :host github :repo "magnars/s.el" :package "s" :local-repo "s.el")) "dash" ("2023-05-26 16:47:24" ("emacs") (:type git :flavor melpa :files ("dash.el" "dash.texi" "dash-pkg.el") :host github :repo "magnars/dash.el" :package "dash" :local-repo "dash.el")) "editorconfig" ("2023-05-26 16:47:24" ("emacs" "nadvice") (:type git :flavor melpa :host github :repo "editorconfig/editorconfig-emacs" :package "editorconfig" :local-repo "editorconfig-emacs")) "jsonrpc" ("2023-05-26 16:47:24" ("emacs") (:type git :host github :repo "emacs-straight/jsonrpc" :files ("*" (:exclude ".git")) :package "jsonrpc" :local-repo "jsonrpc")) "openai" ("2023-05-26 16:47:24" ("emacs" "request" "tblui") (:host github :repo "emacs-openai/openai" :package "openai" :type git :local-repo "openai")) "request" ("2023-05-26 16:47:24" ("emacs") (:type git :flavor melpa :files ("request.el" "request-pkg.el") :host github :repo "tkf/emacs-request" :package "request" :local-repo "emacs-request")) "tblui" ("2023-05-26 16:47:24" ("dash" "magit-popup" "tablist" "cl-lib") (:type git :flavor melpa :host github :repo "Yuki-Inoue/tblui.el" :package "tblui" :local-repo "tblui.el")) "magit-popup" ("2023-05-26 16:47:24" ("emacs" "dash") (:type git :flavor melpa :host github :repo "magit/magit-popup" :package "magit-popup" :local-repo "magit-popup")) "tablist" ("2023-05-26 16:47:24" ("emacs") (:type git :flavor melpa :host github :repo "emacsorphanage/tablist" :package "tablist" :local-repo "tablist")) "chatgpt" ("2023-05-26 16:47:25" ("emacs" "openai" "lv" "ht" "markdown-mode" "spinner") (:host github :repo "emacs-openai/chatgpt" :package "chatgpt" :type git :local-repo "chatgpt")) "lv" ("2023-05-26 16:47:25" nil (:type git :flavor melpa :files ("lv.el" "lv-pkg.el") :host github :repo "abo-abo/hydra" :package "lv" :local-repo "hydra")) "ht" ("2023-05-26 16:47:25" ("dash") (:type git :flavor melpa :host github :repo "Wilfred/ht.el" :package "ht" :local-repo "ht.el")) "markdown-mode" ("2023-05-26 16:47:25" ("emacs") (:type git :flavor melpa :host github :repo "jrblevin/markdown-mode" :package "markdown-mode" :local-repo "markdown-mode")) "spinner" ("2023-05-26 16:47:25" ("emacs") (:type git :host github :repo "emacs-straight/spinner" :files ("*" (:exclude ".git")) :package "spinner" :local-repo "spinner")) "codegpt" ("2023-05-26 16:47:25" ("emacs" "openai" "markdown-mode" "spinner") (:host github :repo "emacs-openai/codegpt" :package "codegpt" :type git :local-repo "codegpt")) "dall-e" ("2023-05-26 16:47:25" ("emacs" "openai" "lv" "ht" "spinner" "reveal-in-folder" "async") (:host github :repo "emacs-openai/dall-e" :package "dall-e" :type git :local-repo "dall-e")) "reveal-in-folder" ("2023-05-26 16:47:25" ("emacs" "f" "s") (:type git :flavor melpa :host github :repo "jcs-elpa/reveal-in-folder" :package "reveal-in-folder" :local-repo "reveal-in-folder")) "f" ("2023-05-26 16:47:25" ("emacs" "s" "dash") (:type git :flavor melpa :host github :repo "rejeep/f.el" :package "f" :local-repo "f.el")) "async" ("2023-05-26 16:47:25" ("emacs") (:type git :flavor melpa :host github :repo "jwiegley/emacs-async" :package "async" :local-repo "emacs-async"))))
 
 #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ("straight" ((straight-x straight-autoloads straight straight-ert-print-hack) (autoload 'straight-remove-unused-repos "straight" "Remove unused repositories from the repos and build directories.
 A repo is considered \"unused\" if it was not explicitly requested via
@@ -27,7 +27,11 @@ is used for the value of SOURCES. ACTION may be `copy' (copy
 recipe to the kill ring), `insert' (insert at point), or nil (no
 action, just return it).
 
-(fn &optional SOURCES ACTION)" t nil) (autoload 'straight-visit-package-website "straight" "Visit the package RECIPE's website.
+Optional arg FILTER must be a unary function.
+It takes a package name as its sole argument.
+If it returns nil the candidate is excluded.
+
+(fn &optional SOURCES ACTION FILTER)" t nil) (autoload 'straight-visit-package-website "straight" "Visit the package RECIPE's website.
 
 (fn RECIPE)" t nil) (autoload 'straight-visit-package "straight" "Open PACKAGE's local repository directory.
 When BUILD is non-nil visit PACKAGE's build directory.
@@ -65,8 +69,7 @@ non-nil if the function has been called interactively. It is for
 internal use only, and is used to determine whether to show a
 hint about how to install the package permanently.
 
-Return non-nil if package was actually installed, and nil
-otherwise (this can only happen if NO-CLONE is non-nil).
+Return non-nil when package is initially installed, nil otherwise.
 
 (fn MELPA-STYLE-RECIPE &optional NO-CLONE NO-BUILD CAUSE INTERACTIVE)" t nil) (autoload 'straight-register-package "straight" "Register a package without cloning, building, or activating it.
 This function is equivalent to calling `straight-use-package'
@@ -299,7 +302,154 @@ locally bound plist, straight-bug-report-args.
 
 (fn &optional PACKAGE)" t nil) (autoload 'straight-dependents "straight" "Return a list PACKAGE's dependents.
 
-(fn &optional PACKAGE)" t nil) (register-definition-prefixes "straight" '("straight-")) (register-definition-prefixes "straight-ert-print-hack" '("+without-print-limits")) (defvar straight-x-pinned-packages nil "List of pinned packages.") (register-definition-prefixes "straight-x" '("straight-x-")) (provide 'straight-autoloads)) "deferred" ((deferred deferred-autoloads) (register-definition-prefixes "deferred" '("deferred:")) (provide 'deferred-autoloads)) "concurrent" ((concurrent concurrent-autoloads) (register-definition-prefixes "concurrent" '("cc:")) (provide 'concurrent-autoloads)) "ctable" ((ctable-autoloads ctable) (register-definition-prefixes "ctable" '("ctbl:")) (provide 'ctable-autoloads)) "epc" ((epc-autoloads epcs epc) (register-definition-prefixes "epc" '("epc:")) (register-definition-prefixes "epcs" '("epcs:")) (provide 'epc-autoloads)) "chatgpt" ((chatgpt chatgpt-autoloads) (autoload 'chatgpt-new "chatgpt" "Run a new instance of ChatGPT." t nil) (autoload 'chatgpt "chatgpt" "Start ChatGPT with existing instance, else create a new instance." t nil) (register-definition-prefixes "chatgpt" '("chatgpt-")) (provide 'chatgpt-autoloads)) "request" ((request-autoloads request) (autoload 'request-response-header "request" "Fetch the values of RESPONSE header field named FIELD-NAME.
+(fn &optional PACKAGE)" t nil) (register-definition-prefixes "straight" '("straight-")) (register-definition-prefixes "straight-ert-print-hack" '("+without-print-limits")) (defvar straight-x-pinned-packages nil "List of pinned packages.") (register-definition-prefixes "straight-x" '("straight-x-")) (provide 'straight-autoloads)) "s" ((s s-autoloads) (register-definition-prefixes "s" '("s-")) (provide 's-autoloads)) "dash" ((dash dash-autoloads) (autoload 'dash-fontify-mode "dash" "Toggle fontification of Dash special variables.
+
+This is a minor mode.  If called interactively, toggle the
+`Dash-Fontify mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `dash-fontify-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+Dash-Fontify mode is a buffer-local minor mode intended for Emacs
+Lisp buffers.  Enabling it causes the special variables bound in
+anaphoric Dash macros to be fontified.  These anaphoras include
+`it', `it-index', `acc', and `other'.  In older Emacs versions
+which do not dynamically detect macros, Dash-Fontify mode
+additionally fontifies Dash macro calls.
+
+See also `dash-fontify-mode-lighter' and
+`global-dash-fontify-mode'.
+
+(fn &optional ARG)" t nil) (put 'global-dash-fontify-mode 'globalized-minor-mode t) (defvar global-dash-fontify-mode nil "Non-nil if Global Dash-Fontify mode is enabled.
+See the `global-dash-fontify-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `global-dash-fontify-mode'.") (custom-autoload 'global-dash-fontify-mode "dash" nil) (autoload 'global-dash-fontify-mode "dash" "Toggle Dash-Fontify mode in all buffers.
+With prefix ARG, enable Global Dash-Fontify mode if ARG is positive;
+otherwise, disable it.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.
+Enable the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+Dash-Fontify mode is enabled in all buffers where
+`dash--turn-on-fontify-mode' would do it.
+
+See `dash-fontify-mode' for more information on Dash-Fontify mode.
+
+(fn &optional ARG)" t nil) (autoload 'dash-register-info-lookup "dash" "Register the Dash Info manual with `info-lookup-symbol'.
+This allows Dash symbols to be looked up with \\[info-lookup-symbol]." t nil) (register-definition-prefixes "dash" '("!cdr" "!cons" "--" "->" "-a" "-butlast" "-c" "-d" "-e" "-f" "-gr" "-i" "-juxt" "-keep" "-l" "-m" "-no" "-o" "-p" "-r" "-s" "-t" "-u" "-value-to-list" "-when-let" "-zip" "dash-")) (provide 'dash-autoloads)) "editorconfig" ((editorconfig-conf-mode editorconfig-autoloads editorconfig editorconfig-core editorconfig-core-handle editorconfig-fnmatch) (autoload 'editorconfig-apply "editorconfig" "Get and apply EditorConfig properties to current buffer.
+
+This function does not respect the values of `editorconfig-exclude-modes' and
+`editorconfig-exclude-regexps' and always applies available properties.
+Use `editorconfig-mode-apply' instead to make use of these variables." t nil) (defvar editorconfig-mode nil "Non-nil if Editorconfig mode is enabled.
+See the `editorconfig-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `editorconfig-mode'.") (custom-autoload 'editorconfig-mode "editorconfig" nil) (autoload 'editorconfig-mode "editorconfig" "Toggle EditorConfig feature.
+
+This is a minor mode.  If called interactively, toggle the
+`Editorconfig mode' mode.  If the prefix argument is positive,
+enable the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `(default-value \\='editorconfig-mode)'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+To disable EditorConfig in some buffers, modify
+`editorconfig-exclude-modes' or `editorconfig-exclude-regexps'.
+
+(fn &optional ARG)" t nil) (autoload 'editorconfig-find-current-editorconfig "editorconfig" "Find the closest .editorconfig file for current file." t nil) (autoload 'editorconfig-display-current-properties "editorconfig" "Display EditorConfig properties extracted for current buffer." t nil) (defalias 'describe-editorconfig-properties 'editorconfig-display-current-properties) (autoload 'editorconfig-format-buffer "editorconfig" "Format buffer according to .editorconfig indent_style and indent_width." t nil) (autoload 'editorconfig-version "editorconfig" "Get EditorConfig version as string.
+
+If called interactively or if SHOW-VERSION is non-nil, show the
+version in the echo area and the messages buffer.
+
+(fn &optional SHOW-VERSION)" t nil) (register-definition-prefixes "editorconfig" '("editorconfig-")) (autoload 'editorconfig-conf-mode "editorconfig-conf-mode" "Major mode for editing .editorconfig files.
+
+(fn)" t nil) (add-to-list 'auto-mode-alist '("\\.editorconfig\\'" . editorconfig-conf-mode)) (register-definition-prefixes "editorconfig-conf-mode" '("editorconfig-conf-mode-")) (autoload 'editorconfig-core-get-nearest-editorconfig "editorconfig-core" "Return path to .editorconfig file that is closest to DIRECTORY.
+
+(fn DIRECTORY)" nil nil) (autoload 'editorconfig-core-get-properties "editorconfig-core" "Get EditorConfig properties for FILE.
+If FILE is not given, use currently visiting file.
+Give CONFNAME for basename of config file other than .editorconfig.
+If need to specify config format version, give CONFVERSION.
+
+This function returns an alist of properties.  Each element will
+look like (KEY . VALUE).
+
+(fn &optional FILE CONFNAME CONFVERSION)" nil nil) (autoload 'editorconfig-core-get-properties-hash "editorconfig-core" "Get EditorConfig properties for FILE.
+If FILE is not given, use currently visiting file.
+Give CONFNAME for basename of config file other than .editorconfig.
+If need to specify config format version, give CONFVERSION.
+
+This function is almost same as `editorconfig-core-get-properties', but returns
+hash object instead.
+
+(fn &optional FILE CONFNAME CONFVERSION)" nil nil) (register-definition-prefixes "editorconfig-core" '("editorconfig-core--")) (register-definition-prefixes "editorconfig-core-handle" '("editorconfig-core-handle")) (autoload 'editorconfig-fnmatch-p "editorconfig-fnmatch" "Test whether STRING match PATTERN.
+
+Matching ignores case if `case-fold-search' is non-nil.
+
+PATTERN should be a shell glob pattern, and some zsh-like wildcard matchings can
+be used:
+
+*           Matches any string of characters, except path separators (/)
+**          Matches any string of characters
+?           Matches any single character
+[name]      Matches any single character in name
+[^name]     Matches any single character not in name
+{s1,s2,s3}  Matches any of the strings given (separated by commas)
+{min..max}  Matches any number between min and max
+
+(fn STRING PATTERN)" nil nil) (register-definition-prefixes "editorconfig-fnmatch" '("editorconfig-fnmatch-")) (provide 'editorconfig-autoloads)) "jsonrpc" ((jsonrpc jsonrpc-autoloads) (register-definition-prefixes "jsonrpc" '("jsonrpc-")) (provide 'jsonrpc-autoloads)) "copilot" ((copilot-autoloads copilot) (autoload 'copilot-complete "copilot" "Complete at the current point." t nil) (autoload 'copilot-mode "copilot" "Minor mode for Copilot.
+
+This is a minor mode.  If called interactively, toggle the
+`Copilot mode' mode.  If the prefix argument is positive, enable
+the mode, and if it is zero or negative, disable the mode.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
+the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+To check whether the minor mode is enabled in the current buffer,
+evaluate `copilot-mode'.
+
+The mode's hook is called both when the mode is enabled and when
+it is disabled.
+
+(fn &optional ARG)" t nil) (put 'global-copilot-mode 'globalized-minor-mode t) (defvar global-copilot-mode nil "Non-nil if Global Copilot mode is enabled.
+See the `global-copilot-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `global-copilot-mode'.") (custom-autoload 'global-copilot-mode "copilot" nil) (autoload 'global-copilot-mode "copilot" "Toggle Copilot mode in all buffers.
+With prefix ARG, enable Global Copilot mode if ARG is positive;
+otherwise, disable it.
+
+If called from Lisp, toggle the mode if ARG is `toggle'.
+Enable the mode if ARG is nil, omitted, or is a positive number.
+Disable the mode if ARG is a negative number.
+
+Copilot mode is enabled in all buffers where `copilot-mode' would do
+it.
+
+See `copilot-mode' for more information on Copilot mode.
+
+(fn &optional ARG)" t nil) (register-definition-prefixes "copilot" '("copilot-")) (provide 'copilot-autoloads)) "request" ((request-autoloads request) (autoload 'request-response-header "request" "Fetch the values of RESPONSE header field named FIELD-NAME.
 
 It returns comma separated values when the header has multiple
 field with the same name, as :RFC:`2616` specifies.
@@ -473,52 +623,7 @@ Note that this function invoke ERROR and COMPLETE callbacks.
 Callbacks may not be called immediately but called later when
 associated process is exited.
 
-(fn RESPONSE)" nil nil) (register-definition-prefixes "request" '("request-")) (provide 'request-autoloads)) "dash" ((dash dash-autoloads) (autoload 'dash-fontify-mode "dash" "Toggle fontification of Dash special variables.
-
-This is a minor mode.  If called interactively, toggle the
-`Dash-Fontify mode' mode.  If the prefix argument is positive,
-enable the mode, and if it is zero or negative, disable the mode.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.  Enable
-the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-To check whether the minor mode is enabled in the current buffer,
-evaluate `dash-fontify-mode'.
-
-The mode's hook is called both when the mode is enabled and when
-it is disabled.
-
-Dash-Fontify mode is a buffer-local minor mode intended for Emacs
-Lisp buffers.  Enabling it causes the special variables bound in
-anaphoric Dash macros to be fontified.  These anaphoras include
-`it', `it-index', `acc', and `other'.  In older Emacs versions
-which do not dynamically detect macros, Dash-Fontify mode
-additionally fontifies Dash macro calls.
-
-See also `dash-fontify-mode-lighter' and
-`global-dash-fontify-mode'.
-
-(fn &optional ARG)" t nil) (put 'global-dash-fontify-mode 'globalized-minor-mode t) (defvar global-dash-fontify-mode nil "Non-nil if Global Dash-Fontify mode is enabled.
-See the `global-dash-fontify-mode' command
-for a description of this minor mode.
-Setting this variable directly does not take effect;
-either customize it (see the info node `Easy Customization')
-or call the function `global-dash-fontify-mode'.") (custom-autoload 'global-dash-fontify-mode "dash" nil) (autoload 'global-dash-fontify-mode "dash" "Toggle Dash-Fontify mode in all buffers.
-With prefix ARG, enable Global Dash-Fontify mode if ARG is positive;
-otherwise, disable it.
-
-If called from Lisp, toggle the mode if ARG is `toggle'.
-Enable the mode if ARG is nil, omitted, or is a positive number.
-Disable the mode if ARG is a negative number.
-
-Dash-Fontify mode is enabled in all buffers where
-`dash--turn-on-fontify-mode' would do it.
-
-See `dash-fontify-mode' for more information on Dash-Fontify mode.
-
-(fn &optional ARG)" t nil) (autoload 'dash-register-info-lookup "dash" "Register the Dash Info manual with `info-lookup-symbol'.
-This allows Dash symbols to be looked up with \\[info-lookup-symbol]." t nil) (register-definition-prefixes "dash" '("!cdr" "!cons" "--" "->" "-a" "-butlast" "-c" "-d" "-e" "-f" "-gr" "-i" "-juxt" "-keep" "-l" "-m" "-no" "-o" "-p" "-r" "-s" "-t" "-u" "-value-to-list" "-when-let" "-zip" "dash-")) (provide 'dash-autoloads)) "magit-popup" ((magit-popup-autoloads magit-popup) (register-definition-prefixes "magit-popup" '("magit-")) (provide 'magit-popup-autoloads)) "tablist" ((tablist-autoloads tablist tablist-filter) (autoload 'tablist-minor-mode "tablist" "Toggle tablist minor mode.
+(fn RESPONSE)" nil nil) (register-definition-prefixes "request" '("request-")) (provide 'request-autoloads)) "magit-popup" ((magit-popup-autoloads magit-popup) (register-definition-prefixes "magit-popup" '("magit-")) (provide 'magit-popup-autoloads)) "tablist" ((tablist-autoloads tablist tablist-filter) (autoload 'tablist-minor-mode "tablist" "Toggle tablist minor mode.
 
 This is a minor mode.  If called interactively, toggle the
 `Tablist minor mode' mode.  If the prefix argument is positive,
@@ -565,60 +670,65 @@ Each arguments are explained as follows:
 With this macro `TBLUI-NAME-goto-ui` function is defined.
 Calling this function will popup and switch to the tblui buffer.
 
-(fn TBLUI-NAME ENTRIES-PROVIDER TABLE-LAYOUT POPUP-DEFINITIONS)" nil t) (register-definition-prefixes "tblui" '("tblui--")) (provide 'tblui-autoloads)) "openai" ((openai-autoloads openai-fine-tune openai openai-embedding openai-edit openai-file openai-chat openai-engine openai-moderation openai-model openai-completion openai-image openai-audio) (register-definition-prefixes "openai" '("openai-")) (autoload 'openai-audio-create-transcription "openai-audio" "Send transcribe audio request.
+(fn TBLUI-NAME ENTRIES-PROVIDER TABLE-LAYOUT POPUP-DEFINITIONS)" nil t) (register-definition-prefixes "tblui" '("tblui--")) (provide 'tblui-autoloads)) "openai" ((openai-autoloads openai-fine-tune openai openai-embedding openai-edit openai-file openai-chat openai-engine openai-moderation openai-model openai-completion openai-image openai-audio) (autoload 'openai-key-auth-source "openai" "Retrieve the OpenAI API key from auth-source given a BASE-URL.
+If BASE-URL is not specified, it defaults to `openai-base-url'.
+
+(fn &optional BASE-URL)" nil nil) (register-definition-prefixes "openai" '("open")) (autoload 'openai-audio-create-transcription "openai-audio" "Send transcribe audio request.
 
 Argument FILE is audio file to transcribe, in one of these formats: mp3, mp4,
 mpeg, mpga, m4a, wav, or webm.  CALLBACK is the execuation after request is
 made.
 
-Arguments KEY is global options; however, you can overwrite the value by passing
-it in.
+Arguments BASE-URL, PARAMETERS, CONTENT-TYPE, KEY and ORG-ID are global
+options; however, you can overwrite the value by passing it in.
 
 The rest of the arugments are optional, please see OpenAI API reference page
 for more information.  Arguments here refer to MODEL PROMPT, RESPONSE-FORMAT,
 TEMPERATURE, and LANGUAGE.
 
-(fn FILE CALLBACK &key (KEY openai-key) (MODEL \"whisper-1\") PROMPT RESPONSE-FORMAT TEMPERATURE LANGUAGE)" nil nil) (autoload 'openai-audio-create-translation "openai-audio" "Send translate audio request.
+(fn FILE CALLBACK &key (BASE-URL openai-base-url) (PARAMETERS openai-parameters) (CONTENT-TYPE \"application/json\") (KEY openai-key) ORG-ID (MODEL \"whisper-1\") PROMPT RESPONSE-FORMAT TEMPERATURE LANGUAGE)" nil nil) (autoload 'openai-audio-create-translation "openai-audio" "Send translate audio request.
 
-Argument FILE is the audio file to translate, in one of these formats: mp3, mp4,
-mpeg, mpga, m4a, wav, or webm. CALLBACK is the execuation after request is made.
+Argument FILE is the audio file to translate, in one of these formats: mp3,
+mp4, mpeg, mpga, m4a, wav, or webm.  CALLBACK is the execuation after request
+is made.
 
-Arguments KEY is global options; however, you can overwrite the value by passing
-it in.
+Arguments BASE-URL, PARAMETERS, CONTENT-TYPE, KEY and ORG-ID are global
+options; however, you can overwrite the value by passing it in.
 
 The rest of the arugments are optional, please see OpenAI API reference page
 for more information.  Arguments here refer to MODEL PROMPT, RESPONSE-FORMAT,
 and TEMPERATURE.
 
-(fn FILE CALLBACK &key (KEY openai-key) (MODEL \"whisper-1\") PROMPT RESPONSE-FORMAT TEMPERATURE)" nil nil) (autoload 'openai-chat "openai-chat" "Send chat request.
+(fn FILE CALLBACK &key (BASE-URL openai-base-url) (PARAMETERS openai-parameters) (CONTENT-TYPE \"application/json\") (KEY openai-key) ORG-ID (MODEL \"whisper-1\") PROMPT RESPONSE-FORMAT TEMPERATURE)" nil nil) (autoload 'openai-chat "openai-chat" "Send chat request.
 
-Arguments MESSAGES and CALLBACK are required for this type of request.  MESSAGES
-is the conversation data.  CALLBACK is the execuation after request is made.
+Arguments MESSAGES and CALLBACK are required for this type of request.
+MESSAGES is the conversation data.  CALLBACK is the execuation after request is
+made.
 
-Arguments KEY and USER are global options; however, you can overwrite the value
-by passing it in.
+Arguments BASE-URL, PARAMETERS, CONTENT-TYPE, KEY, ORG-ID and USER are global
+options; however, you can overwrite the value by passing it in.
 
 The rest of the arugments are optional, please see OpenAI API reference page
 for more information.  Arguments here refer to MODEL,  TEMPERATURE, TOP-P, N,
 STREAM, STOP, MAX-TOKENS, PRESENCE-PENALTY, FREQUENCY-PENALTY, and LOGIT-BIAS.
 
-(fn MESSAGES CALLBACK &key (KEY openai-key) (MODEL \"gpt-3.5-turbo\") TEMPERATURE TOP-P N STREAM STOP MAX-TOKENS PRESENCE-PENALTY FREQUENCY-PENALTY LOGIT-BIAS (USER openai-user))" nil nil) (autoload 'openai-chat-say "openai-chat" "Start making a conversation to OpenAI.
+(fn MESSAGES CALLBACK &key (BASE-URL openai-base-url) (PARAMETERS openai-parameters) (CONTENT-TYPE \"application/json\") (KEY openai-key) ORG-ID (MODEL \"gpt-3.5-turbo\") TEMPERATURE TOP-P N STREAM STOP MAX-TOKENS PRESENCE-PENALTY FREQUENCY-PENALTY LOGIT-BIAS (USER openai-user))" nil nil) (autoload 'openai-chat-say "openai-chat" "Start making a conversation to OpenAI.
 
 This is a ping pong message, so you will only get one response." t nil) (register-definition-prefixes "openai-chat" '("openai-chat-")) (autoload 'openai-completion "openai-completion" "Send completion request.
 
 Arguments PROMPT and CALLBACK are required for this type of request.  PROMPT is
-either the question or instruction to OpenAI.  CALLBACK is the execuation after
+either the question or instruction to OpenAI.  CALLBACK is the execution after
 request is made.
 
-Arguments KEY and USER are global options; however, you can overwrite the value
-by passing it in.
+Arguments BASE-URL, PARAMETERS, CONTENT-TYPE, KEY, ORG-ID and USER are global
+options; however, you can overwrite the value by passing it in.
 
 The rest of the arugments are optional, please see OpenAI API reference page
 for more information.  Arguments here refer to MODEL, SUFFIX, MAX-TOKENS,
 TEMPERATURE, TOP-P, N, STREAM, LOGPROBS, ECHO, STOP, PRESENCE-PENALTY,
 FREQUENCY-PENALTY, BEST-OF, and LOGIT-BIAS.
 
-(fn PROMPT CALLBACK &key (KEY openai-key) (MODEL \"text-davinci-003\") SUFFIX MAX-TOKENS TEMPERATURE TOP-P N STREAM LOGPROBS ECHO STOP PRESENCE-PENALTY FREQUENCY-PENALTY BEST-OF LOGIT-BIAS (USER openai-user))" nil nil) (autoload 'openai-completion-select-insert "openai-completion" "Send the region to OpenAI and insert the result to the next paragraph.
+(fn PROMPT CALLBACK &key (BASE-URL openai-base-url) (PARAMETERS openai-parameters) (CONTENT-TYPE \"application/json\") (KEY openai-key) ORG-ID (MODEL \"text-davinci-003\") SUFFIX MAX-TOKENS TEMPERATURE TOP-P N STREAM LOGPROBS ECHO STOP PRESENCE-PENALTY FREQUENCY-PENALTY BEST-OF LOGIT-BIAS (USER openai-user))" nil nil) (autoload 'openai-completion-select-insert "openai-completion" "Send the region to OpenAI and insert the result to the next paragraph.
 
 START and END are selected region boundaries.
 
@@ -628,7 +738,7 @@ START and END are selected region boundaries.
 
 (fn IMAGE)" t nil) (register-definition-prefixes "openai-image" '("openai-")) (autoload 'openai-retrieve-model "openai-model" "Retrieves a model instance, providing basic information about the model such
 as the owner and permissioning." t nil) (autoload 'openai-list-models "openai-model" "Lists the currently available models, and provides basic information about
-each one such as the owner and availability." t nil) (register-definition-prefixes "openai-model" '("openai-model-entries")) (provide 'openai-autoloads)) "markdown-mode" ((markdown-mode markdown-mode-autoloads) (autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files.
+each one such as the owner and availability." t nil) (register-definition-prefixes "openai-model" '("openai-model-entries")) (provide 'openai-autoloads)) "lv" ((lv-autoloads lv) (register-definition-prefixes "lv" '("lv-")) (provide 'lv-autoloads)) "ht" ((ht ht-autoloads) (register-definition-prefixes "ht" 'nil) (provide 'ht-autoloads)) "markdown-mode" ((markdown-mode markdown-mode-autoloads) (autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files.
 
 (fn)" t nil) (add-to-list 'auto-mode-alist '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode)) (autoload 'gfm-mode "markdown-mode" "Major mode for editing GitHub Flavored Markdown files.
 
@@ -698,7 +808,7 @@ DELAY, if given, is the number of seconds to wait until actually
 displaying the spinner. It is safe to cancel the spinner before
 this time, in which case it won't display at all.
 
-(fn &optional TYPE-OR-OBJECT FPS DELAY)" nil nil) (register-definition-prefixes "spinner" '("spinner-")) (provide 'spinner-autoloads)) "codegpt" ((codegpt-autoloads codegpt) (autoload 'codegpt-mode "codegpt" "Major mode for `codegpt-mode'.
+(fn &optional TYPE-OR-OBJECT FPS DELAY)" nil nil) (register-definition-prefixes "spinner" '("spinner-")) (provide 'spinner-autoloads)) "chatgpt" ((chatgpt chatgpt-autoloads) (autoload 'chatgpt-new "chatgpt" "Run a new instance of ChatGPT." t nil) (autoload 'chatgpt "chatgpt" "Start ChatGPT with existing instance, else create a new instance." t nil) (register-definition-prefixes "chatgpt" '("chatgpt-")) (provide 'chatgpt-autoloads)) "codegpt" ((codegpt-autoloads codegpt) (autoload 'codegpt-mode "codegpt" "Major mode for `codegpt-mode'.
 
 \\<codegpt-mode-map>
 
@@ -732,7 +842,7 @@ that region in buffer.
 This command is interactive region only, the START and END are boundaries of
 that region in buffer.
 
-(fn START END)" t nil) (register-definition-prefixes "codegpt" '("codeg")) (provide 'codegpt-autoloads)) "lv" ((lv-autoloads lv) (register-definition-prefixes "lv" '("lv-")) (provide 'lv-autoloads)) "ht" ((ht ht-autoloads) (register-definition-prefixes "ht" 'nil) (provide 'ht-autoloads)) "s" ((s s-autoloads) (register-definition-prefixes "s" '("s-")) (provide 's-autoloads)) "f" ((f f-autoloads f-shortdoc) (register-definition-prefixes "f" '("f-")) (provide 'f-autoloads)) "reveal-in-folder" ((reveal-in-folder reveal-in-folder-autoloads) (autoload 'reveal-in-folder-at-point "reveal-in-folder" "Reveal the current file in folder at point." t nil) (autoload 'reveal-in-folder-this-buffer "reveal-in-folder" "Reveal the current buffer in folder." t nil) (autoload 'reveal-in-folder "reveal-in-folder" "Reveal buffer/path depends on cursor condition." t nil) (register-definition-prefixes "reveal-in-folder" '("reveal-in-folder-")) (provide 'reveal-in-folder-autoloads)) "async" ((dired-async smtpmail-async async async-bytecomp async-autoloads) (autoload 'async-start-process "async" "Start the executable PROGRAM asynchronously named NAME.  See `async-start'.
+(fn START END)" t nil) (register-definition-prefixes "codegpt" '("codeg")) (provide 'codegpt-autoloads)) "f" ((f f-autoloads f-shortdoc) (register-definition-prefixes "f" '("f-")) (provide 'f-autoloads)) "reveal-in-folder" ((reveal-in-folder reveal-in-folder-autoloads) (autoload 'reveal-in-folder-at-point "reveal-in-folder" "Reveal the current file in folder at point." t nil) (autoload 'reveal-in-folder-this-buffer "reveal-in-folder" "Reveal the current buffer in folder." t nil) (autoload 'reveal-in-folder "reveal-in-folder" "Reveal buffer/path depends on cursor condition." t nil) (register-definition-prefixes "reveal-in-folder" '("reveal-in-folder-")) (provide 'reveal-in-folder-autoloads)) "async" ((dired-async smtpmail-async async async-bytecomp async-autoloads) (autoload 'async-start-process "async" "Start the executable PROGRAM asynchronously named NAME.  See `async-start'.
 PROGRAM is passed PROGRAM-ARGS, calling FINISH-FUNC with the
 process object when done.  If FINISH-FUNC is nil, the future
 object will return the process object when the program is
@@ -869,8 +979,8 @@ it is disabled.
 
 (fn &optional ARG)" t nil) (register-definition-prefixes "dired-async" '("dired-async-")) (register-definition-prefixes "smtpmail-async" '("async-smtpmail-")) (provide 'async-autoloads)) "dall-e" ((dall-e-autoloads dall-e) (autoload 'dall-e-new "dall-e" "Run a new instance of DALL-E." t nil) (autoload 'dall-e "dall-e" "Start DALL-E with existing instance, else create a new instance." t nil) (register-definition-prefixes "dall-e" '("dall-e-")) (provide 'dall-e-autoloads))))
 
-#s(hash-table size 65 test eq rehash-size 1.5 rehash-threshold 0.8125 data (org-elpa #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 14 "melpa" nil "gnu-elpa-mirror" nil "nongnu-elpa" nil "el-get" nil "emacsmirror-mirror" nil "straight" nil "chatgpt" nil "epc" nil "concurrent" nil "deferred" nil "ctable" nil "cl-lib" nil "setq" nil "openai" nil "request" nil "tblui" nil "dash" nil "magit-popup" nil "tablist" nil "codegpt" nil "markdown-mode" nil "spinner" nil "dall-e" nil "lv" nil "ht" nil "reveal-in-folder" nil "f" nil "s" nil "async" nil)) melpa #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 2 "gnu-elpa-mirror" nil "nongnu-elpa" nil "el-get" (el-get :type git :flavor melpa :files ("*.el" ("recipes" "recipes/el-get.rcp") "methods" "el-get-pkg.el") :host github :repo "dimitri/el-get") "emacsmirror-mirror" nil "straight" nil "chatgpt" nil "epc" (epc :type git :flavor melpa :files ("epc.el" "epcs.el" "epc-pkg.el") :host github :repo "kiwanami/emacs-epc") "concurrent" (concurrent :type git :flavor melpa :files ("concurrent.el" "concurrent-pkg.el") :host github :repo "kiwanami/emacs-deferred") "deferred" (deferred :type git :flavor melpa :files ("deferred.el" "deferred-pkg.el") :host github :repo "kiwanami/emacs-deferred") "ctable" (ctable :type git :flavor melpa :files ("ctable.el" "ctable-pkg.el") :host github :repo "kiwanami/emacs-ctable") "cl-lib" nil "setq" nil "openai" nil "request" (request :type git :flavor melpa :files ("request.el" "request-pkg.el") :host github :repo "tkf/emacs-request") "tblui" (tblui :type git :flavor melpa :host github :repo "Yuki-Inoue/tblui.el") "dash" (dash :type git :flavor melpa :files ("dash.el" "dash.texi" "dash-pkg.el") :host github :repo "magnars/dash.el") "magit-popup" (magit-popup :type git :flavor melpa :host github :repo "magit/magit-popup") "tablist" (tablist :type git :flavor melpa :host github :repo "emacsorphanage/tablist") "codegpt" nil "markdown-mode" (markdown-mode :type git :flavor melpa :host github :repo "jrblevin/markdown-mode") "spinner" nil "dall-e" nil "lv" (lv :type git :flavor melpa :files ("lv.el" "lv-pkg.el") :host github :repo "abo-abo/hydra") "ht" (ht :type git :flavor melpa :host github :repo "Wilfred/ht.el") "reveal-in-folder" (reveal-in-folder :type git :flavor melpa :host github :repo "jcs-elpa/reveal-in-folder") "f" (f :type git :flavor melpa :host github :repo "rejeep/f.el") "s" (s :type git :flavor melpa :host github :repo "magnars/s.el") "async" (async :type git :flavor melpa :host github :repo "jwiegley/emacs-async"))) gnu-elpa-mirror #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 3 "nongnu-elpa" nil "emacsmirror-mirror" nil "straight" nil "chatgpt" nil "cl-lib" nil "setq" nil "openai" nil "codegpt" nil "spinner" (spinner :type git :host github :repo "emacs-straight/spinner" :files ("*" (:exclude ".git"))) "dall-e" nil)) nongnu-elpa #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 3 "emacsmirror-mirror" nil "straight" nil "chatgpt" nil "cl-lib" nil "setq" nil "openai" nil "codegpt" nil "dall-e" nil)) el-get #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 2 "emacsmirror-mirror" nil "straight" nil "chatgpt" nil "cl-lib" nil "setq" nil "openai" nil "codegpt" nil "dall-e" nil)) emacsmirror-mirror #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 2 "straight" (straight :type git :host github :repo "emacsmirror/straight") "chatgpt" nil "cl-lib" nil "setq" nil "openai" nil "codegpt" nil "dall-e" nil))))
+#s(hash-table size 65 test eq rehash-size 1.5 rehash-threshold 0.8125 data (org-elpa #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 15 "melpa" nil "gnu-elpa-mirror" nil "nongnu-elpa" nil "el-get" nil "emacsmirror-mirror" nil "straight" nil "copilot" nil "s" nil "dash" nil "editorconfig" nil "jsonrpc" nil "openai" nil "request" nil "tblui" nil "magit-popup" nil "tablist" nil "cl-lib" nil "chatgpt" nil "lv" nil "ht" nil "markdown-mode" nil "spinner" nil "codegpt" nil "dall-e" nil "reveal-in-folder" nil "f" nil "async" nil)) melpa #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 2 "gnu-elpa-mirror" nil "nongnu-elpa" nil "el-get" (el-get :type git :flavor melpa :files ("*.el" ("recipes" "recipes/el-get.rcp") "methods" "el-get-pkg.el") :host github :repo "dimitri/el-get") "emacsmirror-mirror" nil "straight" nil "copilot" nil "s" (s :type git :flavor melpa :host github :repo "magnars/s.el") "dash" (dash :type git :flavor melpa :files ("dash.el" "dash.texi" "dash-pkg.el") :host github :repo "magnars/dash.el") "editorconfig" (editorconfig :type git :flavor melpa :host github :repo "editorconfig/editorconfig-emacs") "jsonrpc" nil "openai" nil "request" (request :type git :flavor melpa :files ("request.el" "request-pkg.el") :host github :repo "tkf/emacs-request") "tblui" (tblui :type git :flavor melpa :host github :repo "Yuki-Inoue/tblui.el") "magit-popup" (magit-popup :type git :flavor melpa :host github :repo "magit/magit-popup") "tablist" (tablist :type git :flavor melpa :host github :repo "emacsorphanage/tablist") "cl-lib" nil "chatgpt" nil "lv" (lv :type git :flavor melpa :files ("lv.el" "lv-pkg.el") :host github :repo "abo-abo/hydra") "ht" (ht :type git :flavor melpa :host github :repo "Wilfred/ht.el") "markdown-mode" (markdown-mode :type git :flavor melpa :host github :repo "jrblevin/markdown-mode") "spinner" nil "codegpt" nil "dall-e" nil "reveal-in-folder" (reveal-in-folder :type git :flavor melpa :host github :repo "jcs-elpa/reveal-in-folder") "f" (f :type git :flavor melpa :host github :repo "rejeep/f.el") "async" (async :type git :flavor melpa :host github :repo "jwiegley/emacs-async"))) gnu-elpa-mirror #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 3 "nongnu-elpa" nil "emacsmirror-mirror" nil "straight" nil "copilot" nil "jsonrpc" (jsonrpc :type git :host github :repo "emacs-straight/jsonrpc" :files ("*" (:exclude ".git"))) "openai" nil "cl-lib" nil "chatgpt" nil "spinner" (spinner :type git :host github :repo "emacs-straight/spinner" :files ("*" (:exclude ".git"))) "codegpt" nil "dall-e" nil)) nongnu-elpa #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 4 "emacsmirror-mirror" nil "straight" nil "copilot" nil "openai" nil "cl-lib" nil "chatgpt" nil "codegpt" nil "dall-e" nil)) el-get #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 2 "emacsmirror-mirror" nil "straight" nil "copilot" nil "openai" nil "cl-lib" nil "chatgpt" nil "codegpt" nil "dall-e" nil)) emacsmirror-mirror #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (version 2 "straight" (straight :type git :host github :repo "emacsmirror/straight") "copilot" nil "openai" nil "cl-lib" nil "chatgpt" nil "codegpt" nil "dall-e" nil))))
 
-("org-elpa" "melpa" "gnu-elpa-mirror" "nongnu-elpa" "el-get" "emacsmirror-mirror" "straight" "emacs" "openai" "request" "tblui" "dash" "magit-popup" "tablist" "cl-lib" "chatgpt" "lv" "ht" "markdown-mode" "spinner" "codegpt" "dall-e" "reveal-in-folder" "f" "s" "async")
+("org-elpa" "melpa" "gnu-elpa-mirror" "nongnu-elpa" "el-get" "emacsmirror-mirror" "straight" "emacs" "copilot" "s" "dash" "editorconfig" "nadvice" "jsonrpc" "openai" "request" "tblui" "magit-popup" "tablist" "cl-lib" "chatgpt" "lv" "ht" "markdown-mode" "spinner" "codegpt" "dall-e" "reveal-in-folder" "f" "async")
 
 t
