@@ -30,6 +30,10 @@
 (custom-set-faces
  '(hl-line ((t (:background "grey20")))))
 
+;; typescriptでコードを書いているときにmessageバッファが勝手に下部に出てくるのを防ぐ(多分根本的解決にはなっていない)
+;; (setq inhibit-message nil)
+(setq max-mini-window-height 0)
+
 ;; キーバインド
 (bind-key "C-h" 'backward-delete-char)
 (bind-key "s-z" 'undo)
@@ -385,6 +389,14 @@
           (?o delete-other-windows)
           (?? aw-show-dispatch-help))))
 
+(use-package dockerfile-mode
+  :ensure t
+  :mode (("Dockerfile\\'" . dockerfile-mode)))
+
+(use-package docker-compose-mode
+  :ensure t
+  :mode (("docker-compose.yml\\'" . docker-compose-mode)))
+
 (use-package ruby-mode
   :ensure t
   :mode (("\\.rb\\'" . ruby-mode)
@@ -449,7 +461,9 @@
   ((ruby-mode . lsp)
    (web-mode . lsp)
    (typescript-mode . lsp)
-   (csharp-mode . lsp))
+   (csharp-mode . lsp)
+   (dockerfile-mode . lsp)
+   (docker-compose-mode . lsp))
   :config
   ;; LSPのフォーマット機能を無効にする
   (setq lsp-enable-on-type-formatting nil

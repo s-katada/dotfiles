@@ -1,0 +1,37 @@
+# This is Git's per-user configuration file.
+[user]
+	name = Shunyakatada
+	email = 85655151+shunyasaitama@users.noreply.github.com
+[core]
+	editor = emacs
+	# pager = less -F -X
+  pager = delta
+[merge]
+	tool = code --wait \"$MERGED\"
+  conflictstyle = diff3
+[push]
+	default = simple
+[alias]
+	g = git
+	ci = commit
+	s = status
+	br = branch
+	co = checkout
+	di = diff
+  df = diff
+	si = switch
+	log-graph = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cd) %C(bold blue)<%an>%Creset' --abbrev-commit --date=format-local:'%Y/%m/%d %H:%M:%S'
+  gsub = !git-gsub-ruby
+[init]
+	defaultBranch = main
+
+[diff]
+  colorMoved = default
+
+[delta]
+  navigate = true
+  light = false
+  line-numbers = true
+
+[interactive]
+  diffFilter = delta --color-only
