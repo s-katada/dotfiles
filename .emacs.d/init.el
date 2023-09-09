@@ -115,24 +115,24 @@
               (setq indent-tabs-mode nil)
               (setq python-indent-offset 2))))
 
-;; 定期的に変えないといけない
-(setq openai-key "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")
+;; ;; 定期的に変えないといけない
+;; (setq openai-key "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")
 
-; dep key (setq openai-key "[YOUR API KEY]")
-(use-package openai
-  :straight (:host github :repo "emacs-openai/openai"))
+;; ; dep key (setq openai-key "[YOUR API KEY]")
+;; (use-package openai
+;;   :straight (:host github :repo "emacs-openai/openai"))
 
-(use-package chatgpt
-  :straight (:host github :repo "emacs-openai/chatgpt")
-  :bind
-  ("C-x C-g" . chatgpt))
+;; (use-package chatgpt
+;;   :straight (:host github :repo "emacs-openai/chatgpt")
+;;   :bind
+;;   ("C-x C-g" . chatgpt))
 
 ;; (add-hook 'window-size-change-functions 'my-resize-buffer)
 
-(use-package codegpt
-  :straight (:host github :repo "emacs-openai/codegpt"))
-(use-package dall-e
-  :straight (:host github :repo "emacs-openai/dall-e"))
+;; (use-package codegpt
+;;   :straight (:host github :repo "emacs-openai/codegpt"))
+;; (use-package dall-e
+;;   :straight (:host github :repo "emacs-openai/dall-e"))
 
 (use-package hydra
   :ensure t)
@@ -414,6 +414,14 @@
 ;;                                 ;; (untabify (point-min) (point-max))
 ;;                                 (whitespace-cleanup)))))
 
+(use-package rust-mode
+  :ensure t
+  :config
+  (setq rust-format-on-save t)
+  (setq rust-indent-offset 2)
+  (setq rust-after-save-hook nil)
+  (setq rust-before-save-hook nil))
+
 (use-package web-mode
   :ensure t
   :mode (("\\.html?\\'" . web-mode)
@@ -463,7 +471,8 @@
    (typescript-mode . lsp)
    (csharp-mode . lsp)
    (dockerfile-mode . lsp)
-   (docker-compose-mode . lsp))
+   (docker-compose-mode . lsp)
+   (rust-mode . lsp))
   :config
   ;; LSPのフォーマット機能を無効にする
   (setq lsp-enable-on-type-formatting nil
