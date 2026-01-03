@@ -1,0 +1,35 @@
+# Nix
+result
+result-*
+
+# macOS
+.DS_Store
+
+# Editor
+*.swp
+*.swo
+*~
+
+# Secrets - GitHub Copilot OAuth token
+darwin/.config/github-copilot/hosts.json
+darwin/.config/configstore/
+
+# Emacs temporary and generated files
+darwin/.emacs.d/.cache/
+darwin/.emacs.d/.claude/
+darwin/.emacs.d/elpaca/
+darwin/.emacs.d/auto-save-list/
+darwin/.emacs.d/backups/
+darwin/.emacs.d/*.elc
+darwin/.emacs.d/recentf
+darwin/.emacs.d/transient/
+darwin/.emacs.d/tree-sitter/
+darwin/.emacs.d/eshell/
+darwin/.emacs.d/url/
+darwin/.emacs.d/games/
+darwin/.emacs.d/tramp
+darwin/.emacs.d/places
+darwin/.emacs.d/bookmarks
+darwin/.emacs.d/custom.el
+darwin/.emacs.d/.lsp-session-*
+darwin/.emacs.d/projectile-bookmarks.eld

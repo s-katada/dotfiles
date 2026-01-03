@@ -1,0 +1,17 @@
+theme = Chester
+background-opacity = 0.9
+cursor-style = bar
+macos-titlebar-proxy-icon = visible
+window-width = 1000
+window-height = 1000
+# term = "xterm-256color"
+font-feature = -dlig # 日本語の文字化け対応
+custom-shader = /Users/awesomemr/.config/ghostty/ghostty-shaders/cursor_blaze.glsl
+custom-shader-animation = true
+
+# Background image settings
+# background-image = /Users/awesomemr/Downloads/background.png
+# background-image-opacity = 1
+# background-image-position = center
+# background-image-fit = cover
+# background-image-repeat = false
