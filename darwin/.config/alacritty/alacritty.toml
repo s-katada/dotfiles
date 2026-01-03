@@ -1,0 +1,10 @@
+[terminal.shell]
+program = "/opt/homebrew/bin/fish"
+
+[window]
+opacity = 0.8
+decorations = "full"
+
+[cursor]
+style = { shape = "Beam", blinking = "On" }
+blink_interval = 350
