@@ -1,0 +1,21 @@
+{
+    "description": "ctrl + spacebar = enter",
+    {
+        "from": {
+            "key_code": "j",
+            "modifiers": {
+                "mandatory": [
+                    "left_control"
+                ],
+                "optional": [
+                    "any"
+                ]
+            }
+        },
+        "to": [
+            {
+                "key_code": "return_or_enter"
+            }
+        ]
+    }
+}

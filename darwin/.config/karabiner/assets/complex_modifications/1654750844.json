@@ -1,0 +1,61 @@
+{
+  "title": "Exchange semicolon and colon",
+  "rules": [
+    {
+      "description": "Exchange semicolon and colon",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "semicolon",
+            "modifiers": {
+              "optional": [
+                "caps_lock"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "semicolon",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "semicolon",
+            "modifiers": {
+              "mandatory": [
+                "shift"
+              ],
+              "optional": [
+                "caps_lock"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "semicolon"
+            }
+          ]
+        },
+    {
+      "type": "basic",
+      "from": {
+        "simultaneous": [
+          { "key_code": "left_control" },
+          { "key_code": "shift" }
+        ]
+      },
+      "to": [
+        { "shell_command": "open -a TextEdit" }
+      ]
+    }
+  ]
+      ]
+    }
+  ]
+}

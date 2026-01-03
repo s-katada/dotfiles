@@ -1,0 +1,6 @@
+theme = Chester
+background-opacity = 0.9
+cursor-style = bar
+macos-titlebar-proxy-icon = visible
+window-width = 1000
+window-height = 1000
