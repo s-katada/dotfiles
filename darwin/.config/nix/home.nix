@@ -15,11 +15,8 @@
     };
 
     interactiveShellInit = ''
-      # bobthefish テーマ設定
-      set -g theme_color_scheme dracula
-      set -g theme_date_format "+[%H:%M:%S]"
-      set -g theme_display_git_default_branch yes
-      set -g theme_newline_cursor yes
+      # Starship プロンプト初期化
+      starship init fish | source
 
       # Homebrew
       fish_add_path /opt/homebrew/bin
@@ -39,9 +36,6 @@
       # Antigravity
       fish_add_path $HOME/.antigravity/antigravity/bin
 
-      # peco で履歴検索 (Ctrl+R)
-      bind \cr peco-history-selection
-
       # OrbStack
       source ~/.orbstack/shell/init2.fish 2>/dev/null || :
 
@@ -59,6 +53,9 @@
     python314
     uv  # Python パッケージマネージャ
 
+    # シェル
+    starship  # Rust製プロンプト
+
     # Git 関連
     git
     gh
@@ -70,7 +67,7 @@
     eza
     bat
     tree
-    peco
+    fzf  # pecoより高速
     silver-searcher  # the_silver_searcher
     zoxide
 
@@ -105,6 +102,16 @@
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
+  };
+
+  # Git 設定
+  programs.git = {
+    enable = true;
+    settings = {
+      core = {
+        quotePath = false;  # 日本語ファイル名を正しく表示
+      };
+    };
   };
 
   # 環境変数
