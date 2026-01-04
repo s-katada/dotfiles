@@ -15,6 +15,9 @@
       cleanup = "zap";  # Homebrew で管理していないものを削除
     };
     casks = [
+      # フォント
+      "font-hack-nerd-font"
+      # アプリ
       "1password"
       "adobe-acrobat-reader"
       "alacritty"

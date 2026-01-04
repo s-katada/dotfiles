@@ -1,3 +1,4 @@
+font-family = Hack Nerd Font Mono
 command = /etc/profiles/per-user/awesomemr/bin/fish
 theme = Chester
 background-opacity = 0.9
