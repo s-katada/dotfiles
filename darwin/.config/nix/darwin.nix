@@ -12,9 +12,12 @@
     enable = true;
     onActivation = {
       autoUpdate = true;
-      autoUpgrade = true;
+      upgrade = true;
       cleanup = "zap";  # Homebrew で管理していないものを削除
     };
+    taps = [
+      "grishka/grishka"
+    ];
     casks = [
       # フォント
       "font-hack-nerd-font"
