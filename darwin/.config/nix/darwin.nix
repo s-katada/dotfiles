@@ -12,6 +12,7 @@
     enable = true;
     onActivation = {
       autoUpdate = true;
+      autoUpgrade = true;
       cleanup = "zap";  # Homebrew で管理していないものを削除
     };
     casks = [
