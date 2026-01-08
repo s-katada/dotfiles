@@ -27,6 +27,9 @@
       # ローカルbin
       fish_add_path $HOME/.local/bin
 
+      # npm global
+      fish_add_path $HOME/.npm-global/bin
+
       # Cargo (rustup)
       fish_add_path $HOME/.cargo/bin
 
@@ -48,7 +51,7 @@
   home.packages = with pkgs; [
     # 開発言語・ランタイム
     bun
-    nodejs_22
+    nodejs_24
     ruby_3_4
     python314
     uv  # Python パッケージマネージャ
@@ -119,5 +122,6 @@
     LANG = "ja_JP.UTF-8";
     EDITOR = "code";
     TERM = "xterm-256color";
+    PGPASSWORD = "postgres";
   };
 }
