@@ -71,3 +71,10 @@ disabled = true
 
 [git_status]
 disabled = true
+
+# 時刻表示（プロンプト右側）
+[time]
+disabled = false
+format = "[$time]($style) "
+time_format = "%H:%M:%S"
+style = "dimmed white"
