@@ -98,7 +98,8 @@
     tesseract
     graphviz
     dos2unix
-
+    awscli
+    mas
   ];
 
   # direnv（プロジェクト別バージョン管理）
