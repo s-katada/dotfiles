@@ -99,6 +99,7 @@
     graphviz
     dos2unix
     awscli
+    terraform
     mas
   ];
 
