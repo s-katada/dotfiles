@@ -51,9 +51,9 @@
   home.packages = with pkgs; [
     # 開発言語・ランタイム
     bun
-    nodejs_24
-    ruby_3_4
-    python314
+    nodejs
+    ruby
+    python3
     uv  # Python パッケージマネージャ
 
     # シェル
