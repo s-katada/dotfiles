@@ -37,7 +37,6 @@
       "discord"
       "emacs-app"
       "firefox"
-      "gather"
       "ghostty"
       "gitify"
       "google-chrome"
