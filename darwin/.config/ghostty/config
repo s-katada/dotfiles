@@ -1,7 +1,7 @@
 font-family = Hack Nerd Font Mono
 command = /etc/profiles/per-user/awesomemr/bin/fish
 theme = Chester
-background-opacity = 0.9
+background-opacity = 1
 cursor-style = bar
 macos-titlebar-proxy-icon = visible
 window-width = 1000
