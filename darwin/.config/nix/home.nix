@@ -101,6 +101,7 @@
     awscli
     terraform
     mas
+    neovim
   ];
 
   # direnv（プロジェクト別バージョン管理）
