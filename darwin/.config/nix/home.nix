@@ -102,6 +102,7 @@
     terraform
     mas
     neovim
+    gcc
   ];
 
   # direnv（プロジェクト別バージョン管理）
