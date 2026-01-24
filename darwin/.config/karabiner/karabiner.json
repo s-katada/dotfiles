@@ -51,7 +51,6 @@
                     },
                     {
                         "description": "CTRLキーを単体で押したときに、英数・かなキーを送信する。（左CTRLキーは英数、右CTRLキーはかな）",
-                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {
@@ -89,7 +88,6 @@
                     },
                     {
                         "description": "コマンドキーを単体で押したとき、かなキーを送信する。（変更した: 右コマンドキーはかな） (rev 3)",
-                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {
