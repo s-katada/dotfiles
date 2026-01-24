@@ -103,6 +103,7 @@
     mas
     neovim
     gcc
+    keymap-drawer
   ];
 
   # direnv（プロジェクト別バージョン管理）
