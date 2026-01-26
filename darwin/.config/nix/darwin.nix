@@ -42,6 +42,7 @@
       "google-chrome"
       "google-drive"
       "handbrake-app"
+      "homerow"
       "karabiner-elements"
       "libreoffice"
       "lm-studio"
