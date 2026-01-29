@@ -60,6 +60,7 @@
       "vial"
       "visual-studio-code"
       "void"
+      "wezterm"
       "zoom"
     ];
   };
