@@ -1,1 +1,31 @@
-/nix/store/18a6yl2j6p5hdi12p8318x50yrpvlssc-home-manager-files/.config/git/config
+[user]
+	name = s-katada
+	email = shunya.saitama@gmail.com
+
+[alias]
+	g = git
+	ci = commit
+	s = status
+	br = branch
+	co = checkout
+	di = diff
+	df = diff
+	si = switch
+	log-graph = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cd) %C(bold blue)<%an>%Creset' --abbrev-commit --date=format-local:'%Y/%m/%d %H:%M:%S'
+
+[init]
+	defaultBranch = main
+
+[core]
+	pager = delta
+	editor = nvim
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	side-by-side = true
+
+[merge]
+	conflictStyle = zdiff3
