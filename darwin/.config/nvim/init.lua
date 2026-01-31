@@ -4,7 +4,6 @@ vim.g.maplocalleader = " "
 
 -- Core options
 vim.opt.number = true
-vim.opt.relativenumber = true
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
@@ -62,6 +61,7 @@ require("lazy").setup({
       terminal = { enabled = true },
     },
     keys = {
+      { "<leader>;", function() Snacks.dashboard() end, desc = "Dashboard" },
       { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
       { "<leader>gf", function() Snacks.lazygit.log_file() end, desc = "Lazygit file history" },
       { "<leader>gl", function() Snacks.lazygit.log() end, desc = "Lazygit log" },
@@ -142,7 +142,16 @@ require("lazy").setup({
     },
     config = function()
       local telescope = require("telescope")
+      local actions = require("telescope.actions")
       telescope.setup({
+        defaults = {
+          mappings = {
+            i = {
+              ["<C-j>"] = actions.move_selection_next,
+              ["<C-k>"] = actions.move_selection_previous,
+            },
+          },
+        },
         extensions = {
           fzf = {
             fuzzy = true,
