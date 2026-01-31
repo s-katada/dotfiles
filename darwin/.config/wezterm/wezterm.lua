@@ -95,10 +95,41 @@ config.leader = {
 	timeout_milliseconds = 1500,
 }
 
+-- Disable default keybindings to avoid Emacs-style bindings (CTRL+h, CTRL+d, etc.)
+config.disable_default_key_bindings = true
+
 -- =============================================================================
 -- Key Bindings
 -- =============================================================================
 config.keys = {
+	-- =========================================================================
+	-- macOS Standard Keybindings
+	-- =========================================================================
+	{ key = "c", mods = "CMD", action = act.CopyTo("Clipboard") },
+	{ key = "v", mods = "CMD", action = act.PasteFrom("Clipboard") },
+	{ key = "t", mods = "CMD", action = act.SpawnTab("CurrentPaneDomain") },
+	{ key = "w", mods = "CMD", action = act.CloseCurrentTab({ confirm = true }) },
+	{ key = "n", mods = "CMD", action = act.SpawnWindow },
+	{ key = "q", mods = "CMD", action = act.QuitApplication },
+	{ key = "h", mods = "CMD", action = act.HideApplication },
+	{ key = "m", mods = "CMD", action = act.Hide },
+	{ key = "f", mods = "CMD", action = act.Search({ CaseInSensitiveString = "" }) },
+	{ key = "k", mods = "CMD", action = act.ClearScrollback("ScrollbackAndViewport") },
+	{ key = "=", mods = "CMD", action = act.IncreaseFontSize },
+	{ key = "-", mods = "CMD", action = act.DecreaseFontSize },
+	{ key = "0", mods = "CMD", action = act.ResetFontSize },
+	{ key = "Enter", mods = "CMD", action = act.ToggleFullScreen },
+	-- CMD + 1-9 for tab switching
+	{ key = "1", mods = "CMD", action = act.ActivateTab(0) },
+	{ key = "2", mods = "CMD", action = act.ActivateTab(1) },
+	{ key = "3", mods = "CMD", action = act.ActivateTab(2) },
+	{ key = "4", mods = "CMD", action = act.ActivateTab(3) },
+	{ key = "5", mods = "CMD", action = act.ActivateTab(4) },
+	{ key = "6", mods = "CMD", action = act.ActivateTab(5) },
+	{ key = "7", mods = "CMD", action = act.ActivateTab(6) },
+	{ key = "8", mods = "CMD", action = act.ActivateTab(7) },
+	{ key = "9", mods = "CMD", action = act.ActivateTab(-1) },
+
 	-- =========================================================================
 	-- Pane Operations
 	-- =========================================================================
