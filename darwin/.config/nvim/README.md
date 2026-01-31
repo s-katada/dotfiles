@@ -10,10 +10,12 @@
 
 ## プラグイン一覧
 
-### コア
+### コア (Ultra Modern)
 | プラグイン | 用途 |
 |-----------|------|
 | lazy.nvim | プラグインマネージャー |
+| snacks.nvim | QoL機能統合 (dashboard, notifier, indent, terminal等) |
+| noice.nvim | モダンUI (cmdline, messages, popupmenu) |
 | tokyonight.nvim | カラースキーム |
 | nvim-treesitter | シンタックスハイライト |
 
@@ -23,7 +25,7 @@
 | mason.nvim | LSP/ツールインストーラー |
 | mason-lspconfig.nvim | Mason-LSP連携 |
 | nvim-lspconfig | LSP設定 |
-| blink.cmp | 自動補完 |
+| blink.cmp | 自動補完 (最新、nvim-cmp後継) |
 | friendly-snippets | スニペット集 |
 
 ### コード品質
@@ -47,7 +49,6 @@
 |-----------|------|
 | lualine.nvim | ステータスライン |
 | bufferline.nvim | バッファタブ |
-| indent-blankline.nvim | インデントガイド |
 | which-key.nvim | キーマップ表示 |
 | trouble.nvim | 診断一覧 |
 | toggleterm.nvim | ターミナル |
@@ -61,6 +62,25 @@
 | `<Space>` | Leader key |
 | `<C-b>` | Neo-tree toggle |
 | `<C-\>` | ターミナル toggle |
+
+### Snacks.nvim
+| キー | 動作 |
+|------|------|
+| `<leader>gg` | Lazygit |
+| `<leader>gf` | Lazygit file history |
+| `<leader>gl` | Lazygit log |
+| `<leader>n` | 通知履歴 |
+| `<leader>un` | 通知を閉じる |
+| `<leader>bd` | バッファ削除 |
+| `]]` / `[[` | 次/前の参照 (word) |
+
+### Noice.nvim
+| キー | 動作 |
+|------|------|
+| `<leader>snl` | 最後のメッセージ |
+| `<leader>snh` | メッセージ履歴 |
+| `<leader>sna` | 全メッセージ |
+| `<leader>snd` | メッセージを閉じる |
 
 ### ファイル検索 (Telescope)
 | キー | 動作 |
@@ -105,6 +125,7 @@
 | `<S-l>` | 次のバッファ |
 | `<leader>bp` | バッファを選択 |
 | `<leader>bc` | バッファを閉じる |
+| `<leader>bd` | バッファ削除 (snacks) |
 
 ### Flash (モーション)
 | キー | 動作 |
@@ -118,7 +139,8 @@
 | `<leader>tt` | 水平ターミナル |
 | `<leader>tv` | 垂直ターミナル |
 | `<leader>tf` | フローティングターミナル |
-| `<leader>tg` | lazygit |
+| `<leader>tg` | lazygit (toggleterm) |
+| `<leader>gg` | lazygit (snacks) |
 
 ### Trouble (診断)
 | キー | 動作 |
@@ -153,3 +175,5 @@
 - `:checkhealth` で設定状態を確認
 - `:Lazy` でプラグイン管理
 - `:Mason` でLSP/ツール管理
+- 起動時にdashboardが表示される (snacks.nvim)
+- コマンドラインがモダンなUIに変更 (noice.nvim)

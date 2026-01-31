@@ -36,11 +36,94 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
+  -- Snacks.nvim (QoL collection)
+  {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    opts = {
+      bigfile = { enabled = true },
+      dashboard = {
+        enabled = true,
+        sections = {
+          { section = "header" },
+          { section = "keys", gap = 1, padding = 1 },
+          { section = "startup" },
+        },
+      },
+      indent = { enabled = true },
+      input = { enabled = true },
+      notifier = { enabled = true, timeout = 3000 },
+      quickfile = { enabled = true },
+      scroll = { enabled = true },
+      statuscolumn = { enabled = true },
+      words = { enabled = true },
+      lazygit = { enabled = true },
+      terminal = { enabled = true },
+    },
+    keys = {
+      { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
+      { "<leader>gf", function() Snacks.lazygit.log_file() end, desc = "Lazygit file history" },
+      { "<leader>gl", function() Snacks.lazygit.log() end, desc = "Lazygit log" },
+      { "<leader>n", function() Snacks.notifier.show_history() end, desc = "Notification history" },
+      { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss notifications" },
+      { "<leader>bd", function() Snacks.bufdelete() end, desc = "Delete buffer" },
+      { "]]", function() Snacks.words.jump(vim.v.count1) end, desc = "Next reference", mode = { "n", "t" } },
+      { "[[", function() Snacks.words.jump(-vim.v.count1) end, desc = "Previous reference", mode = { "n", "t" } },
+    },
+    init = function()
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "VeryLazy",
+        callback = function()
+          _G.dd = function(...) Snacks.debug.inspect(...) end
+          _G.bt = function() Snacks.debug.backtrace() end
+          vim.print = _G.dd
+        end,
+      })
+    end,
+  },
+
+  -- Noice.nvim (UI for messages, cmdline, popupmenu)
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+    },
+    opts = {
+      lsp = {
+        override = {
+          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+          ["vim.lsp.util.stylize_markdown"] = true,
+          ["cmp.entry.get_documentation"] = true,
+        },
+      },
+      presets = {
+        bottom_search = true,
+        command_palette = true,
+        long_message_to_split = true,
+        inc_rename = true,
+        lsp_doc_border = true,
+      },
+    },
+    keys = {
+      { "<leader>sn", "", desc = "+noice" },
+      { "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c", desc = "Redirect cmdline" },
+      { "<leader>snl", function() require("noice").cmd("last") end, desc = "Noice last message" },
+      { "<leader>snh", function() require("noice").cmd("history") end, desc = "Noice history" },
+      { "<leader>sna", function() require("noice").cmd("all") end, desc = "Noice all" },
+      { "<leader>snd", function() require("noice").cmd("dismiss") end, desc = "Dismiss all" },
+      { "<leader>snt", function() require("noice").cmd("pick") end, desc = "Noice picker" },
+      { "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, silent = true, expr = true, desc = "Scroll forward", mode = { "i", "s" } },
+      { "<c-u>", function() if not require("noice.lsp").scroll(-4) then return "<c-u>" end end, silent = true, expr = true, desc = "Scroll backward", mode = { "i", "s" } },
+    },
+  },
+
   -- Colorscheme
   {
     "folke/tokyonight.nvim",
     lazy = false,
-    priority = 1000,
+    priority = 999,
     config = function()
       vim.cmd([[colorscheme tokyonight]])
     end,
@@ -373,17 +456,6 @@ require("lazy").setup({
       { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
       { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
       { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-    },
-  },
-
-  -- Indent blankline
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    main = "ibl",
-    event = { "BufReadPre", "BufNewFile" },
-    opts = {
-      indent = { char = "│" },
-      scope = { enabled = true },
     },
   },
 
