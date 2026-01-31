@@ -1,26 +1,26 @@
 -- Leader key (must be set before lazy)
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+vim.g.mapleader = " "       -- スペースをLeaderキーに
+vim.g.maplocalleader = " "  -- ローカルLeaderも同様
 
 -- Core options
-vim.opt.number = true
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.expandtab = true
-vim.opt.smartindent = true
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-vim.opt.clipboard = "unnamedplus"
-vim.opt.termguicolors = true
-vim.opt.signcolumn = "yes"
-vim.opt.updatetime = 250
-vim.opt.undofile = true
-vim.opt.splitbelow = true
-vim.opt.splitright = true
-vim.opt.scrolloff = 8
-vim.opt.wrap = false
+vim.opt.number = true       -- 行番号表示
+vim.opt.tabstop = 2         -- タブ幅2
+vim.opt.shiftwidth = 2      -- インデント幅2
+vim.opt.expandtab = true    -- タブをスペースに変換
+vim.opt.smartindent = true  -- 自動インデント
+vim.opt.ignorecase = true   -- 検索時大文字小文字無視
+vim.opt.smartcase = true    -- 大文字入力時は区別
+vim.opt.clipboard = "unnamedplus"  -- システムクリップボード共有
+vim.opt.termguicolors = true       -- TrueColor有効
+vim.opt.signcolumn = "yes"  -- 左端にサイン列を常に表示
+vim.opt.updatetime = 250    -- 更新間隔(ms)
+vim.opt.undofile = true     -- undo履歴をファイルに保存
+vim.opt.splitbelow = true   -- 水平分割は下に
+vim.opt.splitright = true   -- 垂直分割は右に
+vim.opt.scrolloff = 8       -- スクロール時の余白行数
+vim.opt.wrap = false        -- 行の折り返し無効
 
--- Bootstrap lazy.nvim
+-- Bootstrap lazy.nvim (プラグインマネージャーの自動インストール)
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   vim.fn.system({
@@ -35,14 +35,14 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-  -- Snacks.nvim (QoL collection)
+  -- Snacks.nvim: 便利機能コレクション
   {
     "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
     opts = {
-      bigfile = { enabled = true },
-      dashboard = {
+      bigfile = { enabled = true },   -- 大きいファイルの最適化
+      dashboard = {                   -- スタートダッシュボード
         enabled = true,
         sections = {
           { section = "header" },
@@ -50,15 +50,15 @@ require("lazy").setup({
           { section = "startup" },
         },
       },
-      indent = { enabled = true },
-      input = { enabled = true },
-      notifier = { enabled = true, timeout = 3000 },
-      quickfile = { enabled = true },
-      scroll = { enabled = true },
-      statuscolumn = { enabled = true },
-      words = { enabled = true },
-      lazygit = { enabled = true },
-      terminal = { enabled = true },
+      indent = { enabled = true },    -- インデントガイド
+      input = { enabled = true },     -- 入力UI改善
+      notifier = { enabled = true, timeout = 3000 },  -- 通知UI
+      quickfile = { enabled = true }, -- 高速ファイル読み込み
+      scroll = { enabled = true },    -- スムーズスクロール
+      statuscolumn = { enabled = true },  -- ステータス列カスタマイズ
+      words = { enabled = true },     -- カーソル下の単語ハイライト
+      lazygit = { enabled = true },   -- Lazygit統合
+      terminal = { enabled = true },  -- ターミナル統合
     },
     keys = {
       { "<leader>;", function() Snacks.dashboard() end, desc = "Dashboard" },
@@ -75,20 +75,20 @@ require("lazy").setup({
       vim.api.nvim_create_autocmd("User", {
         pattern = "VeryLazy",
         callback = function()
-          _G.dd = function(...) Snacks.debug.inspect(...) end
-          _G.bt = function() Snacks.debug.backtrace() end
+          _G.dd = function(...) Snacks.debug.inspect(...) end  -- デバッグ用inspect
+          _G.bt = function() Snacks.debug.backtrace() end      -- バックトレース表示
           vim.print = _G.dd
         end,
       })
     end,
   },
 
-  -- Noice.nvim (UI for messages, cmdline, popupmenu)
+  -- Noice.nvim: コマンドライン・メッセージ・通知のモダンUI
   {
     "folke/noice.nvim",
     event = "VeryLazy",
     dependencies = {
-      "MunifTanjim/nui.nvim",
+      "MunifTanjim/nui.nvim",  -- UI基盤ライブラリ
     },
     opts = {
       lsp = {
@@ -99,11 +99,11 @@ require("lazy").setup({
         },
       },
       presets = {
-        bottom_search = true,
-        command_palette = true,
-        long_message_to_split = true,
-        inc_rename = true,
-        lsp_doc_border = true,
+        bottom_search = true,         -- 検索を画面下に表示
+        command_palette = true,       -- コマンドをパレット風に
+        long_message_to_split = true, -- 長いメッセージを分割表示
+        inc_rename = true,            -- インクリメンタルリネーム
+        lsp_doc_border = true,        -- LSPドキュメントに枠線
       },
     },
     keys = {
@@ -119,7 +119,7 @@ require("lazy").setup({
     },
   },
 
-  -- Colorscheme
+  -- Colorscheme: カラースキーム(Tokyo Night)
   {
     "folke/tokyonight.nvim",
     lazy = false,
@@ -129,14 +129,14 @@ require("lazy").setup({
     end,
   },
 
-  -- Telescope
+  -- Telescope: ファジーファインダー
   {
     "nvim-telescope/telescope.nvim",
     tag = "0.1.6",
     dependencies = {
-      "nvim-lua/plenary.nvim",
+      "nvim-lua/plenary.nvim",        -- 必須ライブラリ
       {
-        "nvim-telescope/telescope-fzf-native.nvim",
+        "nvim-telescope/telescope-fzf-native.nvim",  -- 高速検索拡張
         build = "make",
       },
     },
@@ -146,18 +146,18 @@ require("lazy").setup({
       telescope.setup({
         defaults = {
           mappings = {
-            i = {
-              ["<C-j>"] = actions.move_selection_next,
-              ["<C-k>"] = actions.move_selection_previous,
+            i = {  -- Insertモードのキーマップ
+              ["<C-j>"] = actions.move_selection_next,      -- 次の候補
+              ["<C-k>"] = actions.move_selection_previous,  -- 前の候補
             },
           },
         },
         extensions = {
           fzf = {
-            fuzzy = true,
-            override_generic_sorter = true,
-            override_file_sorter = true,
-            case_mode = "smart_case",
+            fuzzy = true,                   -- あいまい検索有効
+            override_generic_sorter = true, -- 汎用ソーター上書き
+            override_file_sorter = true,    -- ファイルソーター上書き
+            case_mode = "smart_case",       -- スマートケース
           },
         },
       })
@@ -174,13 +174,13 @@ require("lazy").setup({
     end,
   },
 
-  -- Neo-tree
+  -- Neo-tree: ファイルエクスプローラー
   {
     "nvim-neo-tree/neo-tree.nvim",
     branch = "v3.x",
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons",
+      "nvim-tree/nvim-web-devicons",  -- ファイルアイコン
       "MunifTanjim/nui.nvim",
     },
     keys = {
@@ -188,7 +188,7 @@ require("lazy").setup({
     },
   },
 
-  -- Lualine
+  -- Lualine: ステータスライン
   {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -199,25 +199,25 @@ require("lazy").setup({
     end,
   },
 
-  -- Which-key
+  -- Which-key: キーバインドヘルプ表示
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
     init = function()
       vim.o.timeout = true
-      vim.o.timeoutlen = 300
+      vim.o.timeoutlen = 300  -- キー入力待機時間(ms)
     end,
     opts = {},
   },
 
-  -- Treesitter
+  -- Treesitter: 構文解析によるハイライト・インデント
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       require("nvim-treesitter.configs").setup({
-        ensure_installed = {
+        ensure_installed = {  -- 自動インストールする言語
           "lua",
           "typescript",
           "tsx",
@@ -233,13 +233,13 @@ require("lazy").setup({
           "vim",
           "vimdoc",
         },
-        highlight = { enable = true },
-        indent = { enable = true },
+        highlight = { enable = true },  -- ハイライト有効
+        indent = { enable = true },     -- インデント有効
       })
     end,
   },
 
-  -- Mason (LSP installer)
+  -- Mason: LSP/DAP/Linter/Formatterのインストーラー
   {
     "williamboman/mason.nvim",
     build = ":MasonUpdate",
@@ -248,23 +248,23 @@ require("lazy").setup({
     end,
   },
 
-  -- Mason LSPConfig bridge
+  -- Mason-LSPConfig: MasonとLSPConfigの橋渡し
   {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim" },
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = {
-          "ts_ls",
-          "lua_ls",
-          "ruby_lsp",
-          "rust_analyzer",
+        ensure_installed = {  -- 自動インストールするLSP
+          "ts_ls",            -- TypeScript
+          "lua_ls",           -- Lua
+          "ruby_lsp",         -- Ruby
+          "rust_analyzer",    -- Rust
         },
       })
     end,
   },
 
-  -- LSP Config
+  -- LSP Config: LSPクライアント設定
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
@@ -275,7 +275,7 @@ require("lazy").setup({
     config = function()
       local lspconfig = require("lspconfig")
 
-      -- LSP keymaps
+      -- LSP共通キーマップ
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
         callback = function(ev)
@@ -293,7 +293,7 @@ require("lazy").setup({
         end,
       })
 
-      -- LSP servers setup
+      -- LSPサーバー設定
       local capabilities = require("blink.cmp").get_lsp_capabilities()
 
       lspconfig.ts_ls.setup({ capabilities = capabilities })
@@ -303,7 +303,7 @@ require("lazy").setup({
         settings = {
           Lua = {
             runtime = { version = "LuaJIT" },
-            diagnostics = { globals = { "vim" } },
+            diagnostics = { globals = { "vim" } },  -- vimグローバル変数を認識
             workspace = {
               library = vim.api.nvim_get_runtime_file("", true),
               checkThirdParty = false,
@@ -318,10 +318,10 @@ require("lazy").setup({
     end,
   },
 
-  -- Blink.cmp (completion)
+  -- Blink.cmp: 自動補完エンジン
   {
     "saghen/blink.cmp",
-    dependencies = { "rafamadriz/friendly-snippets" },
+    dependencies = { "rafamadriz/friendly-snippets" },  -- スニペット集
     version = "*",
     opts = {
       keymap = { preset = "default" },
@@ -330,12 +330,12 @@ require("lazy").setup({
         nerd_font_variant = "mono",
       },
       sources = {
-        default = { "lsp", "path", "snippets", "buffer" },
+        default = { "lsp", "path", "snippets", "buffer" },  -- 補完ソース
       },
     },
   },
 
-  -- Conform (formatter)
+  -- Conform: フォーマッター
   {
     "stevearc/conform.nvim",
     event = { "BufWritePre" },
@@ -351,7 +351,7 @@ require("lazy").setup({
       },
     },
     opts = {
-      formatters_by_ft = {
+      formatters_by_ft = {  -- 言語別フォーマッター
         lua = { "stylua" },
         javascript = { "prettierd", "prettier", stop_after_first = true },
         typescript = { "prettierd", "prettier", stop_after_first = true },
@@ -363,26 +363,27 @@ require("lazy").setup({
         ruby = { "rubocop" },
         rust = { "rustfmt" },
       },
-      format_on_save = {
+      format_on_save = {      -- 保存時に自動フォーマット
         timeout_ms = 500,
         lsp_fallback = true,
       },
     },
   },
 
-  -- Nvim-lint (linter)
+  -- Nvim-lint: Linter
   {
     "mfussenegger/nvim-lint",
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       local lint = require("lint")
-      lint.linters_by_ft = {
+      lint.linters_by_ft = {  -- 言語別Linter
         javascript = { "eslint_d" },
         typescript = { "eslint_d" },
         javascriptreact = { "eslint_d" },
         typescriptreact = { "eslint_d" },
         ruby = { "rubocop" },
       }
+      -- 自動Lint実行タイミング
       vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
         group = vim.api.nvim_create_augroup("lint", { clear = true }),
         callback = function()
@@ -392,19 +393,19 @@ require("lazy").setup({
     end,
   },
 
-  -- Gitsigns
+  -- Gitsigns: Git差分表示・操作
   {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
     opts = {
-      signs = {
+      signs = {  -- 差分記号
         add = { text = "│" },
         change = { text = "│" },
         delete = { text = "_" },
         topdelete = { text = "‾" },
         changedelete = { text = "~" },
       },
-      current_line_blame = false,
+      current_line_blame = false,  -- 行ごとのblame表示
       on_attach = function(bufnr)
         local gs = package.loaded.gitsigns
         local function map(mode, l, r, opts)
@@ -412,7 +413,7 @@ require("lazy").setup({
           opts.buffer = bufnr
           vim.keymap.set(mode, l, r, opts)
         end
-        -- Navigation
+        -- Hunk間ナビゲーション
         map("n", "]c", function()
           if vim.wo.diff then return "]c" end
           vim.schedule(function() gs.next_hunk() end)
@@ -423,7 +424,7 @@ require("lazy").setup({
           vim.schedule(function() gs.prev_hunk() end)
           return "<Ignore>"
         end, { expr = true, desc = "Previous hunk" })
-        -- Actions
+        -- Hunk操作
         map("n", "<leader>hs", gs.stage_hunk, { desc = "Stage hunk" })
         map("n", "<leader>hr", gs.reset_hunk, { desc = "Reset hunk" })
         map("v", "<leader>hs", function() gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") }) end, { desc = "Stage hunk" })
@@ -441,21 +442,21 @@ require("lazy").setup({
     },
   },
 
-  -- Mini.nvim modules
+  -- Mini.nvim: 軽量ユーティリティモジュール集
   {
     "echasnovski/mini.nvim",
     version = false,
     event = "VeryLazy",
     config = function()
-      require("mini.pairs").setup()
-      require("mini.surround").setup()
-      require("mini.comment").setup()
-      require("mini.ai").setup()
-      require("mini.bracketed").setup()
+      require("mini.pairs").setup()     -- 括弧の自動ペア
+      require("mini.surround").setup()  -- 囲み文字操作 (sa, sd, sr)
+      require("mini.comment").setup()   -- コメントトグル (gc)
+      require("mini.ai").setup()        -- テキストオブジェクト拡張
+      require("mini.bracketed").setup() -- 括弧系ナビゲーション
     end,
   },
 
-  -- Flash (motion)
+  -- Flash: 高速モーション・ジャンプ
   {
     "folke/flash.nvim",
     event = "VeryLazy",
@@ -468,7 +469,7 @@ require("lazy").setup({
     },
   },
 
-  -- Bufferline
+  -- Bufferline: タブ風バッファ表示
   {
     "akinsho/bufferline.nvim",
     version = "*",
@@ -476,9 +477,9 @@ require("lazy").setup({
     event = "VeryLazy",
     opts = {
       options = {
-        mode = "buffers",
-        diagnostics = "nvim_lsp",
-        separator_style = "thin",
+        mode = "buffers",               -- バッファモード
+        diagnostics = "nvim_lsp",       -- LSP診断表示
+        separator_style = "thin",       -- 区切り線スタイル
         show_buffer_close_icons = false,
         show_close_icon = false,
       },
@@ -491,7 +492,7 @@ require("lazy").setup({
     },
   },
 
-  -- Trouble (diagnostics)
+  -- Trouble: 診断・参照の一覧表示
   {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -507,7 +508,7 @@ require("lazy").setup({
     opts = {},
   },
 
-  -- Toggleterm
+  -- Toggleterm: ターミナル管理
   {
     "akinsho/toggleterm.nvim",
     version = "*",
@@ -535,13 +536,13 @@ require("lazy").setup({
       },
     },
     opts = {
-      open_mapping = [[<c-\>]],
-      direction = "float",
+      open_mapping = [[<c-\>]],     -- Ctrl+\でターミナルトグル
+      direction = "float",          -- デフォルトはフロート
       float_opts = { border = "curved" },
     },
   },
 
-  -- Todo comments
+  -- Todo-comments: TODO/FIXME等のハイライト
   {
     "folke/todo-comments.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
