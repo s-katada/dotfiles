@@ -66,6 +66,7 @@
 ### Snacks.nvim
 | キー | 動作 |
 |------|------|
+| `<leader>;` | Dashboard |
 | `<leader>gg` | Lazygit |
 | `<leader>gf` | Lazygit file history |
 | `<leader>gl` | Lazygit log |
