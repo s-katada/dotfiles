@@ -19,6 +19,12 @@ vim.opt.splitbelow = true   -- 水平分割は下に
 vim.opt.splitright = true   -- 垂直分割は右に
 vim.opt.scrolloff = 8       -- スクロール時の余白行数
 vim.opt.wrap = false        -- 行の折り返し無効
+vim.opt.autoread = true     -- 外部変更を自動検知
+
+-- 外部変更の自動リロード
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
+  command = "checktime",
+})
 
 -- Bootstrap lazy.nvim (プラグインマネージャーの自動インストール)
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
