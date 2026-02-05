@@ -56,6 +56,7 @@
       "slack"
       "spotify"
       "synology-drive"
+      "tailscale"
       "teamviewer"
       "vial"
       "visual-studio-code"
