@@ -104,6 +104,7 @@
     neovim
     gcc
     keymap-drawer
+    mosh
   ];
 
   # direnv（プロジェクト別バージョン管理）
