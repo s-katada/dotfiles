@@ -90,6 +90,7 @@
     postgresql_17
 
     # その他 CLI ツール
+    zellij
     tmux
     ollama
     heroku
