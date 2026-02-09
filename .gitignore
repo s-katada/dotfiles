@@ -33,3 +33,11 @@ darwin/.emacs.d/bookmarks
 darwin/.emacs.d/custom.el
 darwin/.emacs.d/.lsp-session-*
 darwin/.emacs.d/projectile-bookmarks.eld
+
+# Ubuntu - home-manager generated files
+ubuntu/.config/direnv/
+ubuntu/.config/environment.d/
+ubuntu/.config/fish/
+ubuntu/.config/git/
+ubuntu/.config/home-manager/
+ubuntu/.config/systemd/
