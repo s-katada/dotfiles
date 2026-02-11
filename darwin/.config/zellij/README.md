@@ -7,7 +7,7 @@ Theme: **Catppuccin Mocha**
 | Key | Action |
 |-----|--------|
 | `Ctrl g` | Locked モード |
-| `Ctrl q` | Zellij 終了 |
+| ~~`Ctrl q`~~ | 無効化済み。`Ctrl o` → `q` で終了 |
 | `Ctrl p` | Pane モード |
 | `Ctrl t` | Tab モード |
 | `Ctrl n` | Resize モード |
@@ -139,5 +139,6 @@ Theme: **Catppuccin Mocha**
 | `s` | セッション共有 |
 | `a` | About |
 | `d` | デタッチ |
+| `q` | Zellij 終了 |
 | `Ctrl o` | Normal モードに戻る |
 
