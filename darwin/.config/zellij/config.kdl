@@ -117,6 +117,7 @@ keybinds clear-defaults=true {
         }
         bind "Ctrl o" { SwitchToMode "normal"; }
         bind "d" { Detach; }
+        bind "q" { Quit; }
         bind "p" {
             LaunchOrFocusPlugin "plugin-manager" {
                 floating true
@@ -160,7 +161,7 @@ keybinds clear-defaults=true {
         bind "Alt o" { MoveTab "right"; }
         bind "Alt p" { TogglePaneInGroup; }
         bind "Alt Shift p" { ToggleGroupMarking; }
-        bind "Ctrl q" { Quit; }
+        // Quit は Session モード (Ctrl o → q) から実行
     }
     shared_except "locked" "move" {
         bind "Ctrl h" { SwitchToMode "move"; }
