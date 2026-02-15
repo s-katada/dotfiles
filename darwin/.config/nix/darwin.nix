@@ -55,14 +55,16 @@
       "rustdesk"
       "slack"
       "spotify"
+      "discord"
       "synology-drive"
-      "tailscale"
       "teamviewer"
+      "tailscale"
       "vial"
       "visual-studio-code"
       "void"
       "wezterm"
       "zoom"
+      "shottr"
     ];
   };
 
