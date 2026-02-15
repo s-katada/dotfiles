@@ -258,16 +258,14 @@ require("lazy").setup({
   {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim" },
-    config = function()
-      require("mason-lspconfig").setup({
-        ensure_installed = {  -- 自動インストールするLSP
-          "ts_ls",            -- TypeScript
-          "lua_ls",           -- Lua
-          "ruby_lsp",         -- Ruby
-          "rust_analyzer",    -- Rust
-        },
-      })
-    end,
+    opts = {
+      ensure_installed = {  -- 自動インストールするLSP
+        "ts_ls",            -- TypeScript
+        "lua_ls",           -- Lua
+        "ruby_lsp",         -- Ruby
+        "rust_analyzer",    -- Rust
+      },
+    },
   },
 
   -- LSP Config: LSPクライアント設定
@@ -279,8 +277,6 @@ require("lazy").setup({
       "williamboman/mason-lspconfig.nvim",
     },
     config = function()
-      local lspconfig = require("lspconfig")
-
       -- LSP共通キーマップ
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
@@ -299,17 +295,18 @@ require("lazy").setup({
         end,
       })
 
-      -- LSPサーバー設定
+      -- blink.cmpの補完機能をLSPに統合
       local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-      lspconfig.ts_ls.setup({ capabilities = capabilities })
+      -- LSPサーバー共通設定（Neovim 0.11のvim.lsp.config方式）
+      vim.lsp.config("*", { capabilities = capabilities })
 
-      lspconfig.lua_ls.setup({
-        capabilities = capabilities,
+      -- Lua LSの個別設定
+      vim.lsp.config("lua_ls", {
         settings = {
           Lua = {
             runtime = { version = "LuaJIT" },
-            diagnostics = { globals = { "vim" } },  -- vimグローバル変数を認識
+            diagnostics = { globals = { "vim" } },
             workspace = {
               library = vim.api.nvim_get_runtime_file("", true),
               checkThirdParty = false,
@@ -319,8 +316,8 @@ require("lazy").setup({
         },
       })
 
-      lspconfig.ruby_lsp.setup({ capabilities = capabilities })
-      lspconfig.rust_analyzer.setup({ capabilities = capabilities })
+      -- LSPサーバー有効化
+      vim.lsp.enable({ "ts_ls", "lua_ls", "ruby_lsp", "rust_analyzer" })
     end,
   },
 
