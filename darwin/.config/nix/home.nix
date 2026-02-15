@@ -106,6 +106,7 @@
     gcc
     keymap-drawer
     mosh
+    lazygit
   ];
 
   # direnv（プロジェクト別バージョン管理）
