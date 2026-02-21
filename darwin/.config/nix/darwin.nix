@@ -65,6 +65,7 @@
       "wezterm"
       "zoom"
       "shottr"
+      "autodesk-fusion"
     ];
   };
 
