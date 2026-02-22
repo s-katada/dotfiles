@@ -107,6 +107,7 @@
     keymap-drawer
     mosh
     lazygit
+    yazi
   ];
 
   # direnv（プロジェクト別バージョン管理）
