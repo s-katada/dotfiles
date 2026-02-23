@@ -17,6 +17,7 @@
     };
     taps = [
       "grishka/grishka"
+      "nikitabobko/tap"
     ];
     casks = [
       # フォント
@@ -26,6 +27,7 @@
       "adobe-acrobat-reader"
       "alacritty"
       "android-studio"
+      "aerospace"
       "arc"
       "arduino-ide"
       "bambu-studio"
