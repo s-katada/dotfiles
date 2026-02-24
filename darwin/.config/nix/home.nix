@@ -107,6 +107,7 @@
     keymap-drawer
     mosh
     lazygit
+    trippy
     yazi
   ];
 
