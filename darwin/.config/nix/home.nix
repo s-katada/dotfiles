@@ -36,6 +36,9 @@
       # LM Studio CLI
       fish_add_path $HOME/.lmstudio/bin
 
+      # Android SDK
+      fish_add_path $HOME/Library/Android/sdk/platform-tools
+
       # Antigravity
       fish_add_path $HOME/.antigravity/antigravity/bin
 
