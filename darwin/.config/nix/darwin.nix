@@ -68,6 +68,7 @@
       "zoom"
       "shottr"
       "autodesk-fusion"
+      "balenaetcher"
     ];
   };
 
