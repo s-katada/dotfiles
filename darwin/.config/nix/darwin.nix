@@ -68,6 +68,7 @@
       "shottr"
       "autodesk-fusion"
       "balenaetcher"
+      "cmux"
     ];
   };
 
