@@ -69,6 +69,7 @@
       "autodesk-fusion"
       "balenaetcher"
       "cmux"
+      "kicad"
     ];
   };
 
