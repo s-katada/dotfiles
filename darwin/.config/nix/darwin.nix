@@ -57,7 +57,6 @@
       "rustdesk"
       "slack"
       "spotify"
-      "synology-drive"
       "teamviewer"
       "tailscale-app"
       "vial"
