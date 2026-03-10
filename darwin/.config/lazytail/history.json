@@ -1,0 +1,34 @@
+[
+  {
+    "pattern": "point",
+    "mode": {
+      "Plain": {
+        "case_sensitive": false
+      }
+    }
+  },
+  {
+    "pattern": "app/models/user.rb",
+    "mode": {
+      "Plain": {
+        "case_sensitive": false
+      }
+    }
+  },
+  {
+    "pattern": "attendancelog",
+    "mode": {
+      "Plain": {
+        "case_sensitive": false
+      }
+    }
+  },
+  {
+    "pattern": "warn",
+    "mode": {
+      "Plain": {
+        "case_sensitive": false
+      }
+    }
+  }
+]
