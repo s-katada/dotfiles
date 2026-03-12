@@ -34,7 +34,7 @@
       "Bash(rm -rf /)*",
       "Bash(sudo rm *)"
     ],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "auto"
   },
   "hooks": {
     "Stop": [
@@ -65,5 +65,7 @@
   "enabledPlugins": {
     "typescript-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true
-  }
+  },
+  "effortLevel": "high",
+  "skipAutoPermissionPrompt": true
 }
