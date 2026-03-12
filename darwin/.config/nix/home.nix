@@ -66,6 +66,7 @@
     git
     gh
     delta  # git-delta
+    act  # GitHub Actions をローカルで実行
 
     # 検索・ファイル操作
     ripgrep
