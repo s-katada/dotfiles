@@ -36,6 +36,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "opus[1m]",
   "hooks": {
     "Stop": [
       {
@@ -60,12 +61,14 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bunx ccusage statusline"
+    "command": "bash /Users/awesomemr/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
     "typescript-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true
   },
   "effortLevel": "high",
+  "voiceEnabled": true,
+  "skipDangerousModePermissionPrompt": true,
   "skipAutoPermissionPrompt": true
 }

@@ -30,5 +30,29 @@
         "case_sensitive": false
       }
     }
+  },
+  {
+    "pattern": "adjustment_evaluation",
+    "mode": {
+      "Plain": {
+        "case_sensitive": false
+      }
+    }
+  },
+  {
+    "pattern": "二次評価",
+    "mode": {
+      "Plain": {
+        "case_sensitive": false
+      }
+    }
+  },
+  {
+    "pattern": "20:12:54",
+    "mode": {
+      "Plain": {
+        "case_sensitive": false
+      }
+    }
   }
 ]
