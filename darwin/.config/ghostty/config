@@ -19,3 +19,4 @@ custom-shader-animation = true
 # background-image-repeat = false
 keybind = shift+enter=text:\x1b\r
 auto-update-channel = tip
+macos-option-as-alt = true
