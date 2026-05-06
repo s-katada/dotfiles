@@ -1,7 +1,10 @@
 {
   "contexts": {
     "__global__": {
-      "last_source": "production.log"
+      "last_source": "production_master_settings_20260412.log"
+    },
+    "/Users/awesomemr/git/mksc/shinmei-evaluator2": {
+      "last_source": "pes-logg"
     }
   }
 }
