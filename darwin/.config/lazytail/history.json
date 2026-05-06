@@ -54,5 +54,29 @@
         "case_sensitive": false
       }
     }
+  },
+  {
+    "pattern": "promotion",
+    "mode": {
+      "Plain": {
+        "case_sensitive": false
+      }
+    }
+  },
+  {
+    "pattern": "test",
+    "mode": {
+      "Plain": {
+        "case_sensitive": false
+      }
+    }
+  },
+  {
+    "pattern": "error",
+    "mode": {
+      "Plain": {
+        "case_sensitive": false
+      }
+    }
   }
 ]

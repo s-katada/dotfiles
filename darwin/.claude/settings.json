@@ -43,17 +43,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "osascript -e 'tell application \"Ghostty\" to activate'"
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "osascript -e 'tell application \"Ghostty\" to activate'"
+            "command": "osascript -e 'display notification \"タスクが完了しました\" with title \"Claude Code\" sound name \"Glass\"'"
           }
         ]
       }
@@ -68,7 +58,8 @@
     "rust-analyzer-lsp@claude-plugins-official": true
   },
   "effortLevel": "high",
-  "voiceEnabled": true,
   "skipDangerousModePermissionPrompt": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "voiceEnabled": true,
+  "preferredNotifChannel": "ghostty"
 }
