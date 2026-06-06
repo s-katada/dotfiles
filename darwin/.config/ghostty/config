@@ -18,7 +18,6 @@ custom-shader-animation = true
 # background-image-fit = cover
 # background-image-repeat = false
 keybind = shift+enter=text:\x1b\r
-keybind = ctrl+h=text:\x7f
 keybind = ctrl+w=text:\x17
 keybind = ctrl+u=text:\x15
 auto-update-channel = tip
