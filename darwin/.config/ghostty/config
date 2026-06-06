@@ -18,5 +18,6 @@ custom-shader-animation = true
 # background-image-fit = cover
 # background-image-repeat = false
 keybind = shift+enter=text:\x1b\r
+keybind = ctrl+h=text:\x7f
 auto-update-channel = tip
 macos-option-as-alt = true
