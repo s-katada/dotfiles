@@ -4,5 +4,13 @@
     "command": "bash /Users/awesomemr/dotfiles/darwin/.cursor/statusline-command.sh",
     "padding": 1,
     "timeoutMs": 2000
-  }
+  },
+  "display": {
+    "showStatusIndicators": true
+  },
+  "editor": {
+    "defaultBehavior": "agent",
+    "vimMode": false
+  },
+  "notifications": true
 }
