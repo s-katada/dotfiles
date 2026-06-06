@@ -1,0 +1,8 @@
+{
+  "statusLine": {
+    "type": "command",
+    "command": "bash /Users/awesomemr/dotfiles/darwin/.cursor/statusline-command.sh",
+    "padding": 1,
+    "timeoutMs": 2000
+  }
+}

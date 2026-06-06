@@ -1,0 +1,15 @@
+---
+description: Dotfiles workspace guidance
+alwaysApply: true
+---
+
+# Dotfiles Workspace Guidance
+
+- Respond to the user in Japanese.
+- Treat this repository as the source for files that are linked into the home directory.
+- Keep edits scoped to the requested tool or config area.
+- Do not commit, print, copy, or preserve secrets such as tokens, API keys, OAuth files, or machine-local state.
+- Do not delete backup or recovery files that may be needed for verification unless the user explicitly approves it.
+- Never revert or overwrite user changes unless the user explicitly asks for that exact action.
+- Prefer existing patterns under `darwin/` when adding new home-directory configuration.
+- For generated or runtime-heavy directories, add ignore rules instead of tracking their contents.
