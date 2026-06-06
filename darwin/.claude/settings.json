@@ -55,11 +55,13 @@
   },
   "enabledPlugins": {
     "typescript-lsp@claude-plugins-official": true,
-    "rust-analyzer-lsp@claude-plugins-official": true
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "clangd-lsp@claude-plugins-official": true
   },
   "effortLevel": "high",
   "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
+  "preferredNotifChannel": "ghostty",
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true,
-  "preferredNotifChannel": "ghostty"
+  "voiceEnabled": true
 }
