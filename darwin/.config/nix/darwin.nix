@@ -73,6 +73,34 @@
     ];
   };
 
+  # macOS 入力デバイス設定
+  system.defaults = {
+    NSGlobalDomain = {
+      # ポインタ/スクロール
+      "com.apple.trackpad.scaling" = 3.0; # トラックパッドの軌跡の速さ: 0-3
+      "com.apple.swipescrolldirection" = true; # ナチュラルスクロール
+
+      # Force Click は誤操作が多いので無効化
+      "com.apple.trackpad.forceClick" = false;
+    };
+
+    # マウスの軌跡の速さ: 0-3。CPI/DPI 自体はデバイス側設定なので、
+    # macOS では tracking speed を Nix 管理する。
+    ".GlobalPreferences"."com.apple.mouse.scaling" = 3.0;
+
+    trackpad = {
+      Clicking = true; # タップでクリック
+      Dragging = false;
+      TrackpadRightClick = true; # 2本指クリック/タップで副ボタン
+      TrackpadThreeFingerDrag = false;
+      TrackpadThreeFingerTapGesture = 2; # Look up & data detectors
+
+      ActuationStrength = 1; # Silent Clicking 無効
+      FirstClickThreshold = 0; # 軽いクリック
+      SecondClickThreshold = 0; # 軽い Force Touch
+    };
+  };
+
   # システムバージョン
   system.stateVersion = 4;
   system.primaryUser = "awesomemr";
