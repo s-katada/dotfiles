@@ -58,7 +58,7 @@
     "rust-analyzer-lsp@claude-plugins-official": true,
     "clangd-lsp@claude-plugins-official": true
   },
-  "effortLevel": "high",
+  "effortLevel": "max",
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
   "preferredNotifChannel": "ghostty",
