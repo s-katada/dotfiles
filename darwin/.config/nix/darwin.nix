@@ -13,7 +13,7 @@
     onActivation = {
       autoUpdate = true;
       upgrade = true;
-      cleanup = "zap";  # Homebrew で管理していないものを削除
+      cleanup = "none";  # Homebrew Bundle の cleanup は手動で確認してから行う
     };
     taps = [
       "grishka/grishka"
