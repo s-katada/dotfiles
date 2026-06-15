@@ -71,6 +71,20 @@
       "kicad"
       "azookey"
     ];
+
+    # Mac App Store アプリ（mas 経由。事前に App Store.app へサインインが必要）
+    masApps = {
+      "GarageBand" = 682658836;
+      "iMovie" = 408981434;
+      "Keynote" = 409183694;
+      "Kindle" = 302584613;
+      "LINE" = 539883307;
+      "Numbers" = 409203825;
+      "Pages" = 409201541;
+      "Perplexity" = 6714467650;
+      "Telephone" = 406825478;
+      "The Unarchiver" = 425424353;
+    };
   };
 
   # macOS 入力デバイス設定
@@ -82,6 +96,38 @@
 
       # Force Click は誤操作が多いので無効化
       "com.apple.trackpad.forceClick" = false;
+
+      # キーボード（GUI 設定を廃止するための追加。全て nix-darwin で検証済み）
+      KeyRepeat = 2; # キーリピート速度（小さいほど速い）
+      InitialKeyRepeat = 15; # リピート開始までの遅延
+      ApplePressAndHoldEnabled = false; # アクセント長押しを無効化（キーリピート優先）
+      "com.apple.keyboard.fnState" = true; # F1-F12 を標準ファンクションキーに
+      AppleKeyboardUIMode = 3; # フルキーボードアクセス
+
+      # テキスト入力（開発者向けに自動変換を全てオフ）
+      NSAutomaticSpellingCorrectionEnabled = false;
+      NSAutomaticCapitalizationEnabled = false;
+      NSAutomaticPeriodSubstitutionEnabled = false;
+      NSAutomaticDashSubstitutionEnabled = false;
+      NSAutomaticQuoteSubstitutionEnabled = false; # ストレートクォートを保持
+      NSAutomaticInlinePredictionEnabled = false;
+
+      # 外観
+      AppleInterfaceStyle = "Dark"; # ダークモード固定（Light にするにはこの行を削除）
+      AppleShowScrollBars = "Always"; # WhenScrolling|Automatic|Always
+      _HIHideMenuBar = false; # メニューバーを自動非表示にしない
+
+      # 地域・時刻・単位
+      AppleICUForce24HourTime = true;
+      AppleMeasurementUnits = "Centimeters";
+      AppleMetricUnits = 1;
+      AppleTemperatureUnit = "Celsius";
+
+      # その他
+      AppleShowAllExtensions = true; # 拡張子を常に表示（finder 側とも併用）
+      NSDocumentSaveNewDocumentsToCloud = false; # 既定保存先をローカルに
+      AppleFontSmoothing = 1;
+      "com.apple.sound.beep.feedback" = 0; # 音量変更時のビープ無効
     };
 
     # マウスの軌跡の速さ: 0-3。CPI/DPI 自体はデバイス側設定なので、
@@ -99,7 +145,106 @@
       FirstClickThreshold = 0; # 軽いクリック
       SecondClickThreshold = 0; # 軽い Force Touch
     };
+
+    # ---- Dock ----
+    dock = {
+      autohide = true;
+      autohide-delay = 0.0; # Nix float。表示までの遅延0
+      autohide-time-modifier = 0.2; # Nix float。表示/非表示アニメ速度
+      tilesize = 48;
+      magnification = false;
+      orientation = "bottom"; # bottom|left|right
+      mineffect = "scale"; # genie|suck|scale
+      minimize-to-application = true;
+      show-recents = false;
+      mru-spaces = false; # Spaces の自動並び替え無効（aerospace 向け）
+      expose-group-apps = false;
+      showhidden = true;
+      show-process-indicators = true;
+      # ホットコーナー（1=何もしない。0 は無効値なので使わないこと）
+      wvous-tl-corner = 1;
+      wvous-tr-corner = 1;
+      wvous-bl-corner = 1;
+      wvous-br-corner = 1;
+    };
+
+    # ---- Finder ----
+    finder = {
+      AppleShowAllExtensions = true;
+      AppleShowAllFiles = true; # 隠しファイル表示
+      ShowPathbar = true;
+      ShowStatusBar = true;
+      FXPreferredViewStyle = "Nlsv"; # リスト表示（icnv/Nlsv/clmv/Flwv）
+      _FXSortFoldersFirst = true;
+      FXDefaultSearchScope = "SCcf"; # 検索は現在のフォルダ
+      FXEnableExtensionChangeWarning = false;
+      ShowHardDrivesOnDesktop = false;
+      ShowExternalHardDrivesOnDesktop = true;
+      ShowMountedServersOnDesktop = false;
+      ShowRemovableMediaOnDesktop = true;
+      QuitMenuItem = false;
+      NewWindowTarget = "Home";
+      _FXShowPosixPathInTitle = true;
+    };
+
+    # ---- スクリーンショット（保存先 ~/Screenshots は home.nix の activation で作成）----
+    screencapture = {
+      location = "~/Screenshots";
+      type = "png";
+      disable-shadow = true;
+      include-date = true;
+      show-thumbnail = false;
+    };
+
+    # ---- スクリーンセーバ / ロック ----
+    screensaver = {
+      askForPassword = true;
+      askForPasswordDelay = 0; # 0=即時
+    };
+
+    # ---- ログインウィンドウ ----
+    loginwindow = {
+      GuestEnabled = false;
+      SHOWFULLNAME = false;
+      DisableConsoleAccess = true; # '>console' ログインを禁止
+    };
+
+    # ---- Window Manager（aerospace 運用のため macOS 側タイリングを無効化）----
+    WindowManager = {
+      GloballyEnabled = false; # Stage Manager オフ
+      EnableStandardClickToShowDesktop = false;
+      EnableTilingByEdgeDrag = false;
+      EnableTopTilingByEdgeDrag = false;
+      EnableTiledWindowMargins = false;
+    };
+
+    # ---- Spaces ----
+    spaces.spans-displays = false; # ディスプレイごとに別 Spaces（要ログアウト）
+
+    # ---- メニューバー時計 ----
+    menuExtraClock = {
+      ShowSeconds = false;
+      Show24Hour = true;
+      ShowDate = 1; # 0=スペース次第,1=常に,2=表示しない
+      ShowDayOfWeek = true;
+    };
+
+    # ---- コントロールセンター ----
+    controlcenter = {
+      BatteryShowPercentage = true;
+    };
+
+    # ---- ソフトウェアアップデート ----
+    SoftwareUpdate.AutomaticallyInstallMacOSUpdates = false;
   };
+
+  # ホスト名（system.defaults ではなくトップレベルのオプション）
+  networking.hostName = "s-katada-private";
+  networking.computerName = "s-katada-private";
+  networking.localHostName = "s-katada-private";
+
+  # アプリケーションファイアウォール（旧 system.defaults.alf.* は廃止済み）
+  networking.applicationFirewall.enable = true;
 
   # システムバージョン
   system.stateVersion = 4;

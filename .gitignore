@@ -60,3 +60,23 @@ ubuntu/.config/fish/
 ubuntu/.config/git/
 ubuntu/.config/home-manager/
 ubuntu/.config/systemd/
+
+# home-manager が生成する /nix/store シンボリックリンク（コミット禁止。新マシンで壊れる）
+darwin/.config/fish/config.fish
+darwin/.config/git/config
+darwin/.config/direnv/lib/hm-nix-direnv.sh
+
+# fish のランタイム状態（マシン固有・set -U が書き換える）
+darwin/.config/fish/fish_variables
+
+# OrbStack が再生成する補完（インストール後に自動生成。新マシンでは dangling）
+darwin/.config/fish/completions/docker.fish
+darwin/.config/fish/completions/kubectl.fish
+darwin/.config/fish/completions/orbctl.fish
+
+# Cursor がランタイムで書き換える設定（machine state として扱う）
+darwin/.cursor/cli-config.json
+darwin/.cursor/hooks.json
+
+# シークレット: gh の OAuth トークンを含む（git から除去すること）
+darwin/.config/gh/hosts.yml
