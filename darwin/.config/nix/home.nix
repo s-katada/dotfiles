@@ -1,4 +1,13 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
+let
+  # dotfiles リポジトリ作業ツリーの絶対パス。
+  # flake のルートは darwin/.config/nix/ なので相対 path リテラル(../alacritty 等)は
+  # flake の外を指してしまい pure 評価で使えない。絶対パス文字列の
+  # mkOutOfStoreSymlink なら flake purity を回避でき、かつアプリが書き換えた
+  # 設定も git diff として現れる（GNU Stow と同じ運用）。
+  repoDarwin = "${config.home.homeDirectory}/dotfiles/darwin";
+  link = relPath: config.lib.file.mkOutOfStoreSymlink "${repoDarwin}/${relPath}";
+in
 {
   home.stateVersion = "24.05";
 
@@ -138,4 +147,31 @@
     TERM = "xterm-256color";
     PGPASSWORD = "postgres";
   };
+
+  # ---- dotfiles リンク（GNU Stow を廃止し home-manager に一本化）----
+  # 全て mkOutOfStoreSymlink（リポジトリ作業ツリーへの書き込み可能シンボリックリンク）。
+  # darwin-rebuild switch がこれらを作るので、別途 stow を走らせる手作業が不要になる。
+  xdg.configFile = {
+    "alacritty".source     = link ".config/alacritty";
+    "ghostty".source       = link ".config/ghostty";
+    "karabiner".source     = link ".config/karabiner"; # Karabiner はディレクトリ全体をリンク（公式要件）
+    "starship.toml".source = link ".config/starship.toml";
+    "nvim".source          = link ".config/nvim";
+    "tmux".source          = link ".config/tmux";
+    "wezterm".source       = link ".config/wezterm";
+    "zellij".source        = link ".config/zellij";
+    "gh/config.yml".source = link ".config/gh/config.yml"; # hosts.yml はトークンを含むので除外
+    "git/ignore".source    = link ".config/git/ignore";   # git/config は programs.git が生成
+  };
+
+  # ~/ 直下のファイル（stow シンボリックリンクを置き換え）
+  home.file.".aerospace.toml".source = link ".aerospace.toml";
+  home.file.".emacs.d".source        = link ".emacs.d";
+  # Claude の静的設定（~/.claude はアプリ管理の実ディレクトリなので個別ファイルのみリンク）
+  home.file.".claude/settings.json".source         = link ".claude/settings.json";
+  home.file.".claude/statusline-command.sh".source = link ".claude/statusline-command.sh";
+
+  # スクリーンショット保存先（system.defaults.screencapture.location 用に作成）
+  home.activation.makeScreenshotsDir =
+    lib.hm.dag.entryAfter [ "writeBoundary" ] ''run mkdir -p "$HOME/Screenshots"'';
 }
