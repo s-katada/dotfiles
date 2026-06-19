@@ -13,9 +13,6 @@
                                             {
                                                 "product_id": 16985,
                                                 "vendor_id": 19279
-                                            },
-                                            {
-                                                "product": "kobu"
                                             }
                                         ],
                                         "type": "device_unless"
@@ -46,9 +43,6 @@
                                             {
                                                 "product_id": 16985,
                                                 "vendor_id": 19279
-                                            },
-                                            {
-                                                "product": "kobu"
                                             }
                                         ],
                                         "type": "device_unless"
@@ -138,9 +132,6 @@
                                             {
                                                 "vendor_id": 19279,
                                                 "product_id": 16985
-                                            },
-                                            {
-                                                "product": "kobu"
                                             }
                                         ]
                                     }
@@ -182,9 +173,6 @@
                                             {
                                                 "vendor_id": 19279,
                                                 "product_id": 16985
-                                            },
-                                            {
-                                                "product": "kobu"
                                             }
                                         ]
                                     }
@@ -231,9 +219,6 @@
                                             {
                                                 "vendor_id": 19279,
                                                 "product_id": 16985
-                                            },
-                                            {
-                                                "product": "kobu"
                                             }
                                         ]
                                     }
