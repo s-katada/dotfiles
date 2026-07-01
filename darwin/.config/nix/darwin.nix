@@ -19,6 +19,9 @@
       "grishka/grishka"
       "nikitabobko/tap"
     ];
+    brews = [
+      "herdr"  # ターミナル常駐のエージェントマルチプレクサ。nixpkgs未収録のため brew で管理
+    ];
     casks = [
       # フォント
       "font-hack-nerd-font"
