@@ -1,3 +1,4 @@
+onboarding = false
 # herdr 設定
 # キーバインドは zellij (darwin/.config/zellij/config.kdl) の操作感に寄せている。
 # 対応表と妥協点は ./README.md を参照。
