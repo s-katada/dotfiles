@@ -1,0 +1,114 @@
+2026-07-01T13:46:45.276638Z  INFO herdr::platform::macos: raised server file descriptor soft limit previous=256 target=8192
+2026-07-01T13:46:45.277203Z  INFO herdr::api::server: api server listening path=/Users/awesomemr/.config/herdr/herdr.sock
+2026-07-01T13:46:45.278159Z  INFO herdr::app: using pane scrollback configuration pane_scrollback_limit_bytes=10000000
+2026-07-01T13:46:45.294276Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-01T13:46:45.296194Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=1 rows=24 cols=80 scrollback_limit_bytes=10000000
+2026-07-01T13:46:45.299831Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=1 pid=41156
+2026-07-01T13:46:45.300133Z  INFO herdr::logging: workspace created event="workspace.create" subsystem="workspace" outcome="ok" workspace_id="w1" pane_id=1
+2026-07-01T13:46:45.300159Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w1"
+2026-07-01T13:46:45.300202Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w1" tab_id="w1:t1"
+2026-07-01T13:46:45.300220Z  INFO herdr::server::headless: created startup workspace cwd=/Users/awesomemr/git/mksc/d-wcs-tico-sensing
+2026-07-01T13:46:45.300375Z  INFO herdr::server::headless: client protocol socket listening path=/Users/awesomemr/.config/herdr/herdr-client.sock
+2026-07-01T13:46:45.300403Z  INFO herdr::server::headless: herdr server started api_socket=/Users/awesomemr/.config/herdr/herdr.sock client_socket=/Users/awesomemr/.config/herdr/herdr-client.sock
+2026-07-01T13:46:45.300428Z  INFO herdr::logging: herdr starting event="app.startup" subsystem="server" outcome="started" pid=41077
+2026-07-01T13:46:45.505703Z  INFO herdr::server::headless: client connected client_id=2 cols=427 rows=72 cell_width_px=0 cell_height_px=0 render_encoding=SemanticFrame
+2026-07-01T13:46:50.304740Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/awesomemr/.config/herdr/session.json workspaces=1
+2026-07-01T13:46:51.762314Z  INFO herdr::logging: pane child exited event="pane.exit" subsystem="pane" outcome="completed" pane_id=1 status="ExitStatus { code: 0, signal: None }"
+2026-07-01T13:46:51.764521Z  INFO herdr::pane: pane session terminated pane=1 pid=41156 signal=Hangup
+2026-07-01T13:46:51.765107Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=2 rows=71 cols=401 scrollback_limit_bytes=10000000
+2026-07-01T13:46:51.772922Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=2 pid=42240
+2026-07-01T13:46:51.773213Z  INFO herdr::logging: workspace created event="workspace.create" subsystem="workspace" outcome="ok" workspace_id="w2" pane_id=2
+2026-07-01T13:46:51.773229Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w2"
+2026-07-01T13:46:51.773241Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w2" tab_id="w2:t1"
+2026-07-01T13:46:53.976784Z  INFO herdr::logging: pane child exited event="pane.exit" subsystem="pane" outcome="completed" pane_id=2 status="ExitStatus { code: 0, signal: None }"
+2026-07-01T13:46:53.979488Z  INFO herdr::pane: pane session terminated pane=2 pid=42240 signal=Hangup
+2026-07-01T13:46:53.979807Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=3 rows=71 cols=401 scrollback_limit_bytes=10000000
+2026-07-01T13:46:53.987736Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=3 pid=42275
+2026-07-01T13:46:53.988021Z  INFO herdr::logging: workspace created event="workspace.create" subsystem="workspace" outcome="ok" workspace_id="w3" pane_id=3
+2026-07-01T13:46:53.988035Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w3"
+2026-07-01T13:46:53.988087Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w3" tab_id="w3:t1"
+2026-07-01T13:46:58.991392Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/awesomemr/.config/herdr/session.json workspaces=1
+2026-07-01T13:47:03.201990Z  INFO herdr::logging: pane child exited event="pane.exit" subsystem="pane" outcome="completed" pane_id=3 status="ExitStatus { code: 0, signal: None }"
+2026-07-01T13:47:03.204839Z  INFO herdr::pane: pane session terminated pane=3 pid=42275 signal=Hangup
+2026-07-01T13:47:03.205241Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=4 rows=71 cols=401 scrollback_limit_bytes=10000000
+2026-07-01T13:47:03.212825Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=4 pid=42350
+2026-07-01T13:47:03.213065Z  INFO herdr::logging: workspace created event="workspace.create" subsystem="workspace" outcome="ok" workspace_id="w4" pane_id=4
+2026-07-01T13:47:03.213080Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w4"
+2026-07-01T13:47:03.213092Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-01T13:47:06.860551Z  INFO herdr::server::headless: client disconnected client_id=2
+2026-07-01T13:47:08.219220Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/awesomemr/.config/herdr/session.json workspaces=1
+2026-07-01T13:47:25.238602Z  INFO herdr::server::headless: client connected client_id=4 cols=429 rows=76 cell_width_px=0 cell_height_px=0 render_encoding=SemanticFrame
+2026-07-01T13:48:42.428848Z  INFO herdr::pane: agent changed pane=4 previous_agent=None agent=Some(Claude) process=claude pgid=Some(42833)
+2026-07-01T13:57:15.730027Z  INFO herdr::server::headless: client resize client_id=4 cols=214 rows=76 cell_width_px=0 cell_height_px=0
+2026-07-01T13:57:18.537321Z  INFO herdr::server::headless: client resize client_id=4 cols=429 rows=76 cell_width_px=0 cell_height_px=0
+2026-07-01T13:57:27.564566Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/awesomemr/.config/herdr/session.json workspaces=1
+2026-07-01T13:58:14.686060Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=5 rows=37 cols=201 scrollback_limit_bytes=10000000
+2026-07-01T13:58:14.692624Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=5 pid=45189
+2026-07-01T13:58:19.697332Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/awesomemr/.config/herdr/session.json workspaces=1
+2026-07-01T14:16:45.296301Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-01T14:46:45.307100Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-01T14:51:43.825991Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-01T14:51:48.835022Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/awesomemr/.config/herdr/session.json workspaces=1
+2026-07-01T15:16:45.317417Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-01T15:46:45.326998Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-01T16:16:45.339519Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-01T16:46:45.347823Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-01T16:57:58.300132Z  INFO herdr::server::headless: client resize client_id=4 cols=239 rows=56 cell_width_px=0 cell_height_px=0
+2026-07-01T17:18:36.150503Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-01T17:52:09.899632Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-01T18:25:02.562839Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-01T18:57:40.560792Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-01T19:29:57.364962Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-01T20:02:15.061496Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-01T20:02:18.134155Z  WARN herdr::detect::manifest_update: agent detection manifest update failed: failed to fetch https://herdr.dev/agent-detection/index.toml
+2026-07-01T20:02:18.134154Z  WARN herdr::logging: update check failed event="update.check.complete" subsystem="update" outcome="error" err="failed to fetch Homebrew formula JSON"
+2026-07-01T20:34:17.535474Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-01T21:06:13.177494Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-01T21:22:21.536402Z  INFO herdr::server::headless: client resize client_id=4 cols=429 rows=76 cell_width_px=0 cell_height_px=0
+2026-07-01T21:37:37.857024Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-01T22:07:37.859976Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-01T22:33:48.833720Z  INFO herdr::server::headless: client resize client_id=4 cols=239 rows=56 cell_width_px=0 cell_height_px=0
+2026-07-01T22:37:51.798549Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-02T00:00:35.372482Z  INFO herdr::server::headless: client resize client_id=4 cols=239 rows=49 cell_width_px=0 cell_height_px=0
+2026-07-02T00:00:38.118616Z  INFO herdr::server::headless: client resize client_id=4 cols=172 rows=47 cell_width_px=0 cell_height_px=0
+2026-07-02T00:01:02.283878Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:01:02.998362Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:01:08.003955Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/awesomemr/.config/herdr/session.json workspaces=1
+2026-07-02T00:01:09.837196Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:01:10.254217Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:01:10.518915Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:01:10.718733Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:01:10.938977Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:01:11.137465Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:01:11.471365Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:01:11.785245Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:01:12.123912Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:01:12.788325Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:01:13.719784Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:01:18.722801Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/awesomemr/.config/herdr/session.json workspaces=1
+2026-07-02T00:01:21.794427Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=6 rows=23 cols=36 scrollback_limit_bytes=10000000
+2026-07-02T00:01:21.804715Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=6 pid=70187
+2026-07-02T00:01:26.811187Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/awesomemr/.config/herdr/session.json workspaces=1
+2026-07-02T00:01:33.685919Z  INFO herdr::logging: checking for updates event="update.check.start" subsystem="update" outcome="started"
+2026-07-02T00:01:37.468442Z  INFO herdr::pane: agent changed pane=6 previous_agent=None agent=Some(Claude) process=claude pgid=Some(71176)
+2026-07-02T00:02:41.953805Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:02:45.987527Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:02:48.887615Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:02:52.841166Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:02:53.420399Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:02:53.988343Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:02:54.168712Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:02:55.436633Z  INFO herdr::logging: workspace focused event="workspace.focus" subsystem="workspace" outcome="ok" workspace_id="w4"
+2026-07-02T00:02:55.437058Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:03:00.441354Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/awesomemr/.config/herdr/session.json workspaces=1
+2026-07-02T00:04:24.693344Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:04:25.402159Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:04:30.409685Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/awesomemr/.config/herdr/session.json workspaces=1
+2026-07-02T00:04:35.600343Z  INFO herdr::logging: spawning pane terminal event="pane.spawn.start" subsystem="pane" outcome="started" pane_id=7 rows=46 cols=73 scrollback_limit_bytes=10000000
+2026-07-02T00:04:35.603692Z  INFO herdr::logging: pane child spawned event="pane.spawned" subsystem="pane" outcome="ok" pane_id=7 pid=71342
+2026-07-02T00:04:35.603923Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t2"
+2026-07-02T00:04:35.604276Z  INFO herdr::logging: tab created event="tab.create" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t2" pane_id=7
+2026-07-02T00:04:40.611179Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/awesomemr/.config/herdr/session.json workspaces=1
+2026-07-02T00:04:58.453969Z  INFO herdr::logging: tab focused event="tab.focus" subsystem="tab" outcome="ok" workspace_id="w4" tab_id="w4:t1"
+2026-07-02T00:05:03.459612Z  INFO herdr::logging: session saved event="persist.save" subsystem="persist" outcome="ok" path=/Users/awesomemr/.config/herdr/session.json workspaces=1
+2026-07-02T00:05:32.126880Z  INFO herdr::pane: agent changed pane=4 previous_agent=Some(Claude) agent=None pgid=Some(42350)
