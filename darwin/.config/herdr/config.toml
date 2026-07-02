@@ -8,6 +8,10 @@
 # プレフィックス2度押しでリテラル ctrl+p をペイン内アプリへ送信。
 prefix = "ctrl+p"
 
+# Enter か Esc を押すまでプレフィックスモードに留まる (zellij のモーダル風)。
+# 自前パッチの独自オプション。ビルド手順: ./build-patched.sh、差分: ./patches/
+prefix_sticky = true
+
 # ペイン操作 (zellij: Ctrl p → キー / Alt+キー)
 focus_pane_left = ["prefix+h", "alt+h", "alt+left"]
 focus_pane_down = ["prefix+j", "alt+j", "alt+down"]
