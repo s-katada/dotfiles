@@ -1,0 +1,294 @@
+diff --git a/src/app/input/navigate.rs b/src/app/input/navigate.rs
+index 7072f65..44af2eb 100644
+--- a/src/app/input/navigate.rs
++++ b/src/app/input/navigate.rs
+@@ -62,13 +62,33 @@ impl App {
+                     action,
+                     ActionContext::Prefix,
+                 );
++                // Detach hands the client away; re-entering prefix mode there
++                // would leave stale sticky mode behind on reattach.
++                if action != NavigateAction::Detach {
++                    restore_sticky_prefix(&mut self.state);
++                }
+             }
+             self.selection_autoscroll_deadline = None;
+             return;
+         }
+ 
+         if let Some(binding) = command_for_key(&self.state, raw_key, BindingDispatch::Prefix) {
++            // Pane commands open a pane the user wants to type into
++            // immediately, so only detached shell commands keep sticky mode.
++            let keeps_sticky = binding.action == crate::config::CustomCommandAction::Shell;
+             self.launch_custom_command(binding, ActionContext::Prefix);
++            if keeps_sticky {
++                restore_sticky_prefix(&mut self.state);
++            }
++            return;
++        }
++
++        if self.state.prefix_sticky {
++            // Sticky prefix mode swallows unbound keys instead of exiting;
++            // Enter is the deliberate way out (Esc is handled above).
++            if key.code == KeyCode::Enter {
++                leave_command_mode(&mut self.state);
++            }
+             return;
+         }
+ 
+@@ -1016,6 +1036,17 @@ fn leave_command_mode(state: &mut AppState) {
+     };
+ }
+ 
++/// Re-enters prefix mode after a prefix action when `[keys] prefix_sticky`
++/// is enabled, so the user can chain actions until Enter or Esc exits.
++/// Actions that deliberately moved to another mode (copy, resize, dialogs,
++/// pickers) are left alone; only the "action finished, back to terminal"
++/// transition is reverted.
++fn restore_sticky_prefix(state: &mut AppState) {
++    if state.prefix_sticky && state.active.is_some() && state.mode == Mode::Terminal {
++        state.mode = Mode::Prefix;
++    }
++}
++
+ fn write_scrollback_temp_file(content: &str) -> io::Result<std::path::PathBuf> {
+     let mut last_collision = None;
+     for attempt in 0..16 {
+@@ -2265,4 +2296,85 @@ last_pane = "prefix+tab"
+         assert!(state.detach_requested);
+         assert!(!state.should_quit);
+     }
++
++    fn sticky_prefix_app() -> App {
++        let (_api_tx, api_rx) = tokio::sync::mpsc::unbounded_channel();
++        let mut app = App::new(
++            &Config::default(),
++            true,
++            None,
++            api_rx,
++            crate::api::EventHub::default(),
++        );
++        app.state.workspaces = vec![Workspace::test_new("test")];
++        app.state.active = Some(0);
++        app.state.selected = 0;
++        app.state.prefix_sticky = true;
++        app.state.mode = Mode::Prefix;
++        app
++    }
++
++    #[test]
++    fn sticky_prefix_stays_after_pane_focus_action() {
++        let mut app = sticky_prefix_app();
++
++        app.handle_prefix_key(TerminalKey::new(KeyCode::Char('h'), KeyModifiers::empty()));
++
++        assert_eq!(app.state.mode, Mode::Prefix);
++    }
++
++    #[test]
++    fn sticky_prefix_stays_after_zoom_action() {
++        let mut app = sticky_prefix_app();
++
++        app.handle_prefix_key(TerminalKey::new(KeyCode::Char('z'), KeyModifiers::empty()));
++
++        assert_eq!(app.state.mode, Mode::Prefix);
++    }
++
++    #[test]
++    fn sticky_prefix_enter_exits_to_terminal() {
++        let mut app = sticky_prefix_app();
++
++        app.handle_prefix_key(TerminalKey::new(KeyCode::Enter, KeyModifiers::empty()));
++
++        assert_eq!(app.state.mode, Mode::Terminal);
++    }
++
++    #[test]
++    fn sticky_prefix_esc_exits_to_terminal() {
++        let mut app = sticky_prefix_app();
++
++        app.handle_prefix_key(TerminalKey::new(KeyCode::Esc, KeyModifiers::empty()));
++
++        assert_eq!(app.state.mode, Mode::Terminal);
++    }
++
++    #[test]
++    fn sticky_prefix_swallows_unbound_key() {
++        let mut app = sticky_prefix_app();
++
++        app.handle_prefix_key(TerminalKey::new(KeyCode::Char('0'), KeyModifiers::empty()));
++
++        assert_eq!(app.state.mode, Mode::Prefix);
++    }
++
++    #[test]
++    fn sticky_prefix_respects_mode_switching_action() {
++        let mut app = sticky_prefix_app();
++
++        app.handle_prefix_key(TerminalKey::new(KeyCode::Char('r'), KeyModifiers::empty()));
++
++        assert_eq!(app.state.mode, Mode::Resize);
++    }
++
++    #[test]
++    fn non_sticky_prefix_exits_after_action() {
++        let mut app = sticky_prefix_app();
++        app.state.prefix_sticky = false;
++
++        app.handle_prefix_key(TerminalKey::new(KeyCode::Char('h'), KeyModifiers::empty()));
++
++        assert_eq!(app.state.mode, Mode::Terminal);
++    }
+ }
+diff --git a/src/app/mod.rs b/src/app/mod.rs
+index bf4fecc..0155dca 100644
+--- a/src/app/mod.rs
++++ b/src/app/mod.rs
+@@ -580,6 +580,7 @@ impl App {
+             outer_terminal_focus: None,
+             prefix_code,
+             prefix_mods,
++            prefix_sticky: config.keys.prefix_sticky,
+             default_sidebar_width: config.ui.sidebar_width,
+             sidebar_width,
+             sidebar_min_width,
+@@ -1276,6 +1277,7 @@ impl App {
+                 Ok((live, keybind_diagnostics)) => {
+                     self.state.prefix_code = live.prefix.0;
+                     self.state.prefix_mods = live.prefix.1;
++                    self.state.prefix_sticky = config.keys.prefix_sticky;
+                     self.state.keybinds = live.keybinds;
+                     diagnostics.extend(keybind_diagnostics);
+                 }
+diff --git a/src/app/state.rs b/src/app/state.rs
+index 9e5dbed..e55eada 100644
+--- a/src/app/state.rs
++++ b/src/app/state.rs
+@@ -1341,6 +1341,7 @@ pub struct AppState {
+     // Config
+     pub prefix_code: KeyCode,
+     pub prefix_mods: KeyModifiers,
++    pub prefix_sticky: bool,
+     pub default_sidebar_width: u16,
+     pub sidebar_width: u16,
+     pub sidebar_min_width: u16,
+@@ -1700,6 +1701,7 @@ impl AppState {
+             outer_terminal_focus: None,
+             prefix_code: KeyCode::Char('b'),
+             prefix_mods: KeyModifiers::CONTROL,
++            prefix_sticky: false,
+             default_sidebar_width: 26,
+             sidebar_width: 26,
+             sidebar_min_width: 18,
+diff --git a/src/config/model.rs b/src/config/model.rs
+index 51af278..7c0a689 100644
+--- a/src/config/model.rs
++++ b/src/config/model.rs
+@@ -292,6 +292,9 @@ pub struct LoadedConfig {
+ pub struct KeysConfig {
+     /// Prefix key to enter prefix mode (e.g. "ctrl+b", "f12", "esc").
+     pub prefix: String,
++    /// Stay in prefix mode after each action until Enter or Esc exits
++    /// (zellij-style modal behavior). Default: false.
++    pub prefix_sticky: bool,
+     /// Open keybinding help. Default: "prefix+?"
+     pub help: BindingConfig,
+     /// Open settings. Default: "prefix+s"
+@@ -412,6 +415,8 @@ pub(crate) struct KeysConfigOverlay {
+     #[serde(skip_serializing_if = "Option::is_none")]
+     prefix: Option<String>,
+     #[serde(skip_serializing_if = "Option::is_none")]
++    prefix_sticky: Option<bool>,
++    #[serde(skip_serializing_if = "Option::is_none")]
+     help: Option<BindingConfig>,
+     #[serde(skip_serializing_if = "Option::is_none")]
+     settings: Option<BindingConfig>,
+@@ -539,6 +544,7 @@ impl<'de> Deserialize<'de> for KeysConfig {
+         }
+ 
+         apply_field!(prefix);
++        apply_field!(prefix_sticky);
+         apply_field!(help);
+         apply_field!(settings);
+         apply_field!(new_workspace);
+@@ -637,6 +643,7 @@ impl KeysConfig {
+         }
+ 
+         profile.prefix = Some(self.prefix.clone());
++        profile.prefix_sticky = Some(self.prefix_sticky);
+         copy_effective_action_field!(help, keybinds.help);
+         copy_effective_action_field!(settings, keybinds.settings);
+         copy_effective_action_field!(new_workspace, keybinds.new_workspace);
+@@ -888,6 +895,7 @@ impl Default for KeysConfig {
+     fn default() -> Self {
+         Self {
+             prefix: "ctrl+b".into(),
++            prefix_sticky: false,
+             help: BindingConfig::one("prefix+?"),
+             settings: BindingConfig::one("prefix+s"),
+             new_workspace: BindingConfig::one("prefix+shift+n"),
+@@ -1088,6 +1096,19 @@ manifest_check = false
+         assert!(!config.update.manifest_check);
+     }
+ 
++    #[test]
++    fn prefix_sticky_defaults_false_and_parses() {
++        assert!(!Config::default().keys.prefix_sticky);
++
++        let toml = r#"
++[keys]
++prefix_sticky = true
++"#;
++        let config: Config = toml::from_str(toml).unwrap();
++        assert!(config.keys.prefix_sticky);
++        assert!(config.keys.key_field_is_user_configured("prefix_sticky"));
++    }
++
+     #[test]
+     fn terminal_default_shell_defaults_empty_and_parses() {
+         let default_config = Config::default();
+diff --git a/src/main.rs b/src/main.rs
+index ed4d454..5df99b6 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -164,6 +164,10 @@ const DEFAULT_CONFIG: &str = r##"# herdr configuration
+ # alt+..., cmd/super, and punctuation-with-modifiers may depend on your terminal/tmux setup.
+ # prefix = "ctrl+b"
+ 
++# Stay in prefix mode after each action until Enter or Esc exits
++# (zellij-style modal behavior). Unbound keys are swallowed while active.
++# prefix_sticky = false
++
+ # Prefix-mode actions
+ # help = "prefix+?"
+ # settings = "prefix+s"
+diff --git a/src/ui/menus.rs b/src/ui/menus.rs
+index 42b4ec7..acc5325 100644
+--- a/src/ui/menus.rs
++++ b/src/ui/menus.rs
+@@ -42,9 +42,14 @@ pub(super) fn render_prefix_overlay(app: &AppState, frame: &mut Frame, area: Rec
+     let help = prefix_rhs_label(&app.keybinds.help);
+     let prefix = crate::config::format_key_combo((app.prefix_code, app.prefix_mods));
+ 
+-    let line = Line::from(vec![
+-        Span::styled(" PREFIX ", mode_style),
+-        Span::raw(" "),
++    let mut spans = vec![Span::styled(" PREFIX ", mode_style), Span::raw(" ")];
++    if app.prefix_sticky {
++        spans.extend([
++            Span::styled("enter", key),
++            Span::styled(" exit  ", dim),
++        ]);
++    }
++    spans.extend([
+         Span::styled("esc", key),
+         Span::styled(" cancel  ", dim),
+         Span::styled(prefix, key),
+@@ -54,6 +59,7 @@ pub(super) fn render_prefix_overlay(app: &AppState, frame: &mut Frame, area: Rec
+         Span::styled(help, key),
+         Span::styled(" keybinds", dim),
+     ]);
++    let line = Line::from(spans);
+ 
+     let overlay_y = area.y + area.height.saturating_sub(1);
+     let overlay_area = Rect::new(area.x, overlay_y, area.width, 1);

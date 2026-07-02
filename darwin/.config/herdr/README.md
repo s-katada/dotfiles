@@ -13,8 +13,28 @@ herdr は tmux 型の**単一プレフィックス方式**で、zellij の**モ�
 | Key | Action |
 |-----|--------|
 | `Ctrl p` | プレフィックス (zellij の Pane モードに相当) |
+| `Enter` / `Esc` | プレフィックスモードを抜ける (sticky パッチ、下記参照) |
 | `Ctrl p` `Ctrl p` | リテラル `Ctrl p` をペイン内アプリへ送信 (zellij の Locked 代替) |
 | `Ctrl p` `?` | 全キーバインドのヘルプ表示 |
+
+### sticky prefix (自前パッチ)
+
+素の herdr はプレフィックス後の 1 アクションで即モードを抜けるが、
+`prefix_sticky = true` (独自オプション) で **Enter/Esc を押すまで
+プレフィックスに留まり、アクションを連打できる** zellij のモーダル操作感にしてある。
+
+- `Ctrl p` → `h h j x r` … のように連続操作、`Enter` で終了
+- 未割当キーは無視される (モードは抜けない)
+- コピー/リサイズモードやダイアログを開くキーは従来どおりそちらに遷移
+- デタッチ、スクロールバック編集、pane型カスタムコマンドは実行後に抜ける
+
+**実装**: herdr は AGPL の Rust 製なので v0.7.1 ソースにパッチを当てて
+ビルドし、brew の Cellar 内バイナリを差し替えている (`brew pin herdr` 済み)。
+
+- 差分: `patches/sticky-prefix.patch` (config オプション追加 + prefix モード遷移 + テスト 8 件)
+- 再ビルド: `bash build-patched.sh` (rustup と zig@0.15 が必要、後者は自動インストール)
+- 戻す: `brew unpin herdr && brew reinstall herdr`
+- herdr のバージョンが上がったらパッチの再調整が必要 (スクリプトが version 不一致で止まる)
 
 ## ペイン (zellij: `Ctrl p` → キー)
 
