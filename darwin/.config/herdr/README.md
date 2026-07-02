@@ -61,12 +61,14 @@ herdr は tmux 型の**単一プレフィックス方式**で、zellij の**モ�
 | `Alt+Shift+h/l` | 前 / 次のタブ | `Ctrl t` → `h/l` |
 | `prefix+Shift+x` | タブを閉じる | `Ctrl t` → `x` |
 | `prefix+Shift+t` | タブ名変更 | `Ctrl t` → `r` |
+| `prefix+Shift+b` | ペインを新規タブに分離 (カスタムコマンド) | `Ctrl t` → `b` |
 
 ## セッション / ワークスペース (zellij: `Ctrl o` 相当)
 
 | Key | Action | zellij |
 |-----|--------|--------|
 | `prefix+q` | デタッチ (全て動いたまま) | `Ctrl o` → `d` |
+| `prefix+Shift+q` | herdr 終了 (カスタムコマンド。確認なしで即停止) | `Ctrl o` → `q` |
 | `prefix+w` | ワークスペースピッカー | `Ctrl o` → `w` (セッションマネージャ) |
 | `prefix+g` | Goto ピッカー (herdr デフォルト) | — |
 | `prefix+b` | サイドバー切替 (herdr デフォルト) | — |
@@ -75,15 +77,14 @@ herdr は tmux 型の**単一プレフィックス方式**で、zellij の**モ�
 | `prefix+e` | スクロールバックをエディタで開く | Scroll モード → `e` |
 | `prefix+o` | 通知元へジャンプ (herdr デフォルト) | — |
 
-## 妥協点 (herdr に機能が存在しないもの)
+## 妥協点 (herdr に機能が存在しないもの。2026-07 確認済みで受容)
 
-- **フローティングペイン** (`Alt f`, Pane モード `w`/`e`) — なし
+- **フローティングペイン** (`Alt f`, Pane モード `w`/`e`) — なし。`alt+f` は意図的に未割当
 - **スタックペイン / ピン留め / ペインフレーム切替** (Pane モード `s`/`i`/`z`) — なし
-- **タブの並べ替え** (`Alt i/o`) / **ペインのタブ分離** (Tab モード `b`/`[`/`]`) — なし
+- **タブの並べ替え** (`Alt i/o`) / **隣のタブへのペイン移動** (Tab モード `[`/`]`) — なし
 - **スワップレイアウト** (`Alt [/]`) / **タブ同期** (Tab モード `s`) — なし
 - **コピーモード内検索** (Scroll → `s`) — なし。`prefix+e` で $EDITOR に落として検索する
 - **Locked モード** (`Ctrl g`) — なし。プレフィックス 2 度押しのリテラル送信のみ
-- **キーからの Quit** (`Ctrl o` → `q`) — なし。`herdr server stop` を使う
 - **`Ctrl n` / `Ctrl s` の横取り** — zellij 同様この 2 キーはペイン内アプリに届かない
 - **`Alt+矢印` の横取り** — zellij 同様シェルの単語ジャンプ (Option+←/→) は使えない
 - **端でのタブ折返し** (`MoveFocusOrTab`) — `Alt h/l` はペイン移動のみ。タブは `Alt+Shift+h/l`
