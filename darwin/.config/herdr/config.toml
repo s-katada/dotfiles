@@ -74,4 +74,7 @@ delivery = "herdr"
 
 [experimental]
 pane_history = true
-switch_ascii_input_source_in_prefix = false
+# プレフィックスモード中だけ macOS の入力ソースを ASCII レイアウト (ABC 等) に
+# 切替え、抜けたら元の IME に復元する。日本語入力中でもプレフィックス操作が通る。
+# 起動時のみ読込 (reload 非対応)。
+switch_ascii_input_source_in_prefix = true
