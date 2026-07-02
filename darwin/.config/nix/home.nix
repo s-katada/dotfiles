@@ -56,6 +56,9 @@ in
 
       # zoxide (Nixで管理しているので初期化のみ)
       zoxide init fish | source
+
+      # atuin (シェル履歴。Ctrl-R を置き換え。上矢印は fish 既定の前方一致を維持)
+      atuin init fish --disable-up-arrow | source
     '';
   };
 
@@ -70,6 +73,7 @@ in
 
     # シェル
     starship  # Rust製プロンプト
+    atuin  # シェル履歴を全文検索・同期し Ctrl-R を強化
 
     # Git 関連
     git
