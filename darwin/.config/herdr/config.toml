@@ -1,7 +1,55 @@
+# herdr 設定
+# キーバインドは zellij (darwin/.config/zellij/config.kdl) の操作感に寄せている。
+# 対応表と妥協点は ./README.md を参照。
+# 反映: herdr server reload-config
+
+[keys]
+# zellij の Pane モードキー (Ctrl p) をプレフィックスに採用。
+# プレフィックス2度押しでリテラル ctrl+p をペイン内アプリへ送信。
+prefix = "ctrl+p"
+
+# ペイン操作 (zellij: Ctrl p → キー / Alt+キー)
+focus_pane_left = ["prefix+h", "alt+h", "alt+left"]
+focus_pane_down = ["prefix+j", "alt+j", "alt+down"]
+focus_pane_up = ["prefix+k", "alt+k", "alt+up"]
+focus_pane_right = ["prefix+l", "alt+l", "alt+right"]
+split_horizontal = ["prefix+d", "prefix+minus"]
+split_vertical = ["prefix+r", "prefix+n", "prefix+v", "alt+n"]
+close_pane = "prefix+x"
+zoom = ["prefix+f", "prefix+z"]
+rename_pane = "prefix+c"
+cycle_pane_next = ["prefix+p", "prefix+tab"]
+cycle_pane_previous = "prefix+shift+tab"
+
+# ペイン入替 (zellij: Ctrl m → h/j/k/l 相当)
+swap_pane_left = "prefix+shift+h"
+swap_pane_down = "prefix+shift+j"
+swap_pane_up = "prefix+shift+k"
+swap_pane_right = "prefix+shift+l"
+
+# リサイズモード (zellij: Ctrl n → h/j/k/l → Ctrl n/Esc)
+resize_mode = "ctrl+n"
+
+# スクロール/コピー (zellij: Ctrl s → スクロールモード)
+copy_mode = ["ctrl+s", "prefix+["]
+edit_scrollback = "prefix+e"
+
+# タブ (zellij: Ctrl t → キー の代替。モーダル方式は再現不可のため直接チョードに分散)
+new_tab = ["prefix+t", "alt+t"]
+close_tab = "prefix+shift+x"
+rename_tab = "prefix+shift+t"
+previous_tab = "alt+shift+h"
+next_tab = "alt+shift+l"
+switch_tab = ["prefix+1..9", "alt+1..9"]
+
+# セッション (zellij: Ctrl o → d / w 相当)
+detach = "prefix+q"
+workspace_picker = "prefix+w"
+
 [ui]
 agent_panel_sort = "priority"
-
 show_agent_labels_on_pane_borders = true
+
 [ui.toast]
 delivery = "herdr"
 
