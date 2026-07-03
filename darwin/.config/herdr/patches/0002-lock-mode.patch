@@ -1,0 +1,300 @@
+diff --git a/src/app/input/navigate.rs b/src/app/input/navigate.rs
+index 44af2eb..fdf4768 100644
+--- a/src/app/input/navigate.rs
++++ b/src/app/input/navigate.rs
+@@ -62,9 +62,9 @@ impl App {
+                     action,
+                     ActionContext::Prefix,
+                 );
+-                // Detach hands the client away; re-entering prefix mode there
+-                // would leave stale sticky mode behind on reattach.
+-                if action != NavigateAction::Detach {
++                // Detach hands the client away and Lock must leave every key
++                // to the pane; re-entering prefix mode there would be stale.
++                if !matches!(action, NavigateAction::Detach | NavigateAction::Lock) {
+                     restore_sticky_prefix(&mut self.state);
+                 }
+             }
+@@ -631,6 +631,7 @@ pub(crate) enum NavigateAction {
+     ReloadConfig,
+     OpenNotificationTarget,
+     Detach,
++    Lock,
+     OpenNavigator,
+ }
+ 
+@@ -736,6 +737,7 @@ fn action_for_key(
+             NavigateAction::OpenNotificationTarget,
+         ),
+         (&kb.detach, NavigateAction::Detach),
++        (&kb.lock, NavigateAction::Lock),
+         (&kb.goto, NavigateAction::OpenNavigator),
+     ] {
+         if action_matches(bindings, key, dispatch) {
+@@ -966,6 +968,10 @@ pub(super) fn execute_navigate_action_in_context(
+             super::modal::request_detach(state);
+             leave_navigate_mode(state);
+         }
++        NavigateAction::Lock => {
++            state.locked = true;
++            leave_navigate_mode(state);
++        }
+         NavigateAction::OpenNavigator => state.open_navigator_from(terminal_runtimes),
+     }
+ 
+@@ -2377,4 +2383,50 @@ last_pane = "prefix+tab"
+ 
+         assert_eq!(app.state.mode, Mode::Terminal);
+     }
++
++    #[test]
++    fn lock_key_toggles_lock_and_bypasses_prefix() {
++        let mut app = sticky_prefix_app();
++        app.state.prefix_sticky = false;
++        app.state.mode = Mode::Terminal;
++        app.state.keybinds.lock = crate::config::ActionKeybinds::direct("ctrl+g");
++
++        app.handle_terminal_key_headless(TerminalKey::new(
++            KeyCode::Char('g'),
++            KeyModifiers::CONTROL,
++        ));
++        assert!(app.state.locked);
++        assert_eq!(app.state.mode, Mode::Terminal);
++
++        // While locked the prefix key is forwarded instead of opening prefix mode.
++        app.handle_terminal_key_headless(TerminalKey::new(
++            app.state.prefix_code,
++            app.state.prefix_mods,
++        ));
++        assert_eq!(app.state.mode, Mode::Terminal);
++        assert!(app.state.locked);
++
++        app.handle_terminal_key_headless(TerminalKey::new(
++            KeyCode::Char('g'),
++            KeyModifiers::CONTROL,
++        ));
++        assert!(!app.state.locked);
++
++        app.handle_terminal_key_headless(TerminalKey::new(
++            app.state.prefix_code,
++            app.state.prefix_mods,
++        ));
++        assert_eq!(app.state.mode, Mode::Prefix);
++    }
++
++    #[test]
++    fn sticky_prefix_lock_action_exits_prefix_mode() {
++        let mut app = sticky_prefix_app();
++        app.state.keybinds.lock = crate::config::ActionKeybinds::prefix("u");
++
++        app.handle_prefix_key(TerminalKey::new(KeyCode::Char('u'), KeyModifiers::empty()));
++
++        assert!(app.state.locked);
++        assert_eq!(app.state.mode, Mode::Terminal);
++    }
+ }
+diff --git a/src/app/input/terminal.rs b/src/app/input/terminal.rs
+index e13412a..3859ae1 100644
+--- a/src/app/input/terminal.rs
++++ b/src/app/input/terminal.rs
+@@ -34,6 +34,20 @@ impl App {
+ 
+         let key_event = key.as_key_event();
+ 
++        // Lock mode: forward every key to the pane untouched (zellij-style).
++        // Only the lock chord itself is intercepted, to unlock. Prefix and
++        // direct bindings are deliberately skipped while locked.
++        if self.state.locked {
++            if self.state.keybinds.lock.matches_direct_key(key) {
++                self.state.locked = false;
++                return None;
++            }
++            if is_modifier_only_key(&key_event.code) {
++                return None;
++            }
++            return self.encode_key_for_focused_pane(key);
++        }
++
+         if let Some(action) = super::terminal_direct_navigation_action(&self.state, key) {
+             debug!(
+                 code = ?key_event.code,
+@@ -86,6 +100,14 @@ impl App {
+             return None;
+         }
+ 
++        self.encode_key_for_focused_pane(key)
++    }
++
++    /// Resolves the focused pane and encodes `key` for it, including host-side
++    /// scrollback paging. Shared by normal forwarding and lock-mode passthrough.
++    fn encode_key_for_focused_pane(&mut self, key: TerminalKey) -> Option<PreparedPaneInput> {
++        let key_event = key.as_key_event();
++
+         let ws_idx = self.state.active?;
+         let ws = self.state.workspaces.get(ws_idx)?;
+         let pane_id = ws.focused_pane_id()?;
+diff --git a/src/app/mod.rs b/src/app/mod.rs
+index 0155dca..d7c6e35 100644
+--- a/src/app/mod.rs
++++ b/src/app/mod.rs
+@@ -581,6 +581,7 @@ impl App {
+             prefix_code,
+             prefix_mods,
+             prefix_sticky: config.keys.prefix_sticky,
++            locked: false,
+             default_sidebar_width: config.ui.sidebar_width,
+             sidebar_width,
+             sidebar_min_width,
+diff --git a/src/app/state.rs b/src/app/state.rs
+index e55eada..af56c74 100644
+--- a/src/app/state.rs
++++ b/src/app/state.rs
+@@ -1342,6 +1342,9 @@ pub struct AppState {
+     pub prefix_code: KeyCode,
+     pub prefix_mods: KeyModifiers,
+     pub prefix_sticky: bool,
++    /// While true, every key except the configured `lock` chord is forwarded
++    /// to the focused pane (zellij-style lock mode).
++    pub locked: bool,
+     pub default_sidebar_width: u16,
+     pub sidebar_width: u16,
+     pub sidebar_min_width: u16,
+@@ -1702,6 +1705,7 @@ impl AppState {
+             prefix_code: KeyCode::Char('b'),
+             prefix_mods: KeyModifiers::CONTROL,
+             prefix_sticky: false,
++            locked: false,
+             default_sidebar_width: 26,
+             sidebar_width: 26,
+             sidebar_min_width: 18,
+diff --git a/src/config/keybinds.rs b/src/config/keybinds.rs
+index 2a1cfc4..3e601c8 100644
+--- a/src/config/keybinds.rs
++++ b/src/config/keybinds.rs
+@@ -301,6 +301,7 @@ pub struct Keybinds {
+     pub workspace_picker: ActionKeybinds,
+     pub goto: ActionKeybinds,
+     pub detach: ActionKeybinds,
++    pub lock: ActionKeybinds,
+     pub reload_config: ActionKeybinds,
+     pub open_notification_target: ActionKeybinds,
+     pub previous_workspace: ActionKeybinds,
+@@ -453,6 +454,7 @@ impl Config {
+                 pane_right: empty_action!(),
+             },
+             help: empty_action!(),
++            lock: empty_action!(),
+             settings: empty_action!(),
+             new_workspace: empty_action!(),
+             new_worktree: empty_action!(),
+@@ -585,6 +587,7 @@ impl Config {
+             apply_action!(keybinds.workspace_picker, workspace_picker, source);
+             apply_action!(keybinds.goto, goto, source);
+             apply_action!(keybinds.detach, detach, source);
++            apply_action!(keybinds.lock, lock, source);
+             apply_action!(keybinds.reload_config, reload_config, source);
+             apply_action!(
+                 keybinds.open_notification_target,
+diff --git a/src/config/model.rs b/src/config/model.rs
+index 7c0a689..22ca472 100644
+--- a/src/config/model.rs
++++ b/src/config/model.rs
+@@ -329,6 +329,10 @@ pub struct KeysConfig {
+     pub navigate_pane_right: BindingConfig,
+     /// Detach from server/client mode, or exit --no-session mode. Default: "prefix+q".
+     pub detach: BindingConfig,
++    /// Toggle lock mode: while locked every key except this one is forwarded
++    /// to the pane (zellij-style). Bind a direct chord; prefix bindings cannot
++    /// unlock because the prefix itself is forwarded while locked. Unset by default.
++    pub lock: BindingConfig,
+     /// Reload config.toml in the running app/server. Default: "prefix+shift+r".
+     pub reload_config: BindingConfig,
+     /// Focus the currently visible notification target. Default: "prefix+o".
+@@ -451,6 +455,8 @@ pub(crate) struct KeysConfigOverlay {
+     #[serde(skip_serializing_if = "Option::is_none")]
+     detach: Option<BindingConfig>,
+     #[serde(skip_serializing_if = "Option::is_none")]
++    lock: Option<BindingConfig>,
++    #[serde(skip_serializing_if = "Option::is_none")]
+     reload_config: Option<BindingConfig>,
+     #[serde(skip_serializing_if = "Option::is_none")]
+     open_notification_target: Option<BindingConfig>,
+@@ -562,6 +568,7 @@ impl<'de> Deserialize<'de> for KeysConfig {
+         apply_field!(navigate_pane_up);
+         apply_field!(navigate_pane_right);
+         apply_field!(detach);
++        apply_field!(lock);
+         apply_field!(reload_config);
+         apply_field!(open_notification_target);
+         apply_field!(previous_workspace);
+@@ -661,6 +668,7 @@ impl KeysConfig {
+         copy_effective_action_field!(navigate_pane_up, keybinds.navigate.pane_up);
+         copy_effective_action_field!(navigate_pane_right, keybinds.navigate.pane_right);
+         copy_effective_action_field!(detach, keybinds.detach);
++        copy_effective_action_field!(lock, keybinds.lock);
+         copy_effective_action_field!(reload_config, keybinds.reload_config);
+         copy_effective_action_field!(open_notification_target, keybinds.open_notification_target);
+         copy_effective_action_field!(previous_workspace, keybinds.previous_workspace);
+@@ -913,6 +921,7 @@ impl Default for KeysConfig {
+             navigate_pane_up: BindingConfig::one("k"),
+             navigate_pane_right: BindingConfig::one("l"),
+             detach: BindingConfig::one("prefix+q"),
++            lock: BindingConfig::empty(),
+             reload_config: BindingConfig::one("prefix+shift+r"),
+             open_notification_target: BindingConfig::one("prefix+o"),
+             previous_workspace: BindingConfig::empty(),
+diff --git a/src/main.rs b/src/main.rs
+index 5df99b6..58efe82 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -172,6 +172,9 @@ const DEFAULT_CONFIG: &str = r##"# herdr configuration
+ # help = "prefix+?"
+ # settings = "prefix+s"
+ # detach = "prefix+q"
++# Toggle lock mode: while locked every key except this chord goes to the pane
++# (zellij-style). Use a direct chord like "ctrl+g"; prefix bindings cannot unlock.
++# lock = ""
+ # reload_config = "prefix+shift+r"
+ # open_notification_target = "prefix+o"
+ # workspace_picker = "prefix+w"
+diff --git a/src/ui/keybind_help.rs b/src/ui/keybind_help.rs
+index 76a68f0..25a6a43 100644
+--- a/src/ui/keybind_help.rs
++++ b/src/ui/keybind_help.rs
+@@ -64,6 +64,7 @@ pub(super) fn keybind_help_groups(app: &AppState) -> Vec<HelpGroup> {
+             help_entry(keybind_label(&kb.help), "keybinds"),
+             help_entry(keybind_label(&kb.settings), "settings"),
+             help_entry(keybind_label(&kb.detach), "detach"),
++            help_entry(keybind_label(&kb.lock), "lock keys (toggle: all keys go to pane)"),
+             help_entry(keybind_label(&kb.reload_config), "reload config"),
+             help_entry(
+                 keybind_label(&kb.open_notification_target),
+diff --git a/src/ui/tabs.rs b/src/ui/tabs.rs
+index f20e22f..aff63cb 100644
+--- a/src/ui/tabs.rs
++++ b/src/ui/tabs.rs
+@@ -389,6 +389,24 @@ pub(super) fn render_tab_bar(app: &AppState, frame: &mut Frame, area: Rect) {
+                 .set_style(Style::default().fg(p.overlay0));
+         }
+     }
++
++    // Lock-mode indicator: drawn last so it stays visible over tab overflow.
++    if app.locked {
++        let label = " LOCKED ";
++        let width = label.len() as u16;
++        if area.width > width {
++            let rect = Rect::new(area.x + area.width - width, area.y, width, 1);
++            frame.render_widget(
++                Paragraph::new(label).style(
++                    Style::default()
++                        .fg(panel_contrast_fg(p))
++                        .bg(p.accent)
++                        .add_modifier(Modifier::BOLD),
++                ),
++                rect,
++            );
++        }
++    }
+ }
+ 
+ #[cfg(test)]
