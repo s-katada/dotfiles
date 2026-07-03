@@ -13,6 +13,10 @@ prefix = "ctrl+p"
 # 自前パッチの独自オプション。ビルド手順: ./build-patched.sh、差分: ./patches/
 prefix_sticky = true
 
+# ロックモード (zellij の Ctrl g 相当、自前パッチの独自オプション)。
+# ロック中は解除キー以外の全キーがペインへ素通しになり、ctrl+p 連打も届く。
+lock = "ctrl+g"
+
 # ペイン操作 (zellij: Ctrl p → キー / Alt+キー)
 focus_pane_left = ["prefix+h", "alt+h", "alt+left"]
 focus_pane_down = ["prefix+j", "alt+j", "alt+down"]

@@ -14,7 +14,8 @@ herdr は tmux 型の**単一プレフィックス方式**で、zellij の**モ�
 |-----|--------|
 | `Ctrl p` | プレフィックス (zellij の Pane モードに相当) |
 | `Enter` / `Esc` | プレフィックスモードを抜ける (sticky パッチ、下記参照) |
-| `Ctrl p` `Ctrl p` | リテラル `Ctrl p` をペイン内アプリへ送信 (zellij の Locked 代替) |
+| `Ctrl g` | ロックモード切替 (lock パッチ、下記参照。zellij の Locked と同じ) |
+| `Ctrl p` `Ctrl p` | リテラル `Ctrl p` を 1 回だけペインへ送信 |
 | `Ctrl p` `?` | 全キーバインドのヘルプ表示 |
 
 ### sticky prefix (自前パッチ)
@@ -28,11 +29,26 @@ herdr は tmux 型の**単一プレフィックス方式**で、zellij の**モ�
 - コピー/リサイズモードやダイアログを開くキーは従来どおりそちらに遷移
 - デタッチ、スクロールバック編集、pane型カスタムコマンドは実行後に抜ける
 
+### lock モード (自前パッチ)
+
+zellij の Locked モード (`Ctrl g`) 相当。**`Ctrl g` でロックすると、解除の
+`Ctrl g` 以外の全キーがペインへ素通し**になる。シェル履歴の `Ctrl p` 連打が
+2 度押しなしで届く。ロック中はタブバー右端に `LOCKED` が出る。
+
+```
+Ctrl g → ctrl+p ctrl+p ctrl+p ... → Ctrl g
+```
+
+- プレフィックス・Alt 系・`Ctrl n`/`Ctrl s` 直接チョードもすべて無効化 (素通し) される
+- 解除キーは直接チョード必須 (`prefix+` ではロック中に届かないため)
+- マウス操作はロック中も有効 (万一の脱出ハッチ)
+
 **実装**: herdr は AGPL の Rust 製なので v0.7.1 ソースにパッチを当てて
 ビルドし、brew の Cellar 内バイナリを差し替えている (`brew pin herdr` 済み)。
 
-- 差分: `patches/sticky-prefix.patch` (config オプション追加 + prefix モード遷移 + テスト 8 件)
-- 再ビルド: `bash build-patched.sh` (rustup と zig@0.15 が必要、後者は自動インストール)
+- 差分: `patches/0001-sticky-prefix.patch` (prefix_sticky オプション + テスト 8 件)、
+  `patches/0002-lock-mode.patch` (lock アクション + LOCKED 表示 + テスト 2 件)
+- 再ビルド: `bash build-patched.sh` (patches/*.patch を番号順に適用。rustup と zig@0.15 が必要、後者は自動インストール)
 - 戻す: `brew unpin herdr && brew reinstall herdr`
 - herdr のバージョンが上がったらパッチの再調整が必要 (スクリプトが version 不一致で止まる)
 
@@ -118,7 +134,7 @@ herdr は tmux 型の**単一プレフィックス方式**で、zellij の**モ�
 - **タブの並べ替え** (`Alt i/o`) / **隣のタブへのペイン移動** (Tab モード `[`/`]`) — なし
 - **スワップレイアウト** (`Alt [/]`) / **タブ同期** (Tab モード `s`) — なし
 - **コピーモード内検索** (Scroll → `s`) — なし。`prefix+e` で $EDITOR に落として検索する
-- **Locked モード** (`Ctrl g`) — なし。プレフィックス 2 度押しのリテラル送信のみ
-- **`Ctrl n` / `Ctrl s` の横取り** — zellij 同様この 2 キーはペイン内アプリに届かない
+- ~~**Locked モード** (`Ctrl g`)~~ — **lock パッチで解消** (上記参照)
+- **`Ctrl n` / `Ctrl s` の横取り** — zellij 同様ペイン内アプリに届かない (ロック中を除く)
 - **`Alt+矢印` の横取り** — zellij 同様シェルの単語ジャンプ (Option+←/→) は使えない
 - **端でのタブ折返し** (`MoveFocusOrTab`) — `Alt h/l` はペイン移動のみ。タブは `Alt+Shift+h/l`

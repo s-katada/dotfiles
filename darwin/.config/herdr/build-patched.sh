@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# herdr に sticky prefix パッチ (patches/sticky-prefix.patch) を当てて
-# ビルドし、brew の Cellar 内バイナリを差し替える。
+# herdr に patches/*.patch (番号順) を当ててビルドし、
+# brew の Cellar 内バイナリを差し替える。
 #
 # 使い方:   bash ~/.config/herdr/build-patched.sh
 # 反映:     herdr server stop してから herdr を起動し直す
@@ -11,7 +11,7 @@
 set -euo pipefail
 
 HERDR_VERSION="0.7.1"
-PATCH_FILE="$(cd "$(dirname "$0")" && pwd)/patches/sticky-prefix.patch"
+PATCH_DIR="$(cd "$(dirname "$0")" && pwd)/patches"
 TARBALL_URL="https://github.com/ogulcancelik/herdr/archive/refs/tags/v${HERDR_VERSION}.tar.gz"
 WORK_DIR="$(mktemp -d /tmp/herdr-sticky-build.XXXXXX)"
 trap 'rm -rf "$WORK_DIR"' EXIT
@@ -41,8 +41,10 @@ echo "==> ソース取得 v${HERDR_VERSION}"
 curl -fsSL "$TARBALL_URL" | tar xz -C "$WORK_DIR"
 cd "$WORK_DIR/herdr-${HERDR_VERSION}"
 
-echo "==> パッチ適用"
-patch -p1 --forward <"$PATCH_FILE"
+for patch_file in "$PATCH_DIR"/*.patch; do
+  echo "==> パッチ適用: $(basename "$patch_file")"
+  patch -p1 --forward <"$patch_file"
+done
 
 echo "==> ビルド (数分かかる)"
 cargo build --release
