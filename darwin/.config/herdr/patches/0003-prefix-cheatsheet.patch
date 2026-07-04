@@ -1,0 +1,336 @@
+diff --git a/src/app/mod.rs b/src/app/mod.rs
+index d7c6e35..1132797 100644
+--- a/src/app/mod.rs
++++ b/src/app/mod.rs
+@@ -603,6 +603,7 @@ impl App {
+             pane_borders: config.ui.pane_borders,
+             pane_gaps: config.ui.pane_gaps,
+             show_agent_labels_on_pane_borders: config.ui.show_agent_labels_on_pane_borders,
++            prefix_cheatsheet: config.ui.prefix_cheatsheet,
+             pane_history_persistence: config.experimental.pane_history,
+             reveal_hidden_cursor_for_cjk_ime: config.experimental.reveal_hidden_cursor_for_cjk_ime,
+             cjk_ime_agent_filter_configured: !config.experimental.cjk_ime_agents.is_empty(),
+@@ -1337,6 +1338,7 @@ impl App {
+                 self.state.pane_gaps = config.ui.pane_gaps;
+                 self.state.show_agent_labels_on_pane_borders =
+                     config.ui.show_agent_labels_on_pane_borders;
++                self.state.prefix_cheatsheet = config.ui.prefix_cheatsheet;
+                 self.state.agent_panel_sort =
+                     agent_panel_sort_from_config(config.ui.agent_panel_sort);
+                 self.state.agent_panel_scroll = 0;
+diff --git a/src/app/state.rs b/src/app/state.rs
+index af56c74..b616daa 100644
+--- a/src/app/state.rs
++++ b/src/app/state.rs
+@@ -1369,6 +1369,8 @@ pub struct AppState {
+     pub pane_borders: bool,
+     pub pane_gaps: bool,
+     pub show_agent_labels_on_pane_borders: bool,
++    /// Render the zellij-style keybinding cheatsheet in the prefix overlay.
++    pub prefix_cheatsheet: bool,
+     pub pane_history_persistence: bool,
+     /// Expose the focused pane's cursor anchor to the outer terminal even when
+     /// the pane requested `?25l`. See `[experimental] reveal_hidden_cursor_for_cjk_ime`.
+@@ -1727,6 +1729,7 @@ impl AppState {
+             pane_borders: true,
+             pane_gaps: false,
+             show_agent_labels_on_pane_borders: false,
++            prefix_cheatsheet: false,
+             pane_history_persistence: false,
+             reveal_hidden_cursor_for_cjk_ime: false,
+             cjk_ime_agent_filter_configured: false,
+diff --git a/src/config/keybinds.rs b/src/config/keybinds.rs
+index 3e601c8..f22ea26 100644
+--- a/src/config/keybinds.rs
++++ b/src/config/keybinds.rs
+@@ -245,6 +245,21 @@ impl ActionKeybinds {
+             Some(labels.join(" / "))
+         }
+     }
++
++    /// Like [`Self::prefix_rhs_label`] but only the first prefix binding,
++    /// for compact cheatsheet entries that show one key per action.
++    pub fn first_prefix_rhs_label(&self) -> Option<String> {
++        self.bindings
++            .iter()
++            .find(|binding| binding.trigger.is_prefix())
++            .map(|binding| {
++                binding
++                    .label
++                    .strip_prefix("prefix+")
++                    .unwrap_or(&binding.label)
++                    .to_string()
++            })
++    }
+ }
+ 
+ #[derive(Debug, Clone, PartialEq, Eq)]
+diff --git a/src/config/model.rs b/src/config/model.rs
+index a8d4e76..fb36722 100644
+--- a/src/config/model.rs
++++ b/src/config/model.rs
+@@ -797,6 +797,9 @@ pub struct UiConfig {
+     pub pane_gaps: bool,
+     /// Show agent labels in split pane borders when no manual pane label is set. Default: false.
+     pub show_agent_labels_on_pane_borders: bool,
++    /// Show a zellij-style keybinding cheatsheet in the prefix-mode bottom
++    /// bar instead of the minimal hint line. Default: false.
++    pub prefix_cheatsheet: bool,
+     /// Agent sidebar ordering. Saved values are "spaces" or "priority". Default: "spaces".
+     pub agent_panel_sort: AgentPanelSortConfig,
+     /// Accent color for highlights, borders, and navigation UI.
+@@ -989,6 +992,7 @@ impl Default for UiConfig {
+             pane_borders: true,
+             pane_gaps: true,
+             show_agent_labels_on_pane_borders: false,
++            prefix_cheatsheet: false,
+             agent_panel_sort: AgentPanelSortConfig::Spaces,
+             accent: "cyan".into(),
+             toast: ToastConfig::default(),
+@@ -1226,6 +1230,18 @@ show_agent_labels_on_pane_borders = true
+         assert!(config.ui.show_agent_labels_on_pane_borders);
+     }
+ 
++    #[test]
++    fn prefix_cheatsheet_defaults_false_and_parses() {
++        assert!(!Config::default().ui.prefix_cheatsheet);
++
++        let toml = r#"
++[ui]
++prefix_cheatsheet = true
++"#;
++        let config: Config = toml::from_str(toml).unwrap();
++        assert!(config.ui.prefix_cheatsheet);
++    }
++
+     #[test]
+     fn worktrees_directory_defaults_and_parses() {
+         let default_config = Config::default();
+diff --git a/src/main.rs b/src/main.rs
+index ac5689c..0dba129 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -289,6 +289,10 @@ const DEFAULT_CONFIG: &str = r##"# herdr configuration
+ # Show detected/reported agent labels in split pane borders when no manual pane name is set.
+ # show_agent_labels_on_pane_borders = false
+ 
++# Show a zellij-style keybinding cheatsheet in the prefix-mode bottom bar
++# instead of the minimal hint line.
++# prefix_cheatsheet = false
++
+ # Agent panel ordering: "spaces" (grouped by space) or "priority" (attention queue).
+ # "workspaces" is accepted as an alias for "spaces".
+ # agent_panel_sort = "spaces"
+diff --git a/src/ui.rs b/src/ui.rs
+index 42e132d..7af36b0 100644
+--- a/src/ui.rs
++++ b/src/ui.rs
+@@ -1163,6 +1163,32 @@ mod tests {
+         assert!(rendered.contains("PREFIX"));
+     }
+ 
++    #[test]
++    fn prefix_cheatsheet_renders_action_hints() {
++        let mut app = crate::app::state::AppState::test_new();
++        app.mode = Mode::Prefix;
++        app.prefix_cheatsheet = true;
++        app.view.terminal_area = ratatui::layout::Rect::new(0, 0, 220, 4);
++        let mut terminal = ratatui::Terminal::new(ratatui::backend::TestBackend::new(220, 4))
++            .expect("test terminal");
++
++        terminal
++            .draw(|frame| render_prefix_overlay(&app, frame, app.view.terminal_area))
++            .expect("draw prefix overlay");
++
++        let rendered = terminal
++            .backend()
++            .buffer()
++            .content()
++            .iter()
++            .map(|cell| cell.symbol())
++            .collect::<String>();
++        assert!(rendered.contains("h/j/k/l focus"));
++        assert!(rendered.contains("shift+h/j/k/l swap"));
++        assert!(rendered.contains("1..9 tab"));
++        assert!(rendered.contains("detach"));
++    }
++
+     #[test]
+     fn keybind_help_shows_unset_for_optional_actions() {
+         let app = crate::app::state::AppState::test_new();
+diff --git a/src/ui/menus.rs b/src/ui/menus.rs
+index acc5325..1205203 100644
+--- a/src/ui/menus.rs
++++ b/src/ui/menus.rs
+@@ -38,10 +38,6 @@ pub(super) fn render_prefix_overlay(app: &AppState, frame: &mut Frame, area: Rec
+         .bg(app.palette.accent)
+         .add_modifier(Modifier::BOLD);
+ 
+-    let workspace_picker = prefix_rhs_label(&app.keybinds.workspace_picker);
+-    let help = prefix_rhs_label(&app.keybinds.help);
+-    let prefix = crate::config::format_key_combo((app.prefix_code, app.prefix_mods));
+-
+     let mut spans = vec![Span::styled(" PREFIX ", mode_style), Span::raw(" ")];
+     if app.prefix_sticky {
+         spans.extend([
+@@ -52,10 +48,23 @@ pub(super) fn render_prefix_overlay(app: &AppState, frame: &mut Frame, area: Rec
+     spans.extend([
+         Span::styled("esc", key),
+         Span::styled(" cancel  ", dim),
+-        Span::styled(prefix, key),
+-        Span::styled(" send prefix  ", dim),
+-        Span::styled(workspace_picker, key),
+-        Span::styled(" workspace nav  ", dim),
++    ]);
++
++    if app.prefix_cheatsheet {
++        extend_prefix_cheatsheet_spans(app, key, dim, &mut spans);
++    } else {
++        let workspace_picker = prefix_rhs_label(&app.keybinds.workspace_picker);
++        let prefix = crate::config::format_key_combo((app.prefix_code, app.prefix_mods));
++        spans.extend([
++            Span::styled(prefix, key),
++            Span::styled(" send prefix  ", dim),
++            Span::styled(workspace_picker, key),
++            Span::styled(" workspace nav  ", dim),
++        ]);
++    }
++
++    let help = prefix_rhs_label(&app.keybinds.help);
++    spans.extend([
+         Span::styled(help, key),
+         Span::styled(" keybinds", dim),
+     ]);
+@@ -66,6 +75,132 @@ pub(super) fn render_prefix_overlay(app: &AppState, frame: &mut Frame, area: Rec
+     render_bottom_bar(frame, overlay_area, line, app.palette.panel_bg);
+ }
+ 
++/// Zellij-style cheatsheet entries for the prefix bar: one `key description`
++/// pair per bound action, most-used first so right-edge truncation on narrow
++/// terminals drops the least important entries. Unbound actions are skipped.
++fn extend_prefix_cheatsheet_spans(
++    app: &AppState,
++    key: Style,
++    dim: Style,
++    spans: &mut Vec<Span<'static>>,
++) {
++    let kb = &app.keybinds;
++    let mut push = |label: String, desc: &str| {
++        spans.push(Span::styled(label, key));
++        spans.push(Span::styled(format!(" {desc}  "), dim));
++    };
++
++    if let Some(label) = quad_prefix_label(
++        &kb.focus_pane_left,
++        &kb.focus_pane_down,
++        &kb.focus_pane_up,
++        &kb.focus_pane_right,
++    ) {
++        push(label, "focus");
++    }
++    if let Some(label) = quad_prefix_label(
++        &kb.swap_pane_left,
++        &kb.swap_pane_down,
++        &kb.swap_pane_up,
++        &kb.swap_pane_right,
++    ) {
++        push(label, "swap");
++    }
++    if let Some(label) = kb.split_horizontal.first_prefix_rhs_label() {
++        push(label, "split─");
++    }
++    if let Some(label) = kb.split_vertical.first_prefix_rhs_label() {
++        push(label, "split│");
++    }
++    if let Some(label) = kb.close_pane.first_prefix_rhs_label() {
++        push(label, "close");
++    }
++    if let Some(label) = kb.zoom.first_prefix_rhs_label() {
++        push(label, "zoom");
++    }
++    if let Some(label) = kb.rename_pane.first_prefix_rhs_label() {
++        push(label, "rename");
++    }
++    if let Some(label) = kb.cycle_pane_next.first_prefix_rhs_label() {
++        push(label, "cycle");
++    }
++    if let Some(label) = kb.new_tab.first_prefix_rhs_label() {
++        push(label, "new tab");
++    }
++    if let Some(label) = prefix_indexed_label(&kb.switch_tab) {
++        push(label, "tab");
++    }
++    if let Some(label) = kb.close_tab.first_prefix_rhs_label() {
++        push(label, "close tab");
++    }
++    if let Some(label) = kb.copy_mode.first_prefix_rhs_label() {
++        push(label, "copy");
++    }
++    if let Some(label) = kb.resize_mode.first_prefix_rhs_label() {
++        push(label, "resize");
++    }
++    if let Some(label) = kb.workspace_picker.first_prefix_rhs_label() {
++        push(label, "workspace");
++    }
++    if let Some(label) = kb.detach.first_prefix_rhs_label() {
++        push(label, "detach");
++    }
++}
++
++/// Compact label for a left/down/up/right action group. Same-modifier
++/// single-key bindings collapse into e.g. `h/j/k/l` or `shift+h/j/k/l`;
++/// anything else falls back to joining the full labels. `None` when any
++/// direction has no prefix binding.
++fn quad_prefix_label(
++    left: &crate::config::ActionKeybinds,
++    down: &crate::config::ActionKeybinds,
++    up: &crate::config::ActionKeybinds,
++    right: &crate::config::ActionKeybinds,
++) -> Option<String> {
++    let labels = [
++        left.first_prefix_rhs_label()?,
++        down.first_prefix_rhs_label()?,
++        up.first_prefix_rhs_label()?,
++        right.first_prefix_rhs_label()?,
++    ];
++    let parts: Vec<(Option<&str>, &str)> = labels
++        .iter()
++        .map(|label| match label.rsplit_once('+') {
++            Some((modifiers, key)) => (Some(modifiers), key),
++            None => (None, label.as_str()),
++        })
++        .collect();
++    let shared_modifiers = parts[0].0;
++    if parts
++        .iter()
++        .all(|(modifiers, key)| *modifiers == shared_modifiers && key.chars().count() == 1)
++    {
++        let keys = parts
++            .iter()
++            .map(|(_, key)| *key)
++            .collect::<Vec<_>>()
++            .join("/");
++        Some(match shared_modifiers {
++            Some(modifiers) => format!("{modifiers}+{keys}"),
++            None => keys,
++        })
++    } else {
++        Some(labels.join("/"))
++    }
++}
++
++/// `1..9`-style label from the first prefix-triggered indexed binding.
++fn prefix_indexed_label(bindings: &[crate::config::IndexedKeybind]) -> Option<String> {
++    let first = bindings
++        .iter()
++        .find(|binding| binding.trigger.is_prefix() && binding.label.ends_with('1'))?;
++    let rhs = first
++        .label
++        .strip_prefix("prefix+")
++        .unwrap_or(&first.label);
++    Some(format!("{rhs}..9"))
++}
++
+ pub(super) fn render_copy_mode_overlay(app: &AppState, frame: &mut Frame, area: Rect) {
+     let key = Style::default()
+         .fg(app.palette.accent)

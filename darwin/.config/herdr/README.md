@@ -32,6 +32,22 @@ Enter/Esc を押すまでプレフィックスに留まり、連打できる** �
 - 移動連打中の未割当キーは無視される (モードは抜けない)、`Enter`/`Esc` で終了
 - コピー/リサイズモードやダイアログを開くキーは従来どおりそちらに遷移
 
+### prefix チートシート (自前パッチ)
+
+zellij の下部ステータスバー風に、**プレフィックスモード中は下部バーに
+主要キーバインドのチートシートを表示**する (`[ui] prefix_cheatsheet = true`)。
+
+```
+PREFIX  enter exit  esc cancel  h/j/k/l focus  shift+h/j/k/l swap  d split─  r split│
+        x close  f zoom  c rename  p cycle  t new tab  1..9 tab  shift+x close tab
+        [ copy  w workspace  q detach  ? keybinds   (実際は1行表示)
+```
+
+- ラベルは実際のバインド設定から動的生成 (未割当のアクションは非表示)
+- 方向キー4連 (focus/swap) は `h/j/k/l` / `shift+h/j/k/l` 形式に自動圧縮
+- 幅が足りない端末では右端から切れる (重要な項目ほど左に配置)
+- `false` (デフォルト) なら従来の最小ヒント行
+
 ### lock モード (自前パッチ)
 
 zellij の Locked モード (`Ctrl g`) 相当。**`Ctrl g` でロックすると、解除の
@@ -49,8 +65,9 @@ Ctrl g → ctrl+p ctrl+p ctrl+p ... → Ctrl g
 **実装**: herdr は AGPL の Rust 製なので v0.7.1 ソースにパッチを当てて
 ビルドし、brew の Cellar 内バイナリを差し替えている (`brew pin herdr` 済み)。
 
-- 差分: `patches/0001-sticky-prefix.patch` (prefix_sticky オプション + テスト 8 件)、
-  `patches/0002-lock-mode.patch` (lock アクション + LOCKED 表示 + テスト 2 件)
+- 差分: `patches/0001-sticky-prefix.patch` (prefix_sticky オプション)、
+  `patches/0002-lock-mode.patch` (lock アクション + LOCKED 表示)、
+  `patches/0003-prefix-cheatsheet.patch` (prefix_cheatsheet オプション)
 - 再ビルド: `bash build-patched.sh` (patches/*.patch を番号順に適用。rustup と zig@0.15 が必要、後者は自動インストール)
 - 戻す: `brew unpin herdr && brew reinstall herdr`
 - herdr のバージョンが上がったらパッチの再調整が必要 (スクリプトが version 不一致で止まる)
