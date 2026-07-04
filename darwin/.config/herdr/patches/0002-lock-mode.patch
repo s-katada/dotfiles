@@ -1,21 +1,8 @@
 diff --git a/src/app/input/navigate.rs b/src/app/input/navigate.rs
-index 44af2eb..fdf4768 100644
+index 108dee5..b4f1936 100644
 --- a/src/app/input/navigate.rs
 +++ b/src/app/input/navigate.rs
-@@ -62,9 +62,9 @@ impl App {
-                     action,
-                     ActionContext::Prefix,
-                 );
--                // Detach hands the client away; re-entering prefix mode there
--                // would leave stale sticky mode behind on reattach.
--                if action != NavigateAction::Detach {
-+                // Detach hands the client away and Lock must leave every key
-+                // to the pane; re-entering prefix mode there would be stale.
-+                if !matches!(action, NavigateAction::Detach | NavigateAction::Lock) {
-                     restore_sticky_prefix(&mut self.state);
-                 }
-             }
-@@ -631,6 +631,7 @@ pub(crate) enum NavigateAction {
+@@ -626,6 +626,7 @@ pub(crate) enum NavigateAction {
      ReloadConfig,
      OpenNotificationTarget,
      Detach,
@@ -23,7 +10,7 @@ index 44af2eb..fdf4768 100644
      OpenNavigator,
  }
  
-@@ -736,6 +737,7 @@ fn action_for_key(
+@@ -731,6 +732,7 @@ fn action_for_key(
              NavigateAction::OpenNotificationTarget,
          ),
          (&kb.detach, NavigateAction::Detach),
@@ -31,7 +18,7 @@ index 44af2eb..fdf4768 100644
          (&kb.goto, NavigateAction::OpenNavigator),
      ] {
          if action_matches(bindings, key, dispatch) {
-@@ -966,6 +968,10 @@ pub(super) fn execute_navigate_action_in_context(
+@@ -961,6 +963,10 @@ pub(super) fn execute_navigate_action_in_context(
              super::modal::request_detach(state);
              leave_navigate_mode(state);
          }
@@ -42,7 +29,7 @@ index 44af2eb..fdf4768 100644
          NavigateAction::OpenNavigator => state.open_navigator_from(terminal_runtimes),
      }
  
-@@ -2377,4 +2383,50 @@ last_pane = "prefix+tab"
+@@ -2413,4 +2419,50 @@ last_pane = "prefix+tab"
  
          assert_eq!(app.state.mode, Mode::Terminal);
      }
@@ -196,10 +183,10 @@ index 2a1cfc4..3e601c8 100644
              apply_action!(
                  keybinds.open_notification_target,
 diff --git a/src/config/model.rs b/src/config/model.rs
-index 7c0a689..22ca472 100644
+index 647745f..a8d4e76 100644
 --- a/src/config/model.rs
 +++ b/src/config/model.rs
-@@ -329,6 +329,10 @@ pub struct KeysConfig {
+@@ -330,6 +330,10 @@ pub struct KeysConfig {
      pub navigate_pane_right: BindingConfig,
      /// Detach from server/client mode, or exit --no-session mode. Default: "prefix+q".
      pub detach: BindingConfig,
@@ -210,7 +197,7 @@ index 7c0a689..22ca472 100644
      /// Reload config.toml in the running app/server. Default: "prefix+shift+r".
      pub reload_config: BindingConfig,
      /// Focus the currently visible notification target. Default: "prefix+o".
-@@ -451,6 +455,8 @@ pub(crate) struct KeysConfigOverlay {
+@@ -452,6 +456,8 @@ pub(crate) struct KeysConfigOverlay {
      #[serde(skip_serializing_if = "Option::is_none")]
      detach: Option<BindingConfig>,
      #[serde(skip_serializing_if = "Option::is_none")]
@@ -219,7 +206,7 @@ index 7c0a689..22ca472 100644
      reload_config: Option<BindingConfig>,
      #[serde(skip_serializing_if = "Option::is_none")]
      open_notification_target: Option<BindingConfig>,
-@@ -562,6 +568,7 @@ impl<'de> Deserialize<'de> for KeysConfig {
+@@ -563,6 +569,7 @@ impl<'de> Deserialize<'de> for KeysConfig {
          apply_field!(navigate_pane_up);
          apply_field!(navigate_pane_right);
          apply_field!(detach);
@@ -227,7 +214,7 @@ index 7c0a689..22ca472 100644
          apply_field!(reload_config);
          apply_field!(open_notification_target);
          apply_field!(previous_workspace);
-@@ -661,6 +668,7 @@ impl KeysConfig {
+@@ -662,6 +669,7 @@ impl KeysConfig {
          copy_effective_action_field!(navigate_pane_up, keybinds.navigate.pane_up);
          copy_effective_action_field!(navigate_pane_right, keybinds.navigate.pane_right);
          copy_effective_action_field!(detach, keybinds.detach);
@@ -235,7 +222,7 @@ index 7c0a689..22ca472 100644
          copy_effective_action_field!(reload_config, keybinds.reload_config);
          copy_effective_action_field!(open_notification_target, keybinds.open_notification_target);
          copy_effective_action_field!(previous_workspace, keybinds.previous_workspace);
-@@ -913,6 +921,7 @@ impl Default for KeysConfig {
+@@ -914,6 +922,7 @@ impl Default for KeysConfig {
              navigate_pane_up: BindingConfig::one("k"),
              navigate_pane_right: BindingConfig::one("l"),
              detach: BindingConfig::one("prefix+q"),
@@ -244,10 +231,10 @@ index 7c0a689..22ca472 100644
              open_notification_target: BindingConfig::one("prefix+o"),
              previous_workspace: BindingConfig::empty(),
 diff --git a/src/main.rs b/src/main.rs
-index 5df99b6..58efe82 100644
+index 2d20314..ac5689c 100644
 --- a/src/main.rs
 +++ b/src/main.rs
-@@ -172,6 +172,9 @@ const DEFAULT_CONFIG: &str = r##"# herdr configuration
+@@ -173,6 +173,9 @@ const DEFAULT_CONFIG: &str = r##"# herdr configuration
  # help = "prefix+?"
  # settings = "prefix+s"
  # detach = "prefix+q"
