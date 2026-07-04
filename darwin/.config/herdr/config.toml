@@ -74,6 +74,10 @@ description = "quit herdr (stop server)"
 agent_panel_sort = "priority"
 show_agent_labels_on_pane_borders = true
 
+# プレフィックスモード中、下部バーに zellij 風のキーバインドチートシートを表示
+# (自前パッチの独自オプション。実際のバインド設定から動的に生成される)
+prefix_cheatsheet = true
+
 [ui.toast]
 delivery = "herdr"
 
