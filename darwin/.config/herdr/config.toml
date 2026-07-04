@@ -9,7 +9,8 @@ onboarding = false
 # プレフィックス2度押しでリテラル ctrl+p をペイン内アプリへ送信。
 prefix = "ctrl+p"
 
-# Enter か Esc を押すまでプレフィックスモードに留まる (zellij のモーダル風)。
+# ペイン/タブ移動系だけ Enter か Esc を押すまでプレフィックスモードに留まり、
+# それ以外の操作 (分割・閉じる・ズーム等) は実行後すぐ抜ける (zellij と同じ)。
 # 自前パッチの独自オプション。ビルド手順: ./build-patched.sh、差分: ./patches/
 prefix_sticky = true
 
