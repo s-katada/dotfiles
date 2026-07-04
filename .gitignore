@@ -52,6 +52,11 @@ darwin/.config/github-copilot/versions.json
 darwin/.config/karabiner/automatic_backups/
 # Ghostty - auto-generated config backups (config.<hash>.bak)
 darwin/.config/ghostty/config.*.bak
+# herdr - ログとセッション状態（端末スクロールバックを含むため機密性の観点でも追跡しない）
+darwin/.config/herdr/herdr-client.log
+darwin/.config/herdr/herdr-server.log
+darwin/.config/herdr/session.json
+darwin/.config/herdr/session-history.json
 
 # Ubuntu - home-manager generated files
 ubuntu/.config/direnv/
