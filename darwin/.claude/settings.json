@@ -1,39 +1,10 @@
 {
-  "effortLevel": "xhigh",
-  "enabledPlugins": {
-    "clangd-lsp@claude-plugins-official": true,
-    "rust-analyzer-lsp@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true
-  },
   "env": {
     "CLAUDE_CODE_EFFORT_LEVEL": "max",
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-fable-5",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-5"
   },
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "command": "bash '/Users/awesomemr/.claude/hooks/herdr-agent-state.sh' session",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "command": "osascript -e 'display notification \"タスクが完了しました\" with title \"Claude Code\" sound name \"Glass\"'",
-            "type": "command"
-          }
-        ]
-      }
-    ]
-  },
-  "model": "claude-fable-5[1m]",
   "permissions": {
     "allow": [
       "Bash(git *)",
@@ -62,20 +33,51 @@
       "WebFetch",
       "Task"
     ],
-    "defaultMode": "auto",
     "deny": [
       "Bash(rm -rf /)*",
       "Bash(sudo rm *)"
+    ],
+    "defaultMode": "auto"
+  },
+  "model": "opusplan[1m]",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/awesomemr/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"タスクが完了しました\" with title \"Claude Code\" sound name \"Glass\"'"
+          }
+        ]
+      }
     ]
   },
-  "preferredNotifChannel": "ghostty",
-  "skipAutoPermissionPrompt": true,
+  "statusLine": {
+    "type": "command",
+    "command": "bash /Users/awesomemr/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "clangd-lsp@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
+  },
+  "effortLevel": "xhigh",
+  "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
-  "statusLine": {
-    "command": "bash /Users/awesomemr/.claude/statusline-command.sh",
-    "type": "command"
-  },
-  "tui": "fullscreen",
+  "preferredNotifChannel": "ghostty",
+  "skipAutoPermissionPrompt": true,
   "voiceEnabled": true
 }
