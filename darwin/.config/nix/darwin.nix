@@ -17,12 +17,10 @@
     };
     taps = [
       "grishka/grishka"
-      "modem-dev/tap"
       "nikitabobko/tap"
     ];
     brews = [
       "herdr"  # ターミナル常駐のエージェントマルチプレクサ。nixpkgs未収録のため brew で管理
-      "hunk"  # レビューファーストのターミナル diff ビューア (hunk.dev)。nixpkgs未収録のため brew で管理
     ];
     casks = [
       # フォント

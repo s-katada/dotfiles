@@ -80,6 +80,7 @@ in
     gh
     delta  # git-delta
     act  # GitHub Actions をローカルで実行
+    hunk  # レビューファーストのターミナル diff ビューア (hunk.dev)。flake input 由来
 
     # 検索・ファイル操作
     ripgrep
