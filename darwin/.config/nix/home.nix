@@ -175,6 +175,10 @@ in
   # Claude の静的設定（~/.claude はアプリ管理の実ディレクトリなので個別ファイルのみリンク）
   home.file.".claude/settings.json".source         = link ".claude/settings.json";
   home.file.".claude/statusline-command.sh".source = link ".claude/statusline-command.sh";
+  home.file.".claude/skills/hunk-review".source    = link ".skills/hunk-review";
+
+  # Cursor Agent のグローバルスキル（~/.cursor はアプリ管理の実ディレクトリなので個別リンク）
+  home.file.".cursor/skills/hunk-review".source    = link ".skills/hunk-review";
 
   # スクリーンショット保存先（system.defaults.screencapture.location 用に作成）
   home.activation.makeScreenshotsDir =

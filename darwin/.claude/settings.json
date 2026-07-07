@@ -24,6 +24,7 @@
       "Bash(chmod *)",
       "Bash(which *)",
       "Bash(gh *)",
+      "Bash(hunk *)",
       "Bash(cargo *)",
       "Bash(rustc *)",
       "Bash(python *)",
@@ -39,7 +40,6 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5[1m]",
   "hooks": {
     "SessionStart": [
       {
