@@ -1,29 +1,13 @@
 ---
 name: hunk-review
-description: Interacts with live Hunk (hunk.dev) terminal diff review sessions via CLI. Use when the user mentions Hunk, hunk session, hunk diff, review notes, inline comments, メモ, レビューノート, or asks to pick up, read, or respond to notes left in a Hunk review. Inspects focus, navigates files and hunks, reads user/agent comments, reloads sessions, and adds inline review comments.
+description: Interacts with live Hunk diff review sessions via CLI. Inspects review focus, navigates files and hunks, reloads session contents, and adds inline review comments. Use when the user has a Hunk session running or wants to review diffs interactively.
 ---
 
 # Hunk Review
 
-Hunk is an interactive terminal diff viewer (https://github.com/modem-dev/hunk). The TUI is for the user — do NOT run `hunk diff`, `hunk show`, or other interactive commands directly. Use `hunk session *` CLI commands to inspect and control live sessions through the local daemon.
+Hunk is an interactive terminal diff viewer. The TUI is for the user -- do NOT run `hunk diff`, `hunk show`, or other interactive commands directly. Use `hunk session *` CLI commands to inspect and control live sessions through the local daemon.
 
-If no session exists, ask the user to launch Hunk in their terminal first (`hunk diff` or `hunk show`).
-
-## Reading user memos (メモ)
-
-When the user says「Hunk のメモを拾って」「メモに答えて」「レビューノートを見て」or similar:
-
-1. Confirm a live session exists: `hunk session list`
-2. Read notes with `--type user` or `--type all` — the default `comment list` omits human notes
-3. Navigate to the relevant file/hunk if you need surrounding diff context
-4. Respond to the note content in the agent chat
-
-```bash
-hunk session comment list --repo . --type user --json
-hunk session comment list --repo . --type all --json
-```
-
-Human notes are created in the Hunk TUI (e.g. `c` key). They appear as `source: user` with a `body` field.
+If no session exists, ask the user to launch Hunk in their terminal first.
 
 ## Workflow
 
@@ -43,14 +27,14 @@ Human notes are created in the Hunk TUI (e.g. `c` key). They appear as `source: 
 
 Most session commands accept:
 
-- `--repo <path>` — match the live session by its current loaded repo root (most common)
-- `<session-id>` — match by exact ID (use when multiple sessions share a repo)
+- `--repo <path>` -- match the live session by its current loaded repo root (most common)
+- `<session-id>` -- match by exact ID (use when multiple sessions share a repo)
 - If only one session exists, it auto-resolves
 
 `reload` also supports:
 
-- `--session-path <path>` — match the live Hunk window by its current working directory
-- `--source <path>` — load the replacement `diff` / `show` command from a different directory
+- `--session-path <path>` -- match the live Hunk window by its current working directory
+- `--source <path>` -- load the replacement `diff` / `show` command from a different directory
 
 Use `--source` only for advanced reloads where the live session you want to control is not already associated with the checkout you want to load next. For a normal worktree session, prefer selecting it directly with `--repo /path/to/worktree`.
 
@@ -119,7 +103,7 @@ hunk session comment rm --repo . <comment-id>
 hunk session comment clear --repo . --yes [--file README.md]
 ```
 
-- `comment list --type user` shows human-authored inline notes; without `--type`, `comment list` returns only legacy live-agent comments (often empty)
+- `comment list --type user` shows human-authored inline notes; without `--type`, `comment list` preserves the legacy live-agent-comment view
 - `comment add` is best for one note; `comment apply` is best when an agent already has several notes ready
 - `comment add` requires `--file`, `--summary`, and exactly one of `--old-line` or `--new-line`
 - `comment apply` payload items require `filePath`, `summary`, and exactly one target such as `hunk`, `hunkNumber`, `oldLine`, or `newLine`
@@ -157,15 +141,15 @@ Guidelines:
 - Use `comment apply` for agent-generated batches and `comment add` for one-off notes
 - Use `--focus` sparingly when the note itself should actively steer the review
 - Keep comments focused: intent, structure, risks, or follow-ups
-- Don't comment on every hunk — highlight what the user wouldn't spot themselves
+- Don't comment on every hunk -- highlight what the user wouldn't spot themselves
 
 ## Common errors
 
-- **"No visible diff file matches ..."** — the file is not in the loaded review. Check `context`, then `reload` if needed.
-- **"No active Hunk sessions"** — if Hunk is visibly running, localhost may be blocked by the agent sandbox; retry with network/sandbox escalation. Otherwise ask the user to open Hunk.
-- **"Multiple active sessions match"** — pass `<session-id>` explicitly.
-- **"No active Hunk session matches session path ..."** — for advanced split-path reloads, verify the live window `Path` via `hunk session get` or `list`, then use `--session-path`.
-- **"Pass the replacement Hunk command after `--`"** — include `--` before the nested `diff` / `show` command.
-- **"Pass --stdin to read batch comments from stdin JSON."** — `comment apply` only reads its batch payload from stdin.
-- **"Specify exactly one navigation target"** — pick one of `--hunk`, `--old-line`, or `--new-line`.
-- **"Specify either --next-comment or --prev-comment, not both."** — choose one comment-navigation direction.
+- **"No visible diff file matches ..."** -- the file is not in the loaded review. Check `context`, then `reload` if needed.
+- **"No active Hunk sessions"** -- if Hunk is visibly running, localhost may be blocked by the agent sandbox; retry with network/sandbox escalation. Otherwise ask the user to open Hunk.
+- **"Multiple active sessions match"** -- pass `<session-id>` explicitly.
+- **"No active Hunk session matches session path ..."** -- for advanced split-path reloads, verify the live window `Path` via `hunk session get` or `list`, then use `--session-path`.
+- **"Pass the replacement Hunk command after `--`"** -- include `--` before the nested `diff` / `show` command.
+- **"Pass --stdin to read batch comments from stdin JSON."** -- `comment apply` only reads its batch payload from stdin.
+- **"Specify exactly one navigation target"** -- pick one of `--hunk`, `--old-line`, or `--new-line`.
+- **"Specify either --next-comment or --prev-comment, not both."** -- choose one comment-navigation direction.
