@@ -57,6 +57,12 @@ darwin/.config/herdr/herdr-client.log
 darwin/.config/herdr/herdr-server.log
 darwin/.config/herdr/session.json
 darwin/.config/herdr/session-history.json
+# herdr - キーバインド移行時の自動バックアップ（config.toml と同内容）
+darwin/.config/herdr/config.toml.bak-*
+# herdr - 起動時に取得するリリースノートのキャッシュ
+darwin/.config/herdr/release-notes.json
+# hunk - 最終確認 CLI バージョンを保持するだけの状態ファイル
+darwin/.config/hunk/state.json
 
 # Ubuntu - home-manager generated files
 ubuntu/.config/direnv/
