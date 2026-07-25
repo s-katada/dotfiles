@@ -11,11 +11,10 @@
                                     {
                                         "identifiers": [
                                             {
-                                                "product_id": 16985,
-                                                "vendor_id": 19279
+                                                "is_built_in_keyboard": true
                                             }
                                         ],
-                                        "type": "device_unless"
+                                        "type": "device_if"
                                     }
                                 ],
                                 "from": {
@@ -41,11 +40,10 @@
                                     {
                                         "identifiers": [
                                             {
-                                                "product_id": 16985,
-                                                "vendor_id": 19279
+                                                "is_built_in_keyboard": true
                                             }
                                         ],
-                                        "type": "device_unless"
+                                        "type": "device_if"
                                     }
                                 ],
                                 "from": {
@@ -73,6 +71,16 @@
                         "enabled": false,
                         "manipulators": [
                             {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "is_built_in_keyboard": true
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "spacebar",
                                     "modifiers": {
@@ -97,6 +105,16 @@
                         "description": "CTRLキーを単体で押したときに、英数・かなキーを送信する。（左CTRLキーは英数、右CTRLキーはかな）",
                         "manipulators": [
                             {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "is_built_in_keyboard": true
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "left_control",
                                     "modifiers": {
@@ -124,20 +142,19 @@
                                         "key_code": "left_control"
                                     }
                                 ],
-                                "type": "basic",
-                                "conditions": [
-                                    {
-                                        "type": "device_unless",
-                                        "identifiers": [
-                                            {
-                                                "vendor_id": 19279,
-                                                "product_id": 16985
-                                            }
-                                        ]
-                                    }
-                                ]
+                                "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "is_built_in_keyboard": true
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "right_control",
                                     "modifiers": {
@@ -165,18 +182,7 @@
                                         "key_code": "right_control"
                                     }
                                 ],
-                                "type": "basic",
-                                "conditions": [
-                                    {
-                                        "type": "device_unless",
-                                        "identifiers": [
-                                            {
-                                                "vendor_id": 19279,
-                                                "product_id": 16985
-                                            }
-                                        ]
-                                    }
-                                ]
+                                "type": "basic"
                             }
                         ]
                     },
@@ -184,6 +190,16 @@
                         "description": "コマンドキーを単体で押したとき、かなキーを送信する。（変更した: 右コマンドキーはかな） (rev 3)",
                         "manipulators": [
                             {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "is_built_in_keyboard": true
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "left_command",
                                     "modifiers": {
@@ -211,47 +227,45 @@
                                         "key_code": "left_command"
                                     }
                                 ],
-                                "type": "basic",
-                                "conditions": [
-                                    {
-                                        "type": "device_unless",
-                                        "identifiers": [
-                                            {
-                                                "vendor_id": 19279,
-                                                "product_id": 16985
-                                            }
-                                        ]
-                                    }
-                                ]
+                                "type": "basic"
                             }
                         ]
                     }
                 ]
             },
-            "name": "Default profile",
-            "selected": true,
-            "simple_modifications": [
+            "devices": [
                 {
-                    "from": {
-                        "key_code": "caps_lock"
+                    "identifiers": {
+                        "is_built_in_keyboard": true
                     },
-                    "to": [
+                    "ignore": false,
+                    "simple_modifications": [
                         {
-                            "key_code": "left_control"
-                        }
-                    ]
-                },
-                {
-                    "from": {
-                        "key_code": "right_shift"
-                    },
-                    "to": [
+                            "from": {
+                                "key_code": "caps_lock"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "left_control"
+                                }
+                            ]
+                        },
                         {
-                            "key_code": "return_or_enter"
+                            "from": {
+                                "key_code": "right_shift"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "return_or_enter"
+                                }
+                            ]
                         }
                     ]
                 }
             ],
+            "name": "Default profile",
+            "selected": true,
+            "simple_modifications": [],
             "virtual_hid_keyboard": {
                 "country_code": 0,
                 "keyboard_type_v2": "ansi"
