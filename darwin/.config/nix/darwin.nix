@@ -48,7 +48,13 @@
       "google-drive"
       "handbrake-app"
       "homerow"
-      "karabiner-elements"
+      # karabiner-elements の cask は auto_updates 指定のため、通常の brew upgrade では
+      # 更新対象から外れる。その結果アプリ自身の自動更新だけがバージョンを上げ、
+      # Homebrew の記録（15.3.0）と実体（16.1.0）が乖離していた。v15 -> v16 は
+      # 特権デーモンが karabiner_grabber から Karabiner-Core-Service へ変わる更新で、
+      # 登録が引き継がれず「GUI にはルールが見えるのに一切効かない」状態になる。
+      # greedy = true で brew 管理下に戻し、更新時に公式 pkg（デーモン登録を含む）を通す。
+      { name = "karabiner-elements"; greedy = true; }
       "libreoffice"
       "lm-studio"
       "microsoft-remote-desktop"
@@ -89,6 +95,25 @@
       "The Unarchiver" = 425424353;
     };
   };
+
+  # Karabiner-Elements の特権デーモン登録チェック。
+  # 特権デーモンの登録が失効するとキー再マップは一切効かなくなるが、設定 GUI 上は
+  # ルールが有効に見えるため気付きにくい（実際に約2週間気付けなかった）。
+  # rebuild ごとに検知して復旧手順を出す。異常検知でも activation は止めない。
+  system.activationScripts.postActivation.text = ''
+    if [ -d /Applications/Karabiner-Elements.app ]; then
+      if ! /bin/launchctl print system 2>/dev/null | /usr/bin/grep -q 'org.pqrs.service.daemon.Karabiner-Core-Service'; then
+        echo ""
+        echo "[karabiner] 警告: 特権デーモン Karabiner-Core-Service が未登録です。キー再マップは効きません。"
+        echo "[karabiner] 復旧1: Karabiner-Elements.app を開き、表示される services のセットアップを完了する"
+        echo "[karabiner]         (システム設定 > 一般 > ログイン項目と機能拡張 で pqrs.org の許可が必要)"
+        echo "[karabiner] 復旧2: 直らなければ brew reinstall --cask karabiner-elements"
+        echo "[karabiner] 状態確認: '/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli' \\"
+        echo "[karabiner]           --show-settings-window-guidance | grep core_daemons_enabled"
+        echo ""
+      fi
+    fi
+  '';
 
   # macOS 入力デバイス設定
   system.defaults = {
