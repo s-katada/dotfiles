@@ -158,6 +158,15 @@
       "com.apple.sound.beep.feedback" = 0; # 音量変更時のビープ無効
     };
 
+    # fn キーを単体で押したときの動作（システム設定 > キーボード >
+    # キーボードショートカット > ファンクションキー の「fn キーを押して」）。
+    # nix-darwin では整数ではなく文字列 enum で指定する。対応は
+    # "Do Nothing"=0 / "Change Input Source"=1 / "Show Emoji & Symbols"=2 / "Start Dictation"=3。
+    # 既存の実機値が 1（入力ソースを変更）なので、挙動を変えずにそのまま宣言する。
+    # なお F1-F12 を標準ファンクションキーとして使う設定は別項目で、
+    # 上の NSGlobalDomain."com.apple.keyboard.fnState" 側で管理している。
+    hitoolbox.AppleFnUsageType = "Change Input Source";
+
     # マウスの軌跡の速さ: 0-3。CPI/DPI 自体はデバイス側設定なので、
     # macOS では tracking speed を Nix 管理する。
     ".GlobalPreferences"."com.apple.mouse.scaling" = 3.0;
