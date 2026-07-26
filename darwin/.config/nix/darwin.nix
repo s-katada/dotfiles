@@ -129,7 +129,12 @@
       KeyRepeat = 2; # キーリピート速度（小さいほど速い）
       InitialKeyRepeat = 15; # リピート開始までの遅延
       ApplePressAndHoldEnabled = false; # アクセント長押しを無効化（キーリピート優先）
-      "com.apple.keyboard.fnState" = true; # F1-F12 を標準ファンクションキーに
+      # F1-F12 の扱い。false = キーに印字された機能（輝度・音量など）を fn なしで
+      # 直接使う（Apple 既定の挙動）。純粋な F1-F12 が必要なときは fn+F1 を使う。
+      # true にすると逆で、F1 が素の F1 になり輝度・音量が fn 側へ移る。
+      # Karabiner はこの値を読んで f キーの変換テーブルを組み立てるため、
+      # 変更後は Karabiner 側の挙動も追従する（別途設定は不要）。
+      "com.apple.keyboard.fnState" = false;
       AppleKeyboardUIMode = 3; # フルキーボードアクセス
 
       # テキスト入力（開発者向けに自動変換を全てオフ）
