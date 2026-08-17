@@ -127,6 +127,7 @@ in
     lazygit
     trippy
     yazi
+    btop  # リソースモニタ（top の高機能版）
   ];
 
   # direnv（プロジェクト別バージョン管理）
