@@ -107,7 +107,12 @@ arch/.config/mozc/.*
 arch/.config/fcitx5/conf/cached_layouts
 
 # herdr - ログとセッション状態（端末スクロールバックを含むため機密性の観点でも追跡しない）
-arch/.config/herdr/
+# 追跡するものだけを明示的に許可する方式（新しい実行時ファイルが増えても漏れない）
+arch/.config/herdr/*
+!arch/.config/herdr/config.toml
+!arch/.config/herdr/patches/
+!arch/.config/herdr/PKGBUILD
+!arch/.config/herdr/README.md
 
 # 各種ツールが作る自動バックアップ
 arch/**/*.bak
