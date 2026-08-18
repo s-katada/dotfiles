@@ -91,3 +91,37 @@ darwin/.cursor/hooks.json
 
 # シークレット: gh の OAuth トークンを含む（git から除去すること）
 darwin/.config/gh/hosts.yml
+
+# ---- Arch (niri/Wayland デスクトップ) ----
+
+# シークレット: gh の OAuth トークンを含む
+arch/.config/gh/hosts.yml
+
+# mozc の学習データ（入力した文章そのものを含む。公開リポジトリには絶対に入れない）
+# config1.db だけが設定で、それ以外は履歴・学習結果。
+arch/.config/mozc/*.db
+!arch/.config/mozc/config1.db
+arch/.config/mozc/.*
+
+# fcitx5 が生成するキーボードレイアウトのキャッシュ
+arch/.config/fcitx5/conf/cached_layouts
+
+# herdr - ログとセッション状態（端末スクロールバックを含むため機密性の観点でも追跡しない）
+arch/.config/herdr/
+
+# 各種ツールが作る自動バックアップ
+arch/**/*.bak
+arch/**/*.bak-*
+arch/.config/ghostty/config.*.bak
+
+# fish のランタイム状態（マシン固有・set -U が書き換える）
+arch/.config/fish/fish_variables
+
+# fisher が入れたプラグイン本体は ~ 側にだけ置く（fish_plugins から復元できる）
+arch/.config/fish/functions/fisher.fish
+arch/.config/fish/functions/_fzf_*.fish
+arch/.config/fish/functions/fzf_configure_bindings.fish
+arch/.config/fish/functions/_autopair_*.fish
+arch/.config/fish/conf.d/fzf.fish
+arch/.config/fish/conf.d/autopair.fish
+arch/.config/fish/completions/
