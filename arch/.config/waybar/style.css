@@ -1,0 +1,109 @@
+* {
+  border: none;
+  border-radius: 0;
+  font-family: "Symbols Nerd Font", "Font Awesome 7 Free Solid", "Noto Sans CJK JP", sans-serif;
+  font-size: 15px;
+  min-height: 0;
+}
+
+/* ── バー本体 ── */
+window#waybar {
+  background: #52526e;
+  color: #ffffff;
+  border-right: 2px solid #6d6d94;
+}
+
+/* ── ワークスペース（上部） ── */
+#workspaces { margin-top: 10px; }
+
+#workspaces button {
+  padding: 8px 0;
+  margin: 3px 7px;
+  border-radius: 10px;
+  background: #6d6d94;
+  color: #e4e8f7;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 200ms ease, color 200ms ease,
+              padding 200ms ease, margin 200ms ease, font-size 200ms ease;
+}
+
+#workspaces button.active { background: #e0b8ff; color: #33334a; }
+
+#workspaces button:hover {
+  background: #9a9ac6;
+  color: #ffffff;
+  padding: 13px 0;
+  margin: 3px 3px;
+  font-size: 18px;
+}
+
+#workspaces button.active:hover { background: #eed4ff; color: #33334a; }
+
+/* ── 下部モジュール ── */
+#tray,
+#custom-notification,
+#pulseaudio,
+#network,
+#cpu,
+#memory,
+#clock {
+  padding: 10px 0;
+  margin: 4px 7px;
+  border-radius: 10px;
+  background: #6d6d94;
+  color: #ffffff;
+  transition: background-color 200ms ease, color 200ms ease,
+              padding 200ms ease, margin 200ms ease, font-size 200ms ease;
+}
+
+#tray:hover,
+#custom-notification:hover,
+#pulseaudio:hover,
+#network:hover,
+#cpu:hover,
+#memory:hover,
+#clock:hover {
+  background: #9a9ac6;
+  padding: 15px 0;
+  margin: 4px 3px;
+}
+
+/* アイコン系は大きめに */
+#custom-notification       { font-size: 20px; }
+#custom-notification:hover { font-size: 23px; }
+
+#pulseaudio        { font-size: 20px; color: #ffdb8a; }
+#pulseaudio:hover  { font-size: 23px; color: #fff0c4; }
+#pulseaudio.muted  { color: #b9bdd4; }
+
+#network              { font-size: 20px; color: #a5e7ff; }
+#network:hover        { font-size: 23px; color: #d4f4ff; }
+#network.disconnected { color: #ff8fa3; }
+
+/* CPU / メモリ：アイコン＋数値の2行 */
+#cpu       { font-size: 14px; color: #a5e7ff; }
+#cpu:hover { font-size: 16px; color: #d4f4ff; }
+
+#memory       { font-size: 14px; color: #d0f5a3; }
+#memory:hover { font-size: 16px; color: #e8fbd0; }
+
+/* 時計 */
+#clock {
+  background: #e0b8ff;
+  color: #33334a;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 10px;
+  padding: 12px 0;
+}
+
+#clock:hover { background: #eed4ff; font-size: 18px; padding: 16px 0; }
+
+/* ツールチップ */
+tooltip {
+  background: #3a3a52;
+  border: 2px solid #e0b8ff;
+  border-radius: 10px;
+}
+tooltip label { color: #ffffff; font-size: 14px; }
