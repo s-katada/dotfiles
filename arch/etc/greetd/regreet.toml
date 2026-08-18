@@ -1,0 +1,33 @@
+# regreet (グリーター UI) の設定。配色は regreet.css 側で Catppuccin Mocha に寄せている。
+
+# true にすると前回のユーザー / セッションを使ってユーザー選択を省略する
+skip_selection = false
+
+[background]
+# 実体は arch/etc/greetd/ ではなく /usr/share/backgrounds/ に置く。
+# greeter ユーザーは /home/saitama (700) を読めないため。
+path = "/usr/share/backgrounds/greeter.png"
+fit = "Cover"
+
+[GTK]
+application_prefer_dark_theme = true
+cursor_theme_name = "Adwaita"
+cursor_blink = true
+font_name = "Noto Sans CJK JP 16"
+icon_theme_name = "Papirus-Dark"
+theme_name = "Adwaita"
+
+[commands]
+reboot = ["systemctl", "reboot"]
+poweroff = ["systemctl", "poweroff"]
+x11_prefix = ["startx", "/usr/bin/env"]
+
+[appearance]
+greeting_msg = "おかえりなさい"
+
+[widget.clock]
+format = "%-m/%-d (%a)  %H:%M"
+resolution = "1s"
+timezone = "Asia/Tokyo"
+label_width = 220
+locale = "en_US"

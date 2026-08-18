@@ -1,0 +1,170 @@
+/* regreet の配色。ターミナル (fish / ghostty) と揃えた Catppuccin Mocha。
+   regreet は素の GTK4 (libadwaita なし) なので、Adwaita の名前付き色を
+   上書きするだけでだいたいの部品に効く。 */
+
+@define-color base     #1e1e2e;
+@define-color mantle   #181825;
+@define-color crust    #11111b;
+@define-color surface0 #313244;
+@define-color surface1 #45475a;
+@define-color surface2 #585b70;
+@define-color overlay0 #6c7086;
+@define-color subtext0 #a6adc8;
+@define-color text     #cdd6f4;
+@define-color blue     #89b4fa;
+@define-color lavender #b4befe;
+@define-color red      #f38ba8;
+
+/* Adwaita の名前付き色を Mocha に差し替える */
+@define-color window_bg_color        @base;
+@define-color window_fg_color        @text;
+@define-color view_bg_color          @surface0;
+@define-color view_fg_color          @text;
+@define-color theme_bg_color         @base;
+@define-color theme_fg_color         @text;
+@define-color theme_base_color       @surface0;
+@define-color theme_text_color       @text;
+@define-color theme_selected_bg_color @blue;
+@define-color theme_selected_fg_color @crust;
+@define-color accent_bg_color        @blue;
+@define-color accent_fg_color        @crust;
+@define-color accent_color           @lavender;
+@define-color card_bg_color          @mantle;
+@define-color popover_bg_color       @mantle;
+@define-color popover_fg_color       @text;
+@define-color dialog_bg_color        @mantle;
+@define-color headerbar_bg_color     @mantle;
+@define-color insensitive_bg_color   @surface0;
+@define-color insensitive_fg_color   @overlay0;
+@define-color borders                @surface1;
+@define-color error_color            @red;
+
+/* 背景画像は regreet が GtkPicture で描いていて CSS (filter / opacity) が届かない。
+   そのため暗くするのは配置時に済ませている (deploy.sh が ffmpeg で
+   /usr/share/backgrounds/greeter.png を暗く焼き直す)。
+   ここでは画像が無いときに真っ黒にならないよう下地だけ敷いておく。 */
+window,
+window.background {
+    background-color: @base;
+}
+
+/* 時計・エラー表示・ログインフォームはいずれも GtkFrame。
+   枠自体は透明にしておき、カードに見せるのは中身が grid のログインフォームだけ。
+   (そうしないとエラーが無いときに空のカードが浮いてしまう) */
+frame {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 20px;
+}
+
+frame grid {
+    min-width: 520px;
+    background-color: alpha(@base, 0.9);
+    border: 1px solid alpha(@surface2, 0.55);
+    border-radius: 20px;
+    padding: 30px 34px;
+    box-shadow: 0 20px 56px alpha(@crust, 0.6);
+}
+
+frame grid > * {
+    margin: 5px 4px;
+}
+
+label {
+    color: @text;
+    font-size: 1.05em;
+}
+
+/* 時計やエラー文言は壁紙の上に直接乗るので、影を付けて読めるようにする */
+frame > label,
+frame > box > label {
+    font-size: 1.25em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 10px alpha(@crust, 0.95), 0 0 4px alpha(@crust, 0.9);
+}
+
+entry,
+entry.password,
+spinbutton,
+dropdown > button,
+combobox button {
+    background-image: none;
+    background-color: alpha(@surface0, 0.95);
+    color: @text;
+    border: 1px solid @surface1;
+    border-radius: 10px;
+    min-height: 38px;
+    padding: 2px 12px;
+    caret-color: @blue;
+}
+
+entry:focus-within,
+dropdown > button:focus,
+combobox button:focus {
+    border-color: @blue;
+    box-shadow: 0 0 0 2px alpha(@blue, 0.35);
+}
+
+entry > text > placeholder {
+    color: @overlay0;
+}
+
+button {
+    background-image: none;
+    background-color: alpha(@surface0, 0.95);
+    color: @text;
+    border: 1px solid @surface1;
+    border-radius: 10px;
+    min-height: 38px;
+    padding: 2px 18px;
+}
+
+button:hover {
+    background-image: none;
+    background-color: @surface1;
+}
+
+/* Login ボタン */
+button.suggested-action {
+    background-image: none;
+    background-color: @blue;
+    color: @crust;
+    border-color: @blue;
+    font-weight: 600;
+}
+
+button.suggested-action:hover {
+    background-image: none;
+    background-color: @lavender;
+}
+
+/* Reboot / Power Off。誤爆しやすいので普段は控えめにして、hover で赤くする */
+button.destructive-action {
+    background-image: none;
+    background-color: alpha(@surface0, 0.9);
+    color: @red;
+    border-color: alpha(@red, 0.45);
+}
+
+button.destructive-action:hover {
+    background-image: none;
+    background-color: alpha(@red, 0.85);
+    color: @crust;
+    border-color: @red;
+}
+
+popover > contents {
+    background-color: @mantle;
+    color: @text;
+    border: 1px solid @surface1;
+    border-radius: 12px;
+}
+
+popover row:selected,
+listview > row:selected {
+    background-color: @blue;
+    color: @crust;
+}
