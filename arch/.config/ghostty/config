@@ -1,2 +1,5 @@
 # 背景の透過（1.0 = 不透明、0.0 = 完全透明）
 background-opacity = 0.9
+
+# カーソルの形。block(■) / bar(|) / underline(_)
+cursor-style = bar
