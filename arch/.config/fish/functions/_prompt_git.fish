@@ -1,5 +1,11 @@
 # git のリポジトリ情報を 1 行にまとめて返すヘルパー。
 # porcelain=v2 を 1 回だけ呼んでパースするので、プロンプトが重くならない。
+#
+# 見た目は darwin/.config/starship.toml のカスタム git セグメントに合わせている:
+#   赤背景   ... 未ステージの変更あり（ステージ済みが混ざっていても赤）
+#   黄背景   ... ステージ済みのみ
+#   緑背景 + ... untracked ファイルのみ
+#   緑背景   ... clean
 function _prompt_git --description 'Render the git segment of the prompt'
     set -l raw (command git --no-optional-locks status --porcelain=v2 --branch --show-stash 2>/dev/null)
     or return
@@ -41,12 +47,33 @@ function _prompt_git --description 'Render the git segment of the prompt'
     end
 
     # detached HEAD なら短縮 SHA を出す
-    set -l label
+    set -l name
     if test "$branch" = '(detached)' -o -z "$branch"
-        set label (set_color -o yellow)"➦ $oid"
+        set name "➦ $oid"
     else
-        set label (set_color -o magenta)" $branch"
+        set name " $branch"
     end
+
+    # 上流との差分（チップの中に入れる）
+    set -l ab ""
+    test $ahead -gt 0; and set ab "$ab ⇡$ahead"
+    test $behind -gt 0; and set ab "$ab⇣$behind"
+
+    # 作業ツリーの状態でチップの色を決める（darwin と同じ Dracula 配色）
+    set -l chip_color
+    set -l dots ""
+    if test $modified -gt 0 -o $conflict -gt 0
+        set chip_color (set_color -o f8f8f2 --background=ff5555)
+    else if test $staged -gt 0
+        set chip_color (set_color -o 282a36 --background=f1fa8c)
+    else if test $untracked -gt 0
+        set chip_color (set_color -o 282a36 --background=50fa7b)
+        set dots "..."
+    else
+        set chip_color (set_color -o 282a36 --background=50fa7b)
+    end
+
+    set -l out $chip_color" $name$dots$ab "(set_color normal)
 
     # rebase / merge / cherry-pick などの進行中オペレーション
     set -l gitdir (command git rev-parse --git-dir 2>/dev/null)
@@ -62,28 +89,9 @@ function _prompt_git --description 'Render the git segment of the prompt'
             set op BISECT
         end
     end
-
-    set -l out $label
     test -n "$op"; and set -a out (set_color -o red)"[$op]"
 
-    # 上流との差分
-    set -l sync
-    test $ahead -gt 0; and set -a sync (set_color cyan)"⇡$ahead"
-    test $behind -gt 0; and set -a sync (set_color cyan)"⇣$behind"
-    test -n "$sync"; and set -a out (string join '' $sync)
-
-    # 作業ツリーの状態
-    set -l st
-    test $conflict -gt 0; and set -a st (set_color -o red)"✖$conflict"
-    test $staged -gt 0; and set -a st (set_color green)"+$staged"
-    test $modified -gt 0; and set -a st (set_color yellow)"!$modified"
-    test $untracked -gt 0; and set -a st (set_color blue)"?$untracked"
-    test $stash -gt 0; and set -a st (set_color brmagenta)"\$$stash"
-    if test -n "$st"
-        set -a out (string join (set_color normal)" " $st)
-    else
-        set -a out (set_color green)"✔"
-    end
+    test $stash -gt 0; and set -a out (set_color brmagenta)"\$$stash"
 
     echo -n (string join ' ' $out)(set_color normal)
 end
