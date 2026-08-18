@@ -23,6 +23,13 @@ input {
 
         // Enable numlock on startup, omitting this setting disables it.
         numlock
+
+        // キーリピート。既定は repeat-delay 600 / repeat-rate 25 で、
+        // 長押ししてから連射が始まるまでが遅い。
+        // repeat-delay: 長押し開始からリピートが始まるまでの待ち時間 (ミリ秒)
+        // repeat-rate:  リピート中の 1 秒あたりの入力回数
+        repeat-delay 200
+        repeat-rate 40
     }
 
     // Next sections include libinput settings.
