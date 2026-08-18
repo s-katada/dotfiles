@@ -1,0 +1,40 @@
+[Hotkey]
+# TriggerKeys is deliberately empty.
+#
+# The trigger key activates/deactivates the *current* input method. With mozc
+# that means mozc stays selected and only flips into its own Direct mode, so
+# the popup keeps showing the "あ" label and just appends "(Direct)".
+# Enumerating instead switches the input method itself: keyboard-us <-> mozc,
+# which shows "US" and "あ" as distinct entries.
+TriggerKeys=
+EnumerateWithTriggerKeys=False
+EnumerateSkipFirst=False
+
+[Hotkey/TriggerKeys]
+
+# LANG1 (かな) -> Japanese. On this ZMK keyboard LANG1 arrives as KEY_HANGEUL,
+# which the us layout maps to the "Hangul" keysym. mozc claims that keysym as
+# its own Kana key and would only toggle its internal alphanumeric mode, so
+# fcitx5 has to grab it first and switch the input method for real.
+[Hotkey/ActivateKeys]
+0=Hangul
+1=Hiragana_Katakana
+
+# LANG2 (英数) -> English. Arrives as KEY_HANJA -> "Hangul_Hanja" keysym,
+# which mozc otherwise treats as its Eisu key.
+[Hotkey/DeactivateKeys]
+0=Hangul_Hanja
+1=Eisu_toggle
+
+# Switch between keyboard-us and mozc.
+[Hotkey/EnumerateForwardKeys]
+0=Control+space
+1=Zenkaku_Hankaku
+
+[Hotkey/EnumerateBackwardKeys]
+0=Control+Shift+space
+
+[Behavior]
+# Remember the input mode per application
+ShareInputState=No
+PreeditEnabledByDefault=True
