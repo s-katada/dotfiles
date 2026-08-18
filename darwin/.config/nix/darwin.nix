@@ -146,6 +146,11 @@
       NSAutomaticInlinePredictionEnabled = false;
 
       # 外観
+      # 「自動」（時刻で light/dark を切り替える）が有効なままだと macOS 側が
+      # AppleInterfaceStyle を書き換えるため、Dark を書いても固定にならない。
+      # 実機で AppleInterfaceStyle=Dark なのに昼間は light になっていた原因がこれ。
+      # 固定するには必ず自動切り替えを false にする（両方セットで初めて固定）。
+      AppleInterfaceStyleSwitchesAutomatically = false; # 外観「自動」を無効化
       AppleInterfaceStyle = "Dark"; # ダークモード固定（Light にするにはこの行を削除）
       AppleShowScrollBars = "Always"; # WhenScrolling|Automatic|Always
       _HIHideMenuBar = false; # メニューバーを自動非表示にしない
