@@ -24,3 +24,7 @@ set -gx fzf_preview_dir_cmd "ls -A --color=always" # eza を入れたら eza --a
 #   fzf_configure_bindings --variables=ctrl-alt-v
 # 無効化は値を空にする:
 #   fzf_configure_bindings --processes=
+
+# Ctrl+V の変数検索を無効化する。ターミナルの貼り付け操作と紛らわしいため。
+# 値を空にすると、そのバインドだけ設定されない（他は既定のまま）。
+fzf_configure_bindings --variables=
