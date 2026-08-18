@@ -1,19 +1,24 @@
 # herdr 設定 (Arch)
 # darwin/.config/herdr/config.toml から再構成したもの。
-# Arch の herdr は上流の非パッチ版なので、darwin 側の自前パッチ専用オプション
-# (prefix_sticky / lock / prefix_cheatsheet) と macOS 専用の入力ソース切替は外してある。
+# キーバインドは zellij の操作感に寄せている。対応表と妥協点は ./README.md を参照。
 # 反映: herdr server reload-config
+#
+# darwin との差分:
+#   - prefix_sticky は移植済み (このディレクトリの PKGBUILD でビルドしたパッケージが必要)
+#   - lock (ctrl+g) / prefix_cheatsheet は未移植。0.8.0 では unknown key として無視される
+#   - switch_ascii_input_source_in_prefix は macOS/Windows 限定なので外してある
 
 onboarding = false
-# herdr 設定
-# キーバインドは zellij (zellij) の操作感に寄せている。
-# 対応表と妥協点は ./README.md を参照。
-# 反映: herdr server reload-config
 
 [keys]
 # zellij の Pane モードキー (Ctrl p) をプレフィックスに採用。
 # プレフィックス2度押しでリテラル ctrl+p をペイン内アプリへ送信。
 prefix = "ctrl+p"
+
+# ペイン/タブ移動系だけ Enter か Esc を押すまでプレフィックスモードに留まり、
+# それ以外の操作 (分割・閉じる・ズーム等) は実行後すぐ抜ける (zellij と同じ)。
+# 自前パッチの独自オプション。ビルド手順: ./README.md、差分: ./0001-sticky-prefix.patch
+prefix_sticky = true
 
 # ペイン操作 (zellij: Ctrl p → キー / Alt+キー)
 focus_pane_left = ["prefix+h", "alt+h", "alt+left"]

@@ -1,0 +1,326 @@
+diff -ruN orig/herdr-0.8.0/src/app/input/navigate.rs work/herdr-0.8.0/src/app/input/navigate.rs
+--- a/src/app/input/navigate.rs	2026-08-04 03:52:56.000000000 +0900
++++ b/src/app/input/navigate.rs	2026-08-19 01:24:15.877865530 +0900
+@@ -100,6 +100,15 @@
+             return;
+         }
+ 
++        if self.state.prefix_sticky {
++            // Sticky prefix mode swallows unbound keys instead of exiting;
++            // Enter is the deliberate way out (Esc is handled above).
++            if key.code == KeyCode::Enter {
++                leave_command_mode(&mut self.state);
++            }
++            return;
++        }
++
+         leave_command_mode(&mut self.state);
+     }
+ 
+@@ -121,6 +130,12 @@
+             self.cancel_copy_mode_if_active();
+             self.execute_tui_navigate_action(action, ActionContext::Prefix);
+         }
++        // Only pane/tab movement chains in sticky prefix mode (zellij-style);
++        // every other action is one-shot and drops back to the terminal
++        // without waiting for Enter.
++        if is_sticky_repeat_action(action) {
++            restore_sticky_prefix(&mut self.state);
++        }
+         self.selection_autoscroll_deadline = None;
+     }
+ 
+@@ -1845,6 +1860,40 @@
+     };
+ }
+ 
++/// Pane/tab movement actions that keep sticky prefix mode alive so they can
++/// be chained until Enter or Esc exits (zellij pane/move/tab-mode feel).
++/// Everything else is one-shot: the prefix exits right after the action.
++fn is_sticky_repeat_action(action: NavigateAction) -> bool {
++    matches!(
++        action,
++        NavigateAction::FocusPaneLeft
++            | NavigateAction::FocusPaneDown
++            | NavigateAction::FocusPaneUp
++            | NavigateAction::FocusPaneRight
++            | NavigateAction::CyclePaneNext
++            | NavigateAction::CyclePanePrevious
++            | NavigateAction::LastPane
++            | NavigateAction::SwapPaneLeft
++            | NavigateAction::SwapPaneDown
++            | NavigateAction::SwapPaneUp
++            | NavigateAction::SwapPaneRight
++            | NavigateAction::SwitchTab(_)
++            | NavigateAction::PreviousTab
++            | NavigateAction::NextTab
++    )
++}
++
++/// Re-enters prefix mode after a movement action when `[keys] prefix_sticky`
++/// is enabled, so the user can chain movements until Enter or Esc exits.
++/// Actions that deliberately moved to another mode (copy, resize, dialogs,
++/// pickers) are left alone; only the "action finished, back to terminal"
++/// transition is reverted.
++fn restore_sticky_prefix(state: &mut AppState) {
++    if state.prefix_sticky && state.active.is_some() && state.mode == Mode::Terminal {
++        state.mode = Mode::Prefix;
++    }
++}
++
+ fn write_scrollback_temp_file(content: &str) -> io::Result<std::path::PathBuf> {
+     let mut last_collision = None;
+     for attempt in 0..16 {
+@@ -3503,4 +3552,103 @@
+         assert!(state.detach_requested);
+         assert!(!state.should_quit);
+     }
++
++    fn sticky_prefix_app() -> App {
++        let (_api_tx, api_rx) = tokio::sync::mpsc::unbounded_channel();
++        let mut app = App::new(
++            &Config::default(),
++            true,
++            None,
++            api_rx,
++            crate::api::EventHub::default(),
++        );
++        app.state.workspaces = vec![Workspace::test_new("test")];
++        app.state.active = Some(0);
++        app.state.selected = 0;
++        app.state.prefix_sticky = true;
++        app.state.mode = Mode::Prefix;
++        app
++    }
++
++    #[test]
++    fn sticky_prefix_stays_after_pane_focus_action() {
++        let mut app = sticky_prefix_app();
++
++        app.handle_prefix_key(TerminalKey::new(KeyCode::Char('h'), KeyModifiers::empty()));
++
++        assert_eq!(app.state.mode, Mode::Prefix);
++    }
++
++    #[test]
++    fn sticky_prefix_stays_after_tab_switch_action() {
++        let mut app = sticky_prefix_app();
++
++        app.handle_prefix_key(TerminalKey::new(KeyCode::Char('1'), KeyModifiers::empty()));
++
++        assert_eq!(app.state.mode, Mode::Prefix);
++    }
++
++    #[test]
++    fn sticky_prefix_stays_after_swap_pane_action() {
++        let mut app = sticky_prefix_app();
++
++        app.handle_prefix_key(TerminalKey::new(KeyCode::Char('H'), KeyModifiers::empty()));
++
++        assert_eq!(app.state.mode, Mode::Prefix);
++    }
++
++    #[test]
++    fn sticky_prefix_exits_after_zoom_action() {
++        let mut app = sticky_prefix_app();
++
++        app.handle_prefix_key(TerminalKey::new(KeyCode::Char('z'), KeyModifiers::empty()));
++
++        assert_eq!(app.state.mode, Mode::Terminal);
++    }
++
++    #[test]
++    fn sticky_prefix_enter_exits_to_terminal() {
++        let mut app = sticky_prefix_app();
++
++        app.handle_prefix_key(TerminalKey::new(KeyCode::Enter, KeyModifiers::empty()));
++
++        assert_eq!(app.state.mode, Mode::Terminal);
++    }
++
++    #[test]
++    fn sticky_prefix_esc_exits_to_terminal() {
++        let mut app = sticky_prefix_app();
++
++        app.handle_prefix_key(TerminalKey::new(KeyCode::Esc, KeyModifiers::empty()));
++
++        assert_eq!(app.state.mode, Mode::Terminal);
++    }
++
++    #[test]
++    fn sticky_prefix_swallows_unbound_key() {
++        let mut app = sticky_prefix_app();
++
++        app.handle_prefix_key(TerminalKey::new(KeyCode::Char('0'), KeyModifiers::empty()));
++
++        assert_eq!(app.state.mode, Mode::Prefix);
++    }
++
++    #[test]
++    fn sticky_prefix_respects_mode_switching_action() {
++        let mut app = sticky_prefix_app();
++
++        app.handle_prefix_key(TerminalKey::new(KeyCode::Char('r'), KeyModifiers::empty()));
++
++        assert_eq!(app.state.mode, Mode::Resize);
++    }
++
++    #[test]
++    fn non_sticky_prefix_exits_after_action() {
++        let mut app = sticky_prefix_app();
++        app.state.prefix_sticky = false;
++
++        app.handle_prefix_key(TerminalKey::new(KeyCode::Char('h'), KeyModifiers::empty()));
++
++        assert_eq!(app.state.mode, Mode::Terminal);
++    }
+ }
+diff -ruN orig/herdr-0.8.0/src/app/mod.rs work/herdr-0.8.0/src/app/mod.rs
+--- a/src/app/mod.rs	2026-08-04 03:52:56.000000000 +0900
++++ b/src/app/mod.rs	2026-08-19 01:23:52.653867473 +0900
+@@ -605,6 +605,7 @@
+             outer_terminal_focus: None,
+             prefix_code,
+             prefix_mods,
++            prefix_sticky: config.keys.prefix_sticky,
+             default_sidebar_width: config.ui.sidebar_width,
+             sidebar_width,
+             sidebar_min_width,
+@@ -1384,6 +1385,7 @@
+                 Ok((live, keybind_diagnostics)) => {
+                     self.state.prefix_code = live.prefix.0;
+                     self.state.prefix_mods = live.prefix.1;
++                    self.state.prefix_sticky = config.keys.prefix_sticky;
+                     self.state.keybinds = live.keybinds;
+                     diagnostics.extend(keybind_diagnostics);
+                 }
+diff -ruN orig/herdr-0.8.0/src/app/state.rs work/herdr-0.8.0/src/app/state.rs
+--- a/src/app/state.rs	2026-08-04 03:52:56.000000000 +0900
++++ b/src/app/state.rs	2026-08-19 01:23:52.654410801 +0900
+@@ -1464,6 +1464,7 @@
+     // Config
+     pub prefix_code: KeyCode,
+     pub prefix_mods: KeyModifiers,
++    pub prefix_sticky: bool,
+     pub default_sidebar_width: u16,
+     pub sidebar_width: u16,
+     pub sidebar_min_width: u16,
+@@ -1836,6 +1837,7 @@
+             outer_terminal_focus: None,
+             prefix_code: KeyCode::Char('b'),
+             prefix_mods: KeyModifiers::CONTROL,
++            prefix_sticky: false,
+             default_sidebar_width: 26,
+             sidebar_width: 26,
+             sidebar_min_width: 18,
+diff -ruN orig/herdr-0.8.0/src/config/model.rs work/herdr-0.8.0/src/config/model.rs
+--- a/src/config/model.rs	2026-08-04 03:52:56.000000000 +0900
++++ b/src/config/model.rs	2026-08-19 01:23:52.654548521 +0900
+@@ -311,6 +311,10 @@
+ pub struct KeysConfig {
+     /// Prefix key to enter prefix mode (e.g. "ctrl+b", "f12", "esc").
+     pub prefix: String,
++    /// Stay in prefix mode after pane/tab movement actions until Enter or
++    /// Esc exits (zellij-style); every other action is one-shot and exits
++    /// immediately. Default: false.
++    pub prefix_sticky: bool,
+     /// Open keybinding help. Default: "prefix+?"
+     pub help: BindingConfig,
+     /// Open settings. Default: "prefix+s"
+@@ -431,6 +435,8 @@
+     #[serde(skip_serializing_if = "Option::is_none")]
+     prefix: Option<String>,
+     #[serde(skip_serializing_if = "Option::is_none")]
++    prefix_sticky: Option<bool>,
++    #[serde(skip_serializing_if = "Option::is_none")]
+     help: Option<BindingConfig>,
+     #[serde(skip_serializing_if = "Option::is_none")]
+     settings: Option<BindingConfig>,
+@@ -558,6 +564,7 @@
+         }
+ 
+         apply_field!(prefix);
++        apply_field!(prefix_sticky);
+         apply_field!(help);
+         apply_field!(settings);
+         apply_field!(new_workspace);
+@@ -656,6 +663,7 @@
+         }
+ 
+         profile.prefix = Some(self.prefix.clone());
++        profile.prefix_sticky = Some(self.prefix_sticky);
+         copy_effective_action_field!(help, keybinds.help);
+         copy_effective_action_field!(settings, keybinds.settings);
+         copy_effective_action_field!(new_workspace, keybinds.new_workspace);
+@@ -937,6 +945,7 @@
+     fn default() -> Self {
+         Self {
+             prefix: "ctrl+b".into(),
++            prefix_sticky: false,
+             help: BindingConfig::one("prefix+?"),
+             settings: BindingConfig::one("prefix+s"),
+             new_workspace: BindingConfig::one("prefix+shift+n"),
+@@ -1165,6 +1174,19 @@
+     }
+ 
+     #[test]
++    fn prefix_sticky_defaults_false_and_parses() {
++        assert!(!Config::default().keys.prefix_sticky);
++
++        let toml = r#"
++[keys]
++prefix_sticky = true
++"#;
++        let config: Config = toml::from_str(toml).unwrap();
++        assert!(config.keys.prefix_sticky);
++        assert!(config.keys.key_field_is_user_configured("prefix_sticky"));
++    }
++
++    #[test]
+     fn terminal_default_shell_defaults_empty_and_parses() {
+         let default_config = Config::default();
+         assert!(default_config.terminal.default_shell.is_empty());
+diff -ruN orig/herdr-0.8.0/src/main.rs work/herdr-0.8.0/src/main.rs
+--- a/src/main.rs	2026-08-04 03:52:56.000000000 +0900
++++ b/src/main.rs	2026-08-19 01:23:52.654662581 +0900
+@@ -170,6 +170,11 @@
+ # alt+..., cmd/super, and punctuation-with-modifiers may depend on your terminal/tmux setup.
+ # prefix = "ctrl+b"
+ 
++# Stay in prefix mode after pane/tab movement actions until Enter or Esc
++# exits (zellij-style); every other action exits immediately after running.
++# Unbound keys are swallowed while active.
++# prefix_sticky = false
++
+ # Prefix-mode actions
+ # help = "prefix+?"
+ # settings = "prefix+s"
+diff -ruN orig/herdr-0.8.0/src/ui/menus.rs work/herdr-0.8.0/src/ui/menus.rs
+--- a/src/ui/menus.rs	2026-08-04 03:52:56.000000000 +0900
++++ b/src/ui/menus.rs	2026-08-19 01:23:52.654728511 +0900
+@@ -42,9 +42,14 @@
+     let help = prefix_rhs_label(&app.keybinds.help);
+     let prefix = crate::config::format_key_combo((app.prefix_code, app.prefix_mods));
+ 
+-    let line = Line::from(vec![
+-        Span::styled(" PREFIX ", mode_style),
+-        Span::raw(" "),
++    let mut spans = vec![Span::styled(" PREFIX ", mode_style), Span::raw(" ")];
++    if app.prefix_sticky {
++        spans.extend([
++            Span::styled("enter", key),
++            Span::styled(" exit  ", dim),
++        ]);
++    }
++    spans.extend([
+         Span::styled("esc", key),
+         Span::styled(" cancel  ", dim),
+         Span::styled(prefix, key),
+@@ -54,6 +59,7 @@
+         Span::styled(help, key),
+         Span::styled(" keybinds", dim),
+     ]);
++    let line = Line::from(spans);
+ 
+     let overlay_y = area.y + area.height.saturating_sub(1);
+     let overlay_area = Rect::new(area.x, overlay_y, area.width, 1);
