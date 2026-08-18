@@ -408,10 +408,12 @@ binds {
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 
     // Chrome のプロファイル別ウィンドウ (macOS 風)。
-    // --profile-directory= には ~/.config/google-chrome/ 配下のディレクトリ名を渡す。
-    // 対応は ~/.config/google-chrome/Local State の profile.info_cache で確認できる。
-    Ctrl+Shift+1 hotkey-overlay-title="Chrome: shunya.saitama@gmail.com" { spawn "google-chrome-stable" "--profile-directory=Default"; }
-    Ctrl+Shift+2 hotkey-overlay-title="Chrome: s-katada@mksc.jp" { spawn "google-chrome-stable" "--profile-directory=Profile 2"; }
+    // 引数は ~/.config/google-chrome/ 配下のディレクトリ名。アカウントとの対応は
+    // ~/.config/google-chrome/Local State の profile.info_cache で確認できる。
+    // 既にそのプロファイルのウィンドウがあれば、新規に開かずフォーカスする
+    // (Chrome は全プロファイルが同じ app_id になるため、判別は自前スクリプト側で行う)。
+    Mod+Shift+1 hotkey-overlay-title="Chrome: shunya.saitama@gmail.com" { spawn "/home/saitama/.local/bin/chrome-profile" "Default"; }
+    Mod+Shift+2 hotkey-overlay-title="Chrome: s-katada@mksc.jp" { spawn "/home/saitama/.local/bin/chrome-profile" "Profile 2"; }
 
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.
