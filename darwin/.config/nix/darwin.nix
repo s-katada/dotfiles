@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   # Determinate Nix を使用しているため、nix-darwin の Nix 管理を無効化
   nix.enable = false;
@@ -96,11 +96,12 @@
     };
   };
 
-  # Karabiner-Elements の特権デーモン登録チェック。
-  # 特権デーモンの登録が失効するとキー再マップは一切効かなくなるが、設定 GUI 上は
-  # ルールが有効に見えるため気付きにくい（実際に約2週間気付けなかった）。
-  # rebuild ごとに検知して復旧手順を出す。異常検知でも activation は止めない。
+  # rebuild ごとに root で走る後処理。
   system.activationScripts.postActivation.text = ''
+    # ---- Karabiner-Elements の特権デーモン登録チェック ----
+    # 特権デーモンの登録が失効するとキー再マップは一切効かなくなるが、設定 GUI 上は
+    # ルールが有効に見えるため気付きにくい（実際に約2週間気付けなかった）。
+    # rebuild ごとに検知して復旧手順を出す。異常検知でも activation は止めない。
     if [ -d /Applications/Karabiner-Elements.app ]; then
       if ! /bin/launchctl print system 2>/dev/null | /usr/bin/grep -q 'org.pqrs.service.daemon.Karabiner-Core-Service'; then
         echo ""
@@ -113,6 +114,15 @@
         echo ""
       fi
     fi
+
+    # ---- 外観のライト固定 ----
+    # ライトは AppleInterfaceStyle キーが無い状態なので、system.defaults では
+    # 表現できない（書き込みしかできない）。過去に Dark を書いた実機ではキーが
+    # 残るため、rebuild ごとにユーザーコンテキストで削除する。
+    # キーが無いときの delete は失敗するので set -e に巻き込まれないようにする。
+    /bin/launchctl asuser "$(/usr/bin/id -u -- ${config.system.primaryUser})" \
+      /usr/bin/sudo --user=${config.system.primaryUser} -- \
+      /usr/bin/defaults delete -g AppleInterfaceStyle 2>/dev/null || true
   '';
 
   # macOS 入力デバイス設定
@@ -147,11 +157,14 @@
 
       # 外観
       # 「自動」（時刻で light/dark を切り替える）が有効なままだと macOS 側が
-      # AppleInterfaceStyle を書き換えるため、Dark を書いても固定にならない。
-      # 実機で AppleInterfaceStyle=Dark なのに昼間は light になっていた原因がこれ。
-      # 固定するには必ず自動切り替えを false にする（両方セットで初めて固定）。
+      # AppleInterfaceStyle を書き換えるため、どちらに固定するにも自動を切る必要がある。
+      # 実機はこれが 1 のままで、Dark を書いても昼間は light に戻っていた。
       AppleInterfaceStyleSwitchesAutomatically = false; # 外観「自動」を無効化
-      AppleInterfaceStyle = "Dark"; # ダークモード固定（Light にするにはこの行を削除）
+      # ライト固定。macOS では「ライト = AppleInterfaceStyle キーが存在しない」なので
+      # このオプションは "Dark" か null しか取れない。null は「nix が管理しない」の意味で
+      # キーを消してはくれないため、削除は下の postActivation 側で行う。
+      # ダークに戻すなら "Dark" にし、postActivation の削除ブロックを外す。
+      AppleInterfaceStyle = null; # ライトモード固定
       AppleShowScrollBars = "Always"; # WhenScrolling|Automatic|Always
       _HIHideMenuBar = false; # メニューバーを自動非表示にしない
 
