@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+"""Chrome のプロファイル別ウィンドウを開く / 既にあればフォーカスする。
+
+使い方: chrome-profile <プロファイルディレクトリ名>
+  例:   chrome-profile Default
+        chrome-profile "Profile 2"
+
+なぜスクリプトが要るのか:
+  Chrome は全プロファイルを 1 つのブラウザプロセスで扱うため、Wayland の
+  app_id はどのプロファイルでも "google-chrome" になり、--class を渡しても
+  起動済みプロセスには無視される。ウィンドウタイトルにもプロファイル名は
+  出ないので、niri 側から「このウィンドウはどのプロファイルか」を判別できない。
+
+  そこで、このスクリプトが開いたウィンドウの niri ウィンドウ ID を
+  プロファイルごとに記録しておき、次回はその ID をフォーカスする。
+
+制限:
+  このスクリプト以外の方法で開いたウィンドウ (Chrome 内で Ctrl+N など) は
+  記録されないため、フォーカス対象にならず新しいウィンドウが開く。
+"""
+
+import json
+import os
+import subprocess
+import sys
+import time
+
+CHROME = "google-chrome-stable"
+APP_ID = "google-chrome"
+STATE_DIR = os.path.join(
+    os.environ.get("XDG_CACHE_HOME", os.path.expanduser("~/.cache")),
+    "chrome-profile-windows",
+)
+
+
+def niri_windows():
+    """niri が把握しているウィンドウ一覧。niri が居なければ空。"""
+    try:
+        out = subprocess.run(
+            ["niri", "msg", "-j", "windows"],
+            capture_output=True, text=True, timeout=5, check=True,
+        ).stdout
+    except (subprocess.SubprocessError, FileNotFoundError):
+        return []
+    try:
+        return json.loads(out)
+    except json.JSONDecodeError:
+        return []
+
+
+def chrome_window_ids():
+    return {w["id"] for w in niri_windows() if w.get("app_id") == APP_ID}
+
+
+def state_path(profile):
+    safe = profile.replace("/", "_").replace(" ", "_")
+    return os.path.join(STATE_DIR, safe)
+
+
+def read_ids(profile):
+    try:
+        with open(state_path(profile)) as f:
+            return [int(line) for line in f.read().split() if line.strip().isdigit()]
+    except (OSError, ValueError):
+        return []
+
+
+def write_ids(profile, ids):
+    os.makedirs(STATE_DIR, exist_ok=True)
+    with open(state_path(profile), "w") as f:
+        f.write("\n".join(str(i) for i in ids))
+
+
+def focus(window_id):
+    subprocess.run(
+        ["niri", "msg", "action", "focus-window", "--id", str(window_id)],
+        capture_output=True, timeout=5,
+    )
+
+
+def main():
+    if len(sys.argv) < 2:
+        print(__doc__, file=sys.stderr)
+        return 2
+    profile = sys.argv[1]
+
+    alive = chrome_window_ids()
+    # 記録済みのうち、まだ生きているものだけ残す
+    known = [i for i in read_ids(profile) if i in alive]
+    if known:
+        write_ids(profile, known)
+        focus(known[0])
+        return 0
+
+    before = alive
+    subprocess.Popen(
+        [CHROME, f"--profile-directory={profile}", "--new-window"],
+        start_new_session=True,
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+    )
+
+    # 新しく現れたウィンドウを掴む（Chrome の起動待ち）
+    deadline = time.time() + 15
+    while time.time() < deadline:
+        time.sleep(0.25)
+        new = chrome_window_ids() - before
+        if new:
+            write_ids(profile, known + sorted(new))
+            return 0
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
