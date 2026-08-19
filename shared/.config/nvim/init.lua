@@ -174,6 +174,9 @@ require("lazy").setup({
       vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Live grep" })
       vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Buffers" })
       vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Help tags" })
+      -- 全キーマップを絞り込み検索する。which-key より網羅的で、プラグインが
+      -- 勝手に張ったものも出る (<CR> で実行できる)
+      vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Keymaps" })
       vim.keymap.set("n", "<leader>fr", builtin.oldfiles, { desc = "Recent files" })
       vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "Diagnostics" })
       vim.keymap.set("n", "<leader>fs", builtin.lsp_document_symbols, { desc = "Document symbols" })
@@ -220,7 +223,31 @@ require("lazy").setup({
       vim.o.timeout = true
       vim.o.timeoutlen = 300  -- キー入力待機時間(ms)
     end,
-    opts = {},
+    opts = {
+      -- プレフィックスに名前を付ける。付けないと <Space> のあとに b/c/f/g/... が
+      -- 裸で並ぶだけで、何の入口なのか分からない。
+      spec = {
+        { "<leader>b", group = "バッファ" },
+        { "<leader>c", group = "コード (アクション・整形)" },
+        { "<leader>f", group = "検索 (Telescope)" },
+        { "<leader>g", group = "Git (lazygit)" },
+        { "<leader>h", group = "Git hunk (gitsigns)" },
+        { "<leader>s", group = "検索・メッセージ" },
+        { "<leader>sn", group = "Noice のメッセージ" },
+        { "<leader>t", group = "ターミナル・トグル" },
+        { "<leader>u", group = "UI トグル" },
+        { "<leader>x", group = "診断 (Trouble)" },
+      },
+    },
+    keys = {
+      {
+        "<leader>?",
+        function()
+          require("which-key").show({ global = false })
+        end,
+        desc = "このバッファで有効なキーマップ",
+      },
+    },
   },
 
   -- Treesitter: 構文解析によるハイライト・インデント

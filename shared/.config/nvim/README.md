@@ -186,6 +186,17 @@ darwin (mac) と arch で中身を共有している。この `shared/.config/nv
 | Rust | rust_analyzer | rustfmt | - |
 | Python | basedpyright (型・ホバー) + ruff (診断) | ruff_organize_imports → ruff_format | ruff (LSP 経由) |
 
+## キーマップを思い出す方法
+
+| 方法 | 内容 |
+|------|------|
+| `<Space>` を押して待つ | which-key がグループ名付きで次に押せるキーを出す。さらに押すと絞り込まれる |
+| `<leader>?` | いま開いているバッファで有効なキーマップだけを一覧 |
+| `<leader>fk` | 全キーマップを Telescope で絞り込み検索。`<CR>` でそのまま実行できる |
+| `:WhichKey` | which-key が知っている全マッピングを一覧 |
+| `<Space>` + `Shift+/` | 上の `<leader>?` と同じ |
+| このファイル | 下の表が総覧。`:e ~/.config/nvim/README.md` |
+
 ## Tips
 
 - `<Space>` を押して待つと which-key でキーマップ一覧が表示される
