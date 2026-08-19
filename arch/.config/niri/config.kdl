@@ -476,9 +476,11 @@ binds {
 
     Mod+Q repeat=false { close-window; }
 
+    // 矢印の上下はワークスペース移動に割り当てる (ワークスペースは縦に並ぶ)。
+    // 既定の「同一カラム内のウィンドウ間フォーカス移動」は hjkl 側に残す。
     Mod+Left  { focus-column-left; }
-    Mod+Down  { focus-window-down; }
-    Mod+Up    { focus-window-up; }
+    Mod+Down  { focus-workspace-down; }
+    Mod+Up    { focus-workspace-up; }
     Mod+Right { focus-column-right; }
     Mod+H     { focus-column-left; }
     Mod+J     { focus-window-down; }
@@ -486,8 +488,8 @@ binds {
     Mod+L     { focus-column-right; }
 
     Mod+Ctrl+Left  { move-column-left; }
-    Mod+Ctrl+Down  { move-window-down; }
-    Mod+Ctrl+Up    { move-window-up; }
+    Mod+Ctrl+Down  { move-column-to-workspace-down; }
+    Mod+Ctrl+Up    { move-column-to-workspace-up; }
     Mod+Ctrl+Right { move-column-right; }
     Mod+Ctrl+H     { move-column-left; }
     Mod+Ctrl+J     { move-window-down; }
@@ -556,10 +558,12 @@ binds {
     // To avoid scrolling through workspaces really fast, you can use
     // the cooldown-ms property. The bind will be rate-limited to this value.
     // You can set a cooldown on any bind, but it's most useful for the wheel.
-    Mod+WheelScrollDown      cooldown-ms=150 { focus-workspace-down; }
-    Mod+WheelScrollUp        cooldown-ms=150 { focus-workspace-up; }
-    Mod+Ctrl+WheelScrollDown cooldown-ms=150 { move-column-to-workspace-down; }
-    Mod+Ctrl+WheelScrollUp   cooldown-ms=150 { move-column-to-workspace-up; }
+    //
+    // Mod だけだとブラウザ等でスクロールしている最中に誤ってワークスペースが
+    // 動いてしまうので、ワークスペース移動は Mod+Ctrl に寄せる。
+    // Mod 単独の上下スクロールは何も割り当てず、アプリ側にそのまま渡す。
+    Mod+Ctrl+WheelScrollDown cooldown-ms=150 { focus-workspace-down; }
+    Mod+Ctrl+WheelScrollUp   cooldown-ms=150 { focus-workspace-up; }
 
     Mod+WheelScrollRight      { focus-column-right; }
     Mod+WheelScrollLeft       { focus-column-left; }
