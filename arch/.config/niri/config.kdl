@@ -310,12 +310,28 @@ spawn-at-startup "thunderbird"
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
 
-// Input method environment.
-// GTK is left unset on purpose so GTK apps use the Wayland text-input protocol.
 environment {
+    // Input method environment.
+    // GTK is left unset on purpose so GTK apps use the Wayland text-input protocol.
     QT_IM_MODULE "fcitx"
     XMODIFIERS "@im=fcitx"
     SDL_IM_MODULE "fcitx"
+
+    // GUI アプリの UI 言語を日本語にする。
+    //
+    // LANG は /etc/locale.conf で en_US.UTF-8 のままにしてある。LANG を
+    // ja_JP.UTF-8 にすると端末のエラーメッセージまで日本語になり、日付・数値の
+    // 書式やソート順も変わって検索しづらくなる。LANGUAGE は gettext と
+    // Chromium 系が見る「UI の言語」だけの変数なので、UI は日本語・CLI は英語と
+    // いう切り分けができる。
+    //
+    // Chrome は Linux では chrome://settings から UI 言語を選べず (あの項目は
+    // Windows/ChromeOS 専用)、--lang=ja も効かない (実測: 英語のままだった)。
+    // 環境変数で渡すのが唯一の方法。日本語リソース (ja.pak) は最初から入っている。
+    //
+    // ここは niri が spawn する子プロセスにしか効かないので、systemd や D-Bus
+    // 経由で起動されるアプリ向けに ~/.config/environment.d/ にも同じものを置く。
+    LANGUAGE "ja"
 }
 
 hotkey-overlay {
