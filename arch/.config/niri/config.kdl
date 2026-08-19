@@ -301,6 +301,12 @@ spawn-at-startup "/usr/lib/hyprpolkitagent/hyprpolkitagent"
 // On-screen display for volume / mute / caps lock (swayosd).
 spawn-at-startup "swayosd-server"
 
+// メールクライアント (Thunderbird)。
+// 新着通知を受けるには常駐している必要があるが、Wayland には常駐トレイが無く
+// Thunderbird 側にも最小化して隠れる手段が無いので、ウィンドウを開いたまま
+// 置いておく形になる。通知は swaync に出る。
+spawn-at-startup "thunderbird"
+
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
 
@@ -426,6 +432,10 @@ binds {
     // (Chrome は全プロファイルが同じ app_id になるため、判別は自前スクリプト側で行う)。
     Mod+Shift+1 hotkey-overlay-title="Chrome: shunya.saitama@gmail.com" { spawn "/home/saitama/.local/bin/chrome-profile" "Default"; }
     Mod+Shift+2 hotkey-overlay-title="Chrome: s-katada@mksc.jp" { spawn "/home/saitama/.local/bin/chrome-profile" "Profile 2"; }
+
+    // メール (Thunderbird)。Chrome と違って単一インスタンスなので、
+    // 起動済みなら既存のウィンドウが前に出る。専用スクリプトは要らない。
+    Mod+Shift+M hotkey-overlay-title="Mail: Thunderbird" { spawn "thunderbird"; }
 
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.
