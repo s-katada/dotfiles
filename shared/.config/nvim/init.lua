@@ -360,6 +360,46 @@ require("lazy").setup({
       })
 
       -- LSPサーバー有効化
+      -- basedpyright の既定は厳しめで、reportAny / reportUnusedCallResult 等により
+      -- 普通のコードでも「Type of "x" is Any」「Result of call expression is not used」が
+      -- 大量に出る。pyright 相当の standard に落とす。
+      --
+      -- インタプリタは pyright が PYTHONPATH を見ないため明示的に渡す必要がある。
+      -- direnv で activate 済みの venv -> プロジェクトの .venv -> PATH の python3
+      -- の順に探す。Nix の dev shell のようにパッケージを PYTHONPATH で渡す構成も
+      -- あるので、その中身は extraPaths として渡しておく。
+      vim.lsp.config("basedpyright", {
+        -- settings は workspace/configuration で pull されるので、client.settings を
+        -- 書き換える。root_dir が確定してから解決したいので on_init で行う。
+        on_init = function(client)
+          -- テーブルリテラルに nil を混ぜると ipairs がそこで止まるので順に積む
+          local candidates = {}
+          if vim.env.VIRTUAL_ENV then
+            candidates[#candidates + 1] = vim.env.VIRTUAL_ENV .. "/bin/python"
+          end
+          candidates[#candidates + 1] = (client.root_dir or vim.fn.getcwd()) .. "/.venv/bin/python"
+
+          local python = vim.fn.exepath("python3")
+          for _, path in ipairs(candidates) do
+            if path and vim.uv.fs_stat(path) then
+              python = path
+              break
+            end
+          end
+          client.settings = vim.tbl_deep_extend("force", client.settings or {}, {
+            python = { pythonPath = python },
+          })
+        end,
+        settings = {
+          basedpyright = {
+            analysis = {
+              typeCheckingMode = "standard",
+              extraPaths = vim.split(vim.env.PYTHONPATH or "", ":", { trimempty = true }),
+            },
+          },
+        },
+      })
+
       vim.lsp.enable({ "ts_ls", "lua_ls", "ruby_lsp", "rust_analyzer", "basedpyright", "ruff" })
     end,
   },
