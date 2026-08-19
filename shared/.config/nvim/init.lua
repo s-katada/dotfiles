@@ -224,31 +224,63 @@ require("lazy").setup({
   },
 
   -- Treesitter: 構文解析によるハイライト・インデント
+  -- main ブランチ (lazy-lock.json で固定している版) は master 系と API が違う:
+  --   1. configs.setup() は無くなり、パーサの導入は install() を呼ぶ
+  --      (既に入っている言語は no-op。非同期なので初回起動時に裏でビルドされる)
+  --   2. highlight / indent は自動で有効にならず、FileType で自分で有効化する
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",  -- master とは API が非互換なので明示的に固定する
     build = ":TSUpdate",
     event = { "BufReadPre", "BufNewFile" },
     config = function()
-      require("nvim-treesitter.configs").setup({
-        ensure_installed = {  -- 自動インストールする言語
-          "lua",
-          "typescript",
-          "tsx",
-          "javascript",
-          "ruby",
-          "rust",
-          "json",
-          "yaml",
-          "markdown",
-          "markdown_inline",
-          "html",
-          "css",
-          "vim",
-          "vimdoc",
-        },
-        highlight = { enable = true },  -- ハイライト有効
-        indent = { enable = true },     -- インデント有効
+      require("nvim-treesitter").install({  -- 自動インストールする言語
+        "lua",
+        "typescript",
+        "tsx",
+        "javascript",
+        "ruby",
+        "rust",
+        "json",
+        "yaml",
+        "markdown",
+        "markdown_inline",
+        "html",
+        "css",
+        "vim",
+        "vimdoc",
       })
+
+      -- パーサがある filetype だけ treesitter に切り替える。
+      -- typescriptreact -> tsx のような filetype と言語の対応は
+      -- nvim-treesitter の plugin/filetypes.lua が登録済み。
+      local function enable(buf)
+        local ft = vim.bo[buf].filetype
+        local lang = vim.treesitter.language.get_lang(ft) or ft
+        -- パーサ未導入なら失敗するので、その場合は従来の syntax に任せる
+        if not pcall(vim.treesitter.start, buf, lang) then
+          return
+        end
+        -- indents.scm を持つ言語だけインデントも treesitter にする
+        if vim.treesitter.query.get(lang, "indents") then
+          vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
+      end
+
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("UserTreesitter", { clear = true }),
+        callback = function(ev)
+          enable(ev.buf)
+        end,
+      })
+
+      -- このプラグインは BufReadPre で読み込まれるため、最初のバッファは
+      -- filetype が既に決まっていて上の autocmd が間に合わない。手動で有効化する。
+      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].filetype ~= "" then
+          enable(buf)
+        end
+      end
     end,
   },
 

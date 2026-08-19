@@ -12,13 +12,15 @@ DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 NVIM_SRC="$DOTFILES/shared/.config/nvim"
 
 echo "==> 1/4 パッケージのインストール"
-#   neovim   本体
-#   npm      mason が ts_ls / prettierd / eslint_d を入れるのに必要 (Arch では nodejs と別)
-#   lazygit  snacks.nvim の <leader>gg から呼ばれる
-#   ruby     ruby_lsp / rubocop を gem で入れるのに必要
+#   neovim          本体
+#   npm             mason が ts_ls / prettierd / eslint_d を入れるのに必要 (Arch では nodejs と別)
+#   lazygit         snacks.nvim の <leader>gg から呼ばれる
+#   ruby            ruby_lsp / rubocop を gem で入れるのに必要
+#   tree-sitter-cli nvim-treesitter (main) がパーサを `tree-sitter build` でビルドする。
+#                   master 系と違い C コンパイラだけでは足りず、この CLI が必須
 # 既に入っているもの: git gcc make unzip curl nodejs ripgrep fd wl-clipboard python
 # (クリップボードは wl-clipboard 経由。mac の pbcopy 相当で、設定側は unnamedplus のまま動く)
-sudo pacman -S --needed --noconfirm neovim npm lazygit ruby
+sudo pacman -S --needed --noconfirm neovim npm lazygit ruby tree-sitter-cli
 
 echo "==> 2/4 設定のシンボリックリンク"
 # ディレクトリごとリンクする。lazy.nvim が lazy-lock.json を書き換えるので、
@@ -41,11 +43,8 @@ echo "==> 4/4 mason のフォーマッタ・リンタを入れる"
 nvim --headless "+MasonInstall stylua prettierd eslint_d" +qa \
   || echo "    MasonInstall が失敗。nvim を開いて :MasonInstall stylua prettierd eslint_d で入れ直せる"
 
-# treesitter のパーサはここでは入れられない。lazy-lock.json が nvim-treesitter を
-# main ブランチ (API 刷新版) で固定しているのに、init.lua が master 系の旧 API
-# (require("nvim-treesitter.configs").setup) を呼んでいて設定が効いていないため。
-# mac 側も同じ lock / 同じ init.lua なので同じ状態。init.lua を新 API に直せば
-# ここでパーサのビルドまでやれる。
+# treesitter のパーサは初回 nvim 起動時に install() が裏で落としてビルドする
+# (nvim-treesitter main の作法。既に入っている言語は no-op)。
 
 cat <<'MSG'
 
@@ -59,11 +58,10 @@ cat <<'MSG'
     :Lazy               プラグインの状態。mac と同じコミットか確認できる
     :Mason              LSP・フォーマッタの状態
 
-  既知の問題 (mac 側も同じ):
-    - treesitter のパーサが 1 つも入らない。lazy-lock.json は nvim-treesitter を
-      main ブランチで固定しているが、init.lua が master 系の旧 API を呼んでいる
-      ため設定が丸ごと無効になっている。nvim 同梱の lua/markdown/vim 等は動くが、
-      typescript/ruby/rust 等はハイライトが treesitter にならない。
+  treesitter のパーサは初回起動時に裏でビルドされる。状況は
+    :checkhealth nvim-treesitter   で確認、手で入れ直すなら :TSInstall <lang>。
+
+  既知の差 (mac 側も同じ):
     - rustfmt は mac 側にも無い (nix の home.packages に rust ツールチェインが無い)
       ので、rust の保存時フォーマットは両方で LSP フォールバックになる。
       欲しければ  sudo pacman -S rust  (mac は home.nix に rustup を足す)
