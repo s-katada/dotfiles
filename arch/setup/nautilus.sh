@@ -10,7 +10,7 @@
 # GTK4 / libadwaita / gvfs は regreet や waybar の依存として既に入っているので、
 # 実際に追加されるのは上の 4 つだけ。GTK4 アプリなので Wayland ネイティブに動く。
 #
-# 見た目 (ダークテーマ) とサイドバーのお気に入りは dotfiles 側のファイルで管理し、
+# 見た目 (ライトテーマ) とサイドバーのお気に入りは dotfiles 側のファイルで管理し、
 # それ以外の Nautilus の設定は dconf にしか置けないのでこのスクリプトで流し込む。
 #
 # 使い方:  ./nautilus.sh      (パッケージのインストールで sudo を聞かれる)
@@ -52,8 +52,10 @@ set_key() {
   fi
 }
 
-# アプリ全体をダークに (waybar や regreet の色味に合わせる)。
-set_key org.gnome.desktop.interface color-scheme "'prefer-dark'"
+# アプリ全体をライトに。xdg-desktop-portal-gtk がこの値を
+# org.freedesktop.appearance color-scheme として公開するので、
+# Electron / Chromium 系 (Cursor 等) の "システムに従う" もこれに従う。
+set_key org.gnome.desktop.interface color-scheme "'prefer-light'"
 
 # Finder に寄せる:
 #   一覧表示 + フォルダを三角で展開 = Finder のリスト表示

@@ -8,9 +8,9 @@
 
 /* ── バー本体 ── */
 window#waybar {
-  background: #52526e;
-  color: #ffffff;
-  border-right: 2px solid #6d6d94;
+  background: #eceaf4;
+  color: #2f2f42;
+  border-right: 2px solid #cdc8e0;
 }
 
 /* ── ワークスペース（上部） ── */
@@ -20,25 +20,25 @@ window#waybar {
   padding: 8px 0;
   margin: 3px 7px;
   border-radius: 10px;
-  background: #6d6d94;
-  color: #e4e8f7;
+  background: #dcd8ec;
+  color: #4a4a63;
   font-size: 16px;
   font-weight: bold;
   transition: background-color 200ms ease, color 200ms ease,
               padding 200ms ease, margin 200ms ease, font-size 200ms ease;
 }
 
-#workspaces button.active { background: #e0b8ff; color: #33334a; }
+#workspaces button.active { background: #c9a0f0; color: #2b2340; }
 
 #workspaces button:hover {
-  background: #9a9ac6;
-  color: #ffffff;
+  background: #c6c0e0;
+  color: #2f2f42;
   padding: 13px 0;
   margin: 3px 3px;
   font-size: 18px;
 }
 
-#workspaces button.active:hover { background: #eed4ff; color: #33334a; }
+#workspaces button.active:hover { background: #d9bcf7; color: #2b2340; }
 
 /* ── 下部モジュール ── */
 #tray,
@@ -51,8 +51,8 @@ window#waybar {
   padding: 10px 0;
   margin: 4px 7px;
   border-radius: 10px;
-  background: #6d6d94;
-  color: #ffffff;
+  background: #dcd8ec;
+  color: #2f2f42;
   transition: background-color 200ms ease, color 200ms ease,
               padding 200ms ease, margin 200ms ease, font-size 200ms ease;
 }
@@ -64,7 +64,7 @@ window#waybar {
 #cpu:hover,
 #memory:hover,
 #clock:hover {
-  background: #9a9ac6;
+  background: #c6c0e0;
   padding: 15px 0;
   margin: 4px 3px;
 }
@@ -73,37 +73,38 @@ window#waybar {
 #custom-notification       { font-size: 20px; }
 #custom-notification:hover { font-size: 23px; }
 
-#pulseaudio        { font-size: 20px; color: #ffdb8a; }
-#pulseaudio:hover  { font-size: 23px; color: #fff0c4; }
-#pulseaudio.muted  { color: #b9bdd4; }
+/* 明色背景なので、アイコンの色は dark テーマ時のパステルではなく濃い側に振る */
+#pulseaudio        { font-size: 20px; color: #9a6b00; }
+#pulseaudio:hover  { font-size: 23px; color: #6f4d00; }
+#pulseaudio.muted  { color: #7c7c96; }
 
-#network              { font-size: 20px; color: #a5e7ff; }
-#network:hover        { font-size: 23px; color: #d4f4ff; }
-#network.disconnected { color: #ff8fa3; }
+#network              { font-size: 20px; color: #0b6f8c; }
+#network:hover        { font-size: 23px; color: #084f63; }
+#network.disconnected { color: #b3243c; }
 
 /* CPU / メモリ：アイコン＋数値の2行 */
-#cpu       { font-size: 14px; color: #a5e7ff; }
-#cpu:hover { font-size: 16px; color: #d4f4ff; }
+#cpu       { font-size: 14px; color: #0b6f8c; }
+#cpu:hover { font-size: 16px; color: #084f63; }
 
-#memory       { font-size: 14px; color: #d0f5a3; }
-#memory:hover { font-size: 16px; color: #e8fbd0; }
+#memory       { font-size: 14px; color: #3f7a12; }
+#memory:hover { font-size: 16px; color: #2f5c0d; }
 
 /* 時計 */
 #clock {
-  background: #e0b8ff;
-  color: #33334a;
+  background: #c9a0f0;
+  color: #2b2340;
   font-weight: bold;
   font-size: 16px;
   margin-bottom: 10px;
   padding: 12px 0;
 }
 
-#clock:hover { background: #eed4ff; font-size: 18px; padding: 16px 0; }
+#clock:hover { background: #d9bcf7; font-size: 18px; padding: 16px 0; }
 
 /* ツールチップ */
 tooltip {
-  background: #3a3a52;
-  border: 2px solid #e0b8ff;
+  background: #f5f3fb;
+  border: 2px solid #a97be0;
   border-radius: 10px;
 }
-tooltip label { color: #ffffff; font-size: 14px; }
+tooltip label { color: #2f2f42; font-size: 14px; }
