@@ -1,0 +1,121 @@
+/* GTK4 / libadwaita アプリの配色: Catppuccin Latte
+ *
+ * 対象は Nautilus など GTK4 アプリ全般。Thunderbird を Latte にしたので、
+ * デスクトップの GUI アプリの配色をそこに揃える。
+ * (ターミナル・bat・ログイン画面は Mocha のダーク。GUI はライト、という
+ *  gtk-3.0/gtk-4.0 の settings.ini の方針に沿う)
+ *
+ * 2 通りの書き方を併記しているのは意図的:
+ *   libadwaita は 1.7 前後で名前付き色 (@define-color) から CSS カスタム
+ *   プロパティ (--accent-bg-color) へ移行しており、どちらを読むかが版で違う。
+ *   両方書いておけば当たった方が効き、外れた方は無視されるだけで害がない。
+ *
+ * Latte:
+ *   base #eff1f5  mantle #e6e9ef  crust #dce0e8
+ *   surface0 #ccd0da  surface1 #bcc0cc  surface2 #acb0be
+ *   overlay0 #9ca0b0  overlay1 #8c8fa1
+ *   subtext0 #6c6f85  subtext1 #5c5f77  text #4c4f69
+ *   blue #1e66f5  mauve #8839ef  green #40a02b  yellow #df8e1d  red #d20f39
+ */
+
+/* --- 名前付き色 (libadwaita 1.6 以前 / 互換パス) ---------------------- */
+@define-color accent_color            #1e66f5;
+@define-color accent_bg_color         #1e66f5;
+@define-color accent_fg_color         #eff1f5;
+
+@define-color window_bg_color         #eff1f5;
+@define-color window_fg_color         #4c4f69;
+@define-color view_bg_color           #eff1f5;
+@define-color view_fg_color           #4c4f69;
+
+@define-color headerbar_bg_color      #e6e9ef;
+@define-color headerbar_fg_color      #4c4f69;
+@define-color headerbar_border_color  #ccd0da;
+@define-color headerbar_backdrop_color #eff1f5;
+@define-color headerbar_shade_color    rgba(76, 79, 105, 0.07);
+
+@define-color sidebar_bg_color        #e6e9ef;
+@define-color sidebar_fg_color        #4c4f69;
+@define-color sidebar_backdrop_color  #eff1f5;
+@define-color sidebar_border_color    #ccd0da;
+@define-color sidebar_shade_color     rgba(76, 79, 105, 0.07);
+
+@define-color secondary_sidebar_bg_color #dce0e8;
+@define-color secondary_sidebar_fg_color #4c4f69;
+
+@define-color card_bg_color           #ffffff;
+@define-color card_fg_color           #4c4f69;
+@define-color dialog_bg_color         #eff1f5;
+@define-color dialog_fg_color         #4c4f69;
+@define-color popover_bg_color        #eff1f5;
+@define-color popover_fg_color        #4c4f69;
+@define-color thumbnail_bg_color      #ffffff;
+@define-color thumbnail_fg_color      #4c4f69;
+
+@define-color destructive_bg_color    #d20f39;
+@define-color destructive_fg_color    #eff1f5;
+@define-color destructive_color       #d20f39;
+@define-color success_bg_color        #40a02b;
+@define-color success_fg_color        #eff1f5;
+@define-color success_color           #40a02b;
+@define-color warning_bg_color        #df8e1d;
+@define-color warning_fg_color        #eff1f5;
+@define-color warning_color           #9a6410;
+@define-color error_bg_color          #d20f39;
+@define-color error_fg_color          #eff1f5;
+@define-color error_color             #d20f39;
+
+@define-color shade_color             rgba(76, 79, 105, 0.10);
+@define-color scrollbar_outline_color #dce0e8;
+
+/* --- CSS カスタムプロパティ (libadwaita 1.7 以降) --------------------- */
+:root {
+  --accent-color:            #1e66f5;
+  --accent-bg-color:         #1e66f5;
+  --accent-fg-color:         #eff1f5;
+
+  --window-bg-color:         #eff1f5;
+  --window-fg-color:         #4c4f69;
+  --view-bg-color:           #eff1f5;
+  --view-fg-color:           #4c4f69;
+
+  --headerbar-bg-color:      #e6e9ef;
+  --headerbar-fg-color:      #4c4f69;
+  --headerbar-border-color:  #ccd0da;
+  --headerbar-backdrop-color: #eff1f5;
+  --headerbar-shade-color:   rgba(76, 79, 105, 0.07);
+
+  --sidebar-bg-color:        #e6e9ef;
+  --sidebar-fg-color:        #4c4f69;
+  --sidebar-backdrop-color:  #eff1f5;
+  --sidebar-border-color:    #ccd0da;
+  --sidebar-shade-color:     rgba(76, 79, 105, 0.07);
+
+  --secondary-sidebar-bg-color: #dce0e8;
+  --secondary-sidebar-fg-color: #4c4f69;
+
+  --card-bg-color:           #ffffff;
+  --card-fg-color:           #4c4f69;
+  --dialog-bg-color:         #eff1f5;
+  --dialog-fg-color:         #4c4f69;
+  --popover-bg-color:        #eff1f5;
+  --popover-fg-color:        #4c4f69;
+  --thumbnail-bg-color:      #ffffff;
+  --thumbnail-fg-color:      #4c4f69;
+
+  --destructive-bg-color:    #d20f39;
+  --destructive-fg-color:    #eff1f5;
+  --destructive-color:       #d20f39;
+  --success-bg-color:        #40a02b;
+  --success-fg-color:        #eff1f5;
+  --success-color:           #40a02b;
+  --warning-bg-color:        #df8e1d;
+  --warning-fg-color:        #eff1f5;
+  --warning-color:           #9a6410;
+  --error-bg-color:          #d20f39;
+  --error-fg-color:          #eff1f5;
+  --error-color:             #d20f39;
+
+  --shade-color:             rgba(76, 79, 105, 0.10);
+  --scrollbar-outline-color: #dce0e8;
+}
