@@ -21,7 +21,7 @@ ARCH_DIR="$DOTFILES/arch"
 
 echo "==> 1/3 パッケージのインストール"
 # 追加で欲しくなったら: gvfs-mtp (Android 実機), gvfs-smb (Windows 共有), gvfs-google
-sudo pacman -S --needed --noconfirm nautilus sushi ffmpegthumbnailer udisks2
+sudo pacman -S --needed --noconfirm nautilus sushi ffmpegthumbnailer udisks2 papirus-icon-theme
 
 echo "==> 2/3 設定ファイルのシンボリックリンク"
 # このリポジトリは「ファイル単位で ~/.config へ symlink」方式なので、それに合わせる。
@@ -36,6 +36,8 @@ link() {
   echo "    $dst -> $src"
 }
 link "$ARCH_DIR/.config/gtk-3.0/settings.ini" "$HOME/.config/gtk-3.0/settings.ini"
+# GTK4 / libadwaita アプリの配色 (Catppuccin Latte)。
+link "$ARCH_DIR/.config/gtk-4.0/gtk.css" "$HOME/.config/gtk-4.0/gtk.css"
 link "$ARCH_DIR/.config/gtk-4.0/settings.ini" "$HOME/.config/gtk-4.0/settings.ini"
 # サイドバーのお気に入り。GTK4 アプリも参照先はこの gtk-3.0 のファイル。
 link "$ARCH_DIR/.config/gtk-3.0/bookmarks" "$HOME/.config/gtk-3.0/bookmarks"
@@ -56,6 +58,12 @@ set_key() {
 # org.freedesktop.appearance color-scheme として公開するので、
 # Electron / Chromium 系 (Cursor 等) の "システムに従う" もこれに従う。
 set_key org.gnome.desktop.interface color-scheme "'prefer-light'"
+
+# アイコンテーマ。素の Adwaita はフォルダが平坦で、スクリプトや設定ファイルが
+# 汎用アイコンにまとめられて見分けがつかない。Papirus はファイル種別ごとの
+# アイコンが揃っている (Python / Markdown / JSON など)。ライトなデスクトップ
+# なので -Light を使う。
+set_key org.gnome.desktop.interface icon-theme "'Papirus-Light'"
 
 # Finder に寄せる:
 #   一覧表示 + フォルダを三角で展開 = Finder のリスト表示

@@ -332,6 +332,14 @@ environment {
     // ここは niri が spawn する子プロセスにしか効かないので、systemd や D-Bus
     // 経由で起動されるアプリ向けに ~/.config/environment.d/ にも同じものを置く。
     LANGUAGE "ja"
+
+    // 日付・時刻の書式だけ日本語にする。
+    // LANGUAGE=ja で UI は日本語になるが、日付の書式は LC_TIME が決めるため
+    // en_US のままだと Nautilus のファイル一覧が「Yesterday, 13:57」「2 days ago」
+    // と英語で出て、日本語 UI の中で浮く。ここだけ ja_JP にして揃える。
+    // messages (LANG) は en_US のままなので、端末のエラーメッセージは英語のまま。
+    // 副作用として ls -l の日付表記も日本語になる。
+    LC_TIME "ja_JP.UTF-8"
 }
 
 hotkey-overlay {
