@@ -1,12 +1,25 @@
 # Neovim Configuration
 
+darwin (mac) と arch で中身を共有している。この `shared/.config/nvim/` が実体で、
+両方の `~/.config/nvim` がここへのシンボリックリンクになる。
+
+- mac:  `darwin/.config/nix/home.nix` の `linkShared ".config/nvim"`
+        （`darwin-rebuild switch` でリンクが張られる）
+- arch: `arch/setup/neovim.sh`
+
+`lazy-lock.json` でプラグインのバージョンを固定しているので、片方で `:Lazy update`
+したらコミットして、もう片方では `:Lazy restore` で揃える。
+
 ## セットアップ
 
-1. Neovimを起動（プラグインが自動インストールされる）
-2. `:Mason` でフォーマッター・リンターをインストール
-   ```
-   :MasonInstall stylua prettierd eslint_d
-   ```
+- arch: `arch/setup/neovim.sh` を実行（パッケージ導入 + リンク + プラグイン復元まで）
+- mac:  `darwin-rebuild switch` の後 Neovim を起動（プラグインが自動インストールされる）
+
+いずれも、フォーマッター・リンターは `:Mason` から入れる:
+
+```
+:MasonInstall stylua prettierd eslint_d
+```
 
 ## プラグイン一覧
 
