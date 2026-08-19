@@ -19,13 +19,13 @@
     "tooltip": false,
     "format": "{icon}",
     "format-icons": {
-      "notification": "<span foreground='#ff8fa3'>󰂜</span>",
+      "notification": "<span foreground='#b3243c'>󰂜</span>",
       "none": "󰂚",
-      "dnd-notification": "<span foreground='#ff8fa3'>󰂛</span>",
+      "dnd-notification": "<span foreground='#b3243c'>󰂛</span>",
       "dnd-none": "󰂛",
-      "inhibited-notification": "<span foreground='#ff8fa3'>󰂜</span>",
+      "inhibited-notification": "<span foreground='#b3243c'>󰂜</span>",
       "inhibited-none": "󰂚",
-      "dnd-inhibited-notification": "<span foreground='#ff8fa3'>󰂛</span>",
+      "dnd-inhibited-notification": "<span foreground='#b3243c'>󰂛</span>",
       "dnd-inhibited-none": "󰂛"
     },
     "return-type": "json",
@@ -60,6 +60,6 @@
   "clock": {
     "format": "{:%H\n%M}",
     "tooltip-format": "<tt>{calendar}</tt>",
-    "calendar": { "mode": "month", "format": { "today": "<span color='#d9a8ff'><b>{}</b></span>" } }
+    "calendar": { "mode": "month", "format": { "today": "<span color='#7a3fb0'><b>{}</b></span>" } }
   }
 }
