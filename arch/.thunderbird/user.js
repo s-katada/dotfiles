@@ -76,3 +76,15 @@ user_pref("mail.biff.show_tray_icon_always", false);
 // check_time はその保険としてのポーリング間隔(分)。
 user_pref("mail.server.default.use_idle",   true);
 user_pref("mail.server.default.check_time", 5);
+
+// ---------------------------------------------------------------------------
+// 使わない機能を止める (メールだけ使う)
+// ---------------------------------------------------------------------------
+// カレンダー / タスク / チャット / アドレス帳は本体に組み込みでビルドされていて
+// アドオンのように取り外せない。UI から消すのは chrome/userChrome.css 側で行い、
+// ここでは prefs で止められる動作を切る。
+
+// カレンダーのリマインダを出さない・鳴らさない・インジケータも出さない
+user_pref("calendar.alarms.show",            false);
+user_pref("calendar.alarms.playsound",       false);
+user_pref("calendar.alarms.indicator.show",  false);
