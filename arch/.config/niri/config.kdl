@@ -302,9 +302,14 @@ spawn-at-startup "/usr/lib/hyprpolkitagent/hyprpolkitagent"
 spawn-at-startup "swayosd-server"
 
 // メールクライアント (Thunderbird)。
-// 新着通知を受けるには常駐している必要があるが、Wayland には常駐トレイが無く
-// Thunderbird 側にも最小化して隠れる手段が無いので、ウィンドウを開いたまま
-// 置いておく形になる。通知は swaync に出る。
+// 新着通知を受けるには常駐している必要がある。
+//
+// トレイに畳めないかを確かめたが駄目だった。トレイ自体はある (waybar の tray
+// モジュールが org.kde.StatusNotifierWatcher を持ち、fcitx5 / 1Password / Slack /
+// Discord が登録している)。Thunderbird も mail.biff.show_tray_icon_always = true で
+// アイコンを出せる。しかし**それでもウィンドウを閉じると終了する**ので、常駐の
+// 代わりにはならない。結局ウィンドウを開いたまま置いておく形になる。
+// 通知は swaync に出る。
 spawn-at-startup "thunderbird"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:

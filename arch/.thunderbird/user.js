@@ -69,7 +69,17 @@ user_pref("mail.biff.alert.enabled_actions", "mark-as-read,delete");
 // 音は鳴らさない (通知だけで足りるため)。鳴らしたい場合は true にする
 user_pref("mail.biff.play_sound", false);
 
-// トレイアイコンは Wayland に常駐トレイが無いので無効のまま
+// トレイアイコン。既定のまま無効にしておく。
+//
+// 訂正の記録: 当初「Wayland には常駐トレイが無い」と書いていたが誤りだった。
+// この環境にはトレイがある。waybar の tray モジュールが org.kde.StatusNotifierWatcher
+// を持っていて、fcitx5 / 1Password / Slack / Discord が実際に登録している。
+// Thunderbird も true にすれば StatusNotifierItem を登録することを確認した。
+//
+// ただし true にしても**ウィンドウを閉じると Thunderbird は終了する**
+// (実測: 閉じた時点でプロセスもトレイ項目も消えた)。つまりトレイに畳んで常駐させる
+// ことはできず、常駐させたいならウィンドウを開いたままにするしかない。
+// アイコン自体が欲しいときだけ true にする。
 user_pref("mail.biff.show_tray_icon_always", false);
 
 // IMAP IDLE。サーバ側から push されるので新着はほぼ即座に届く。
