@@ -76,3 +76,17 @@ delivery = "herdr"
 
 [experimental]
 pane_history = true
+
+# ペイン内の画像表示 (kitty graphics protocol) を通す。
+#
+# 既定では無効で、その状態では画像を送るプログラムの出力が herdr に飲み込まれて
+# 何も表示されない。yazi の画像プレビューが出なかったのがこれ。素の ghostty で
+# 同じ yazi を動かすと実画像が出たので、端末側ではなく herdr 側の問題だと切り分けた。
+#
+# yazi は chafa (ブロック文字による代替描画) へフォールバックしない。pty を割り当てて
+# 計測したところ、TERM を変えても常に kitty graphics の APC シーケンスを送っていた。
+# つまりこのフラグを立てる以外に herdr の中で画像を出す方法は無い。
+#
+# experimental なので不具合を踏む可能性はある。おかしくなったらこの行を消して
+# herdr server reload-config で戻せる。
+kitty_graphics = true
