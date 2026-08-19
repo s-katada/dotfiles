@@ -241,6 +241,8 @@ require("lazy").setup({
         "javascript",
         "ruby",
         "rust",
+        "python",
+        "toml",
         "json",
         "yaml",
         "markdown",
@@ -303,6 +305,8 @@ require("lazy").setup({
         "lua_ls",           -- Lua
         "ruby_lsp",         -- Ruby
         "rust_analyzer",    -- Rust
+        "basedpyright",     -- Python (型チェック・ホバー。pyright のフォーク)
+        "ruff",             -- Python (lint 診断。型は見ない)
       },
     },
   },
@@ -356,7 +360,7 @@ require("lazy").setup({
       })
 
       -- LSPサーバー有効化
-      vim.lsp.enable({ "ts_ls", "lua_ls", "ruby_lsp", "rust_analyzer" })
+      vim.lsp.enable({ "ts_ls", "lua_ls", "ruby_lsp", "rust_analyzer", "basedpyright", "ruff" })
     end,
   },
 
@@ -404,6 +408,8 @@ require("lazy").setup({
         markdown = { "prettierd", "prettier", stop_after_first = true },
         ruby = { "rubocop" },
         rust = { "rustfmt" },
+        -- import の並べ替え -> 整形の順に流す (black + isort 相当)
+        python = { "ruff_organize_imports", "ruff_format" },
       },
       format_on_save = {      -- 保存時に自動フォーマット
         timeout_ms = 500,
@@ -424,6 +430,8 @@ require("lazy").setup({
         javascriptreact = { "eslint_d" },
         typescriptreact = { "eslint_d" },
         ruby = { "rubocop" },
+        -- python は ruff を LSP として動かしていて診断がそこから出るため、
+        -- ここに足すと同じ警告が二重に出る。
       }
       -- 自動Lint実行タイミング
       vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {

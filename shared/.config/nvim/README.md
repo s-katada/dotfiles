@@ -178,10 +178,13 @@ darwin (mac) と arch で中身を共有している。この `shared/.config/nv
 
 ## 対応言語
 
-- TypeScript / JavaScript / JSX / TSX
-- Lua
-- Ruby / Rails
-- Rust
+| 言語 | LSP | フォーマッタ | Linter |
+|------|-----|--------------|--------|
+| TypeScript / JavaScript / JSX / TSX | ts_ls | prettierd | eslint_d |
+| Lua | lua_ls | stylua | - |
+| Ruby / Rails | ruby_lsp | rubocop | rubocop |
+| Rust | rust_analyzer | rustfmt | - |
+| Python | basedpyright (型・ホバー) + ruff (診断) | ruff_organize_imports → ruff_format | ruff (LSP 経由) |
 
 ## Tips
 
