@@ -124,6 +124,7 @@ in
     terraform
     mas
     neovim
+    tree-sitter  # nvim-treesitter (main) がパーサを `tree-sitter build` でビルドするのに必須
     gcc
     keymap-drawer
     mosh
