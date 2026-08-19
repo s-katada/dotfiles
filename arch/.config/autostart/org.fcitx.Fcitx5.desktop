@@ -1,0 +1,15 @@
+# /etc/xdg/autostart/org.fcitx.Fcitx5.desktop を打ち消すためのエントリ。
+#
+# fcitx5 の起動は niri の spawn-at-startup 1 本に絞りたい。両方から起動すると、
+# niri の入力メソッド枠 (zwp_input_method_v2 は 1 クライアントしか受け付けない) を
+# 先に取った側を、後から起動した --replace 付きの側が D-Bus 名ごと蹴り落とし、
+# 生き残った fcitx5 が入力メソッドを持たないまま動き続けることがある。
+# こうなると英字は普通に打てるのに かな / Ctrl+Space が fcitx5 に届かず、
+# 日本語に切り替えられなくなる。数十 ms 差のレースなので発生は日によってまちまち。
+#
+# 同名のファイルをユーザー側に置くと /etc/xdg/autostart のものより優先され、
+# Hidden=true で systemd-xdg-autostart-generator がユニットを生成しなくなる。
+[Desktop Entry]
+Type=Application
+Name=Fcitx 5
+Hidden=true
