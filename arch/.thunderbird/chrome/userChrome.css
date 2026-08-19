@@ -1,0 +1,135 @@
+/* Thunderbird の配色: Catppuccin Latte
+ *
+ * 配置: <profile>/chrome/userChrome.css へのシンボリックリンク。
+ *       user.js の toolkit.legacyUserProfileCustomizations.stylesheets = true が必要。
+ *
+ * ---------------------------------------------------------------------------
+ * ここに至るまでに外した道の記録（同じ轍を踏まないため）
+ * ---------------------------------------------------------------------------
+ * 1. ui.* prefs でシステム色を差し替える方法は効かない。
+ *    ツールキット側のトークン (tokens-platform.css) は Canvas / Field /
+ *    AccentColor といった CSS のシステム色を土台にしているので一見効きそうで、
+ *    prefs にも 40 件すべて取り込まれた。しかし ui.window="#ff0000" を入れて
+ *    起動しても UI の色は 1px も変わらなかった。Thunderbird は messenger 側で
+ *    独自トークンを定義していてシステム色を経由しない。
+ *
+ * 2. すべての宣言に !important が必要。userChrome.css は user オリジンなので、
+ *    CSS のカスケードでは author オリジン (Thunderbird 本体の CSS) に負ける。
+ *
+ * 3. colors.css の --color-surface-*-light だけを上書りしても 3 ペインは
+ *    変わらない。フォルダペイン・メッセージ一覧・ツールバーを実際に塗って
+ *    いるのは layout.css / shared/variables.css の別の層:
+ *      --layout-background-0  = light-dark(var(--color-white),    ...) 本文・一覧
+ *      --layout-background-1  = light-dark(var(--color-gray-05),  ...) ツールバー
+ *      --layout-background-2  = light-dark(var(--color-gray-10),  ...)
+ *      --toolbar-background-color = var(--layout-background-1)
+ *      --sidebar-background   = var(--sidebar-background-color)  ← テーマ拡張由来
+ *      --selected-item-color  = var(--sidebar-highlight-background-color, AccentColor)
+ *    プリミティブ (--color-gray-*) をいじるより、この意味づけされた層を直接
+ *    上書きするほうが予測しやすい。
+ *
+ * ---------------------------------------------------------------------------
+ * Latte:
+ *   base #eff1f5  mantle #e6e9ef  crust #dce0e8
+ *   surface0 #ccd0da  surface1 #bcc0cc  surface2 #acb0be
+ *   overlay0 #9ca0b0  overlay1 #8c8fa1
+ *   subtext0 #6c6f85  subtext1 #5c5f77  text #4c4f69
+ *   blue #1e66f5  lavender #7287fd  sky #04a5e5  teal #179299
+ *   green #40a02b  yellow #df8e1d  peach #fe640b  red #d20f39
+ *   mauve #8839ef  pink #ea76cb
+ *
+ * ダークにするなら Mocha の値に差し替え、user.js の
+ * ui.systemUsesDarkTheme を 1 にする (light-dark() の解決先が変わるので
+ * -dark 側のトークンも同様に書く必要がある)。
+ */
+
+:root {
+  /* --- 面の階層 ------------------------------------------------------ */
+  /* 0 = 本文とメッセージ一覧、1 = ツールバー、2 = さらに一段奥 */
+  --layout-background-0: #eff1f5 !important;  /* base   */
+  --layout-background-1: #e6e9ef !important;  /* mantle */
+  --layout-background-2: #dce0e8 !important;  /* crust  */
+
+  --layout-color-0: #4c4f69 !important;  /* text     */
+  --layout-color-1: #4c4f69 !important;  /* text     */
+  --layout-color-2: #5c5f77 !important;  /* subtext1 */
+
+  /* --- フォルダペイン (サイドバー) ------------------------------------ */
+  /* テーマ拡張 (組み込みの Light テーマ) が与える LWT 変数。
+     --sidebar-background がこれを参照している。 */
+  --sidebar-background-color: #e6e9ef !important;  /* mantle */
+  --sidebar-background: #e6e9ef !important;
+  --sidebar-text-color: #4c4f69 !important;
+  --sidebar-border-color: #ccd0da !important;      /* surface0 */
+
+  /* --- ツールバー・タイトルバー -------------------------------------- */
+  --toolbar-background-color: #e6e9ef !important;
+  --lwt-accent-color: #dce0e8 !important;          /* crust */
+  --toolbar-field-background-color: #eff1f5 !important;
+  --toolbar-field-background-color-focus: #ffffff !important;
+  --toolbar-field-color: #4c4f69 !important;
+
+  /* --- 選択中の項目 (メール・フォルダ) -------------------------------- */
+  --selected-item-color: #1e66f5 !important;              /* blue */
+  --selected-item-text-color: #eff1f5 !important;
+  --sidebar-highlight-background-color: #1e66f5 !important;
+  --sidebar-highlight-text-color: #eff1f5 !important;
+
+  /* --- messenger 側の意味トークン ("Bolt Colors") --------------------- */
+  /* --color-* 本体は light-dark(var(--color-*-light), var(--color-*-dark))
+     になっているので、-light だけ差し替えればライト表示が入れ替わる。 */
+  --color-surface-base-light: #eff1f5 !important;
+  --color-surface-raised-light: #eff1f5 !important;
+  --color-surface-subtle-light: #e6e9ef !important;
+  --color-surface-lower-light: #e6e9ef !important;
+  --color-surface-deep-light: #dce0e8 !important;
+  --color-surface-border-light: #ccd0da !important;
+  --color-surface-border-intense-light: #9ca0b0 !important;
+
+  --color-text-base-light: #4c4f69 !important;
+  --color-text-secondary-light: #5c5f77 !important;
+  --color-text-muted-light: #8c8fa1 !important;
+
+  --color-primary-soft-light: #e4ebfd !important;
+  --color-primary-default-light: #1e66f5 !important;
+  --color-primary-hover-light: #1552cc !important;
+  --color-primary-pressed-light: #1247b3 !important;
+  --color-text-brand-light: #1552cc !important;
+  --color-text-highlight-light: #1e66f5 !important;
+
+  --color-secondary-soft-light: #f3e9fd !important;
+  --color-secondary-default-light: #8839ef !important;   /* mauve */
+  --color-secondary-hover-light: #7a2ed6 !important;
+  --color-secondary-pressed-light: #6a26bb !important;
+
+  --color-success-soft-light: #eaf5e7 !important;
+  --color-success-default-light: #40a02b !important;     /* green */
+  --color-success-hover-light: #388f26 !important;
+  --color-success-pressed-light: #2f7a20 !important;
+  --color-text-success-light: #40a02b !important;
+
+  --color-warning-soft-light: #fbf3e3 !important;
+  --color-warning-default-light: #df8e1d !important;     /* yellow */
+  --color-warning-hover-light: #c87d16 !important;
+  --color-warning-pressed-light: #ad6c12 !important;
+  --color-text-warning-light: #9a6410 !important;
+
+  --color-critical-soft-light: #fbe9ec !important;
+  --color-critical-default-light: #d20f39 !important;    /* red */
+  --color-critical-hover-light: #b80c31 !important;
+  --color-critical-pressed-light: #9c0a2a !important;
+  --color-text-critical-light: #d20f39 !important;
+
+  /* フォルダやタグの色分けに使われるアクセント */
+  --color-accent-teal-light: #179299 !important;
+  --color-accent-blue-light: #04a5e5 !important;
+  --color-accent-purple-light: #8839ef !important;
+  --color-accent-orange-light: #fe640b !important;
+  --color-accent-pink-light: #ea76cb !important;
+  --color-accent-ink-light: #7287fd !important;
+
+  /* --- UI フォント ---------------------------------------------------- */
+  /* GTK 経由だと Nimbus Sans + Noto Sans CJK KR (韓国字形) に解決されるため、
+     欧文と日本語を明示する。Adwaita Sans は GNOME の現行 UI フォント。 */
+  font-family: "Adwaita Sans", "Noto Sans CJK JP", sans-serif !important;
+}
