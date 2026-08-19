@@ -133,3 +133,57 @@
      欧文と日本語を明示する。Adwaita Sans は GNOME の現行 UI フォント。 */
   font-family: "Adwaita Sans", "Noto Sans CJK JP", sans-serif !important;
 }
+
+/* ===========================================================================
+ * 使わない機能を UI から消す (メールだけ使う)
+ * ===========================================================================
+ * カレンダー / タスク / チャット / アドレス帳はいずれも Thunderbird 本体に
+ * 組み込みでビルドされていて、アドオンのように取り外すことはできない。
+ * よって「UI から消す + 動作を止める」で対応する。動作停止のうち prefs で
+ * できる分 (カレンダーのリマインダ) は user.js 側に書いた。
+ *
+ * アドレス帳だけは隠すだけで、機能そのものは残す。メール作成時の宛先補完が
+ * アドレス帳を引いているため、止めると補完が効かなくなる。
+ */
+
+/* spaces toolbar (左端の縦バー) からメール以外のボタンを消す。
+   歯車の設定ボタンは入口として残す。 */
+#addressBookButton,
+#calendarButton,
+#tasksButton,
+#chatButton {
+  display: none !important;
+}
+
+/* カレンダーの Today ペイン (右下) と、その開閉ボタン */
+#today-pane-panel,
+#today-splitter,
+#calendar-status-todaypane-button {
+  display: none !important;
+}
+
+/* メニューバー (既定では非表示だが、出したときのため) からも消す。
+   ID は messenger.xhtml の menubar 直下を辿って特定した。 */
+#menu_Event_Task,      /* 「予定とToDo」メニューそのもの */
+#calTodayPaneMenu,     /* 表示 > Today ペイン */
+#calCalendarMenu,      /* 表示 > カレンダー */
+#calTasksMenu,         /* 表示 > ToDo */
+#imAccountsStatus,     /* ツール > チャットの状態 */
+#menu_newAddressbook { /* ファイル > 新規作成 > アドレス帳 */
+  display: none !important;
+}
+
+/* メニューからカレンダー / タスク / チャット / アドレス帳の作成項目を消す */
+#appmenu_newCard,
+#appmenu_newCardDAVMenuItem,
+#appmenu-new-calendar,
+#appmenu-open-calendar,
+#appmenu_OpenCalendarFileMenuitem,
+#appmenu_calendar-new-calendar-menu-item,
+#appmenu_calendar-new-event-menu-item,
+#appmenu_calendar-new-task-menu-item,
+#appmenu-create-task,
+#appmenu-new-chat-account,
+#appmenu_newIMAccountMenuItem {
+  display: none !important;
+}
