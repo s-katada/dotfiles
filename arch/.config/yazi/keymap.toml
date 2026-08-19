@@ -1,0 +1,6 @@
+# Finder の Quick Look 風: Space でプレビューを最大化/元に戻す (toggle-pane プラグイン)
+# デフォルトの Space (選択トグル) は潰れるが、選択は v (ビジュアルモード) で代替できる
+[[mgr.prepend_keymap]]
+on = "<Space>"
+run = "plugin toggle-pane max-preview"
+desc = "プレビューを最大化 (Quick Look 風)"
