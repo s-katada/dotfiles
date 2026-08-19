@@ -5,8 +5,11 @@ let
   # flake の外を指してしまい pure 評価で使えない。絶対パス文字列の
   # mkOutOfStoreSymlink なら flake purity を回避でき、かつアプリが書き換えた
   # 設定も git diff として現れる（GNU Stow と同じ運用）。
-  repoDarwin = "${config.home.homeDirectory}/dotfiles/darwin";
+  repoRoot   = "${config.home.homeDirectory}/dotfiles";
+  repoDarwin = "${repoRoot}/darwin";
   link = relPath: config.lib.file.mkOutOfStoreSymlink "${repoDarwin}/${relPath}";
+  # darwin と arch で中身を共有する設定は shared/ に置き、両方からここを指す。
+  linkShared = relPath: config.lib.file.mkOutOfStoreSymlink "${repoRoot}/shared/${relPath}";
 in
 {
   home.stateVersion = "24.05";
@@ -162,7 +165,7 @@ in
     "ghostty".source       = link ".config/ghostty";
     "karabiner".source     = link ".config/karabiner"; # Karabiner はディレクトリ全体をリンク（公式要件）
     "starship.toml".source = link ".config/starship.toml";
-    "nvim".source          = link ".config/nvim";
+    "nvim".source          = linkShared ".config/nvim"; # arch と共有 (shared/.config/nvim)
     "tmux".source          = link ".config/tmux";
     "wezterm".source       = link ".config/wezterm";
     "zellij".source        = link ".config/zellij";
