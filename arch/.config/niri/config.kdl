@@ -422,6 +422,9 @@ binds {
     // macOS の Finder 相当 (設定は dotfiles の arch/setup/nautilus.sh で入れている)。
     // macOS の Cmd+Opt+Space に合わせたキー。Mod+Space のランチャーとの関係も mac と同じ。
     Mod+Alt+Space hotkey-overlay-title="Open a File Manager: nautilus" { spawn "nautilus"; }
+    // macOS の Ctrl+Cmd+Space (絵文字ビューア) に合わせたキー。
+    // vicinae 内蔵の絵文字検索を直接開く。選ぶとクリップボードに入るので貼り付ける。
+    Mod+Ctrl+Space hotkey-overlay-title="Emoji Picker: vicinae" { spawn "vicinae" "cmd" "launch" "core:search-emojis"; }
     Mod+Shift+B hotkey-overlay-title="Restart waybar" { spawn-sh "pkill -x waybar; sleep 0.3; exec waybar"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 
