@@ -278,7 +278,16 @@ layout {
 spawn-at-startup "waybar"
 
 // Japanese input (fcitx5 + mozc).
-spawn-at-startup "fcitx5" "-d" "--replace"
+// 起動経路はここ 1 本に絞る。/etc/xdg/autostart にも fcitx5 のエントリがあり、
+// 両方から起動すると niri の入力メソッド枠 (zwp_input_method_v2 は 1 クライアントしか
+// 受け付けない) を先に取った側を、後から起動した --replace 付きの側が D-Bus 名ごと
+// 蹴り落とし、生き残った fcitx5 が入力メソッドを持たないまま動き続けることがある。
+// そうなると英字は打てるのに かな / Ctrl+Space が fcitx5 に届かず日本語にできない。
+// autostart 側は ~/.config/autostart/org.fcitx.Fcitx5.desktop の Hidden=true で止めている。
+//
+// -d は付けない。デーモン化するとログが /dev/null に消えて、失敗しても journal に
+// 何も残らず原因が追えなくなる。
+spawn-at-startup "fcitx5" "--replace"
 
 // Wallpaper daemon (awww). Restores the last wallpaper from its cache.
 spawn-at-startup "awww-daemon"
