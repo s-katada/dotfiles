@@ -141,11 +141,43 @@ in
   };
 
   # Git 設定
+  # alias 等は元々 darwin/.config/git/config (2d8a225) にあったが、home-manager 生成の
+  # symlink に戻した際に失われていたのでここに宣言として復元。arch/.config/git/config と同内容。
   programs.git = {
     enable = true;
     settings = {
+      user = {
+        name = "s-katada";
+        email = "shunya.saitama@gmail.com";
+      };
+      alias = {
+        g = "git";
+        ci = "commit";
+        s = "status";
+        br = "branch";
+        co = "checkout";
+        di = "diff";
+        df = "diff";
+        si = "switch";
+        log-graph = "log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cd) %C(bold blue)<%an>%Creset' --abbrev-commit --date=format-local:'%Y/%m/%d %H:%M:%S'";
+      };
+      init = {
+        defaultBranch = "main";
+      };
       core = {
         quotePath = false;  # 日本語ファイル名を正しく表示
+        pager = "delta";
+        editor = "nvim";
+      };
+      interactive = {
+        diffFilter = "delta --color-only";
+      };
+      delta = {
+        navigate = true;
+        side-by-side = true;
+      };
+      merge = {
+        conflictStyle = "zdiff3";
       };
     };
   };
