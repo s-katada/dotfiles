@@ -1,0 +1,35 @@
+# darwin で使っていた git config (コミット 2d8a225 の darwin/.config/git/config) を
+# arch に復元したもの。alias は fish 側の g (= git) と組み合わせて `g s` のように使う。
+# ~/.gitconfig ではなく XDG の ~/.config/git/config としてリンクする。
+[user]
+	name = s-katada
+	email = shunya.saitama@gmail.com
+
+[alias]
+	g = git
+	ci = commit
+	s = status
+	br = branch
+	co = checkout
+	di = diff
+	df = diff
+	si = switch
+	log-graph = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cd) %C(bold blue)<%an>%Creset' --abbrev-commit --date=format-local:'%Y/%m/%d %H:%M:%S'
+
+[init]
+	defaultBranch = main
+
+[core]
+	pager = delta
+	editor = nvim
+	quotePath = false
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	side-by-side = true
+
+[merge]
+	conflictStyle = zdiff3
