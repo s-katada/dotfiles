@@ -87,3 +87,24 @@ pane_history = true
 # 切替え、抜けたら元の IME に復元する。日本語入力中でもプレフィックス操作が通る。
 # 起動時のみ読込 (reload 非対応)。
 switch_ascii_input_source_in_prefix = true
+
+# ペイン内の画像表示 (kitty graphics protocol) を通す。arch 側と同じ設定。
+#
+# 既定では無効で、その状態では画像を送るプログラムの出力が herdr に飲み込まれて
+# 何も表示されない。yazi の画像プレビューが出なかったのがこれ。yazi は chafa
+# (ブロック文字による代替描画) へフォールバックせず常に kitty graphics を送るので、
+# このフラグを立てる以外に herdr の中で画像を出す方法は無い (切り分けの経緯は
+# arch/.config/herdr/config.toml と commit b6626d3)。
+#
+# 反映は reload-config だけでは足りない。0.7.1 のソースを読むと、サーバー側は
+# reload で切り替わる (src/app/mod.rs) がクライアントはアタッチ時に一度だけ読む
+# (src/client/mod.rs)。off のまま起動したクライアントはセルのピクセルサイズを
+# 0 で申告するため、サーバーが画像フレームを送れない。detach (prefix+q) して
+# herdr を起動し直すこと (サーバーは生きているのでペインは残る)。
+# `herdr terminal attach` 系の直アタッチでは仕様上つねに無効。
+#
+# HEIC のプレビューには imagemagick が必要 (nix の home.nix で導入済み、libheif 同梱)。
+#
+# experimental なので不具合の可能性はある。おかしくなったらこの行を消して
+# クライアントを再起動すれば戻せる。
+kitty_graphics = true
