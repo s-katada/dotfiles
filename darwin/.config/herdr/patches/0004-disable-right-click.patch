@@ -1,0 +1,186 @@
+diff --git a/src/app/input/mouse.rs b/src/app/input/mouse.rs
+index c8a0367..50b3c2a 100644
+--- a/src/app/input/mouse.rs
++++ b/src/app/input/mouse.rs
+@@ -27,11 +27,26 @@ use super::{
+ };
+ 
+ impl AppState {
++    /// True when `[ui] right_click = false` and this is a right-button event,
++    /// so the whole gesture is swallowed before any handler sees it.
++    fn right_click_disabled(&self, mouse: MouseEvent) -> bool {
++        !self.right_click
++            && matches!(
++                mouse.kind,
++                MouseEventKind::Down(MouseButton::Right)
++                    | MouseEventKind::Up(MouseButton::Right)
++                    | MouseEventKind::Drag(MouseButton::Right)
++            )
++    }
++
+     pub(crate) fn handle_pane_mouse_only(
+         &mut self,
+         terminal_runtimes: &TerminalRuntimeRegistry,
+         mouse: MouseEvent,
+     ) {
++        if self.right_click_disabled(mouse) {
++            return;
++        }
+         if self.mode != Mode::Terminal {
+             return;
+         }
+@@ -60,6 +75,12 @@ impl AppState {
+         terminal_runtimes: &mut TerminalRuntimeRegistry,
+         mouse: MouseEvent,
+     ) -> Option<SettingsAction> {
++        // `[ui] right_click = false`: no context menu, and nothing forwarded to
++        // pane apps either. Right-click simply does not exist inside Herdr.
++        if self.right_click_disabled(mouse) {
++            return None;
++        }
++
+         if self.mode == Mode::Onboarding {
+             self.handle_onboarding_mouse(mouse);
+             return None;
+@@ -2011,6 +2032,42 @@ mod tests {
+         assert!(input_rx.try_recv().is_err());
+     }
+ 
++    #[tokio::test]
++    async fn disabled_right_click_opens_no_menu_and_forwards_nothing() {
++        let mut app = app_for_mouse_test();
++        let mut ws = Workspace::test_new("test");
++        let pane_id = ws.tabs[0].root_pane;
++        let pane_infos = ws.tabs[0].layout.panes(Rect::new(26, 2, 80, 18));
++        let info = pane_infos[0].clone();
++        let (runtime, mut input_rx) =
++            crate::terminal::TerminalRuntime::test_with_channel_and_scrollback_bytes(
++                info.inner_rect.width,
++                info.inner_rect.height,
++                0,
++                b"\x1b[?1002h\x1b[?1006h",
++                4,
++            );
++        ws.insert_test_runtime(pane_id, runtime);
++
++        app.state.workspaces = vec![ws];
++        app.state.active = Some(0);
++        app.state.selected = 0;
++        app.state.mode = Mode::Terminal;
++        app.state.view.pane_infos = pane_infos;
++        app.state.right_click = false;
++
++        app.handle_mouse(mouse(
++            MouseEventKind::Down(MouseButton::Right),
++            info.inner_rect.x + 2,
++            info.inner_rect.y + 3,
++        ));
++
++        assert_eq!(app.state.mode, Mode::Terminal);
++        assert!(app.state.context_menu.is_none());
++        assert!(app.state.right_click_passthrough.is_none());
++        assert!(input_rx.try_recv().is_err());
++    }
++
+     #[tokio::test]
+     async fn unset_right_click_passthrough_keeps_modified_right_click_as_herdr_menu() {
+         let mut app = app_for_mouse_test();
+diff --git a/src/app/mod.rs b/src/app/mod.rs
+index 1132797..16f07de 100644
+--- a/src/app/mod.rs
++++ b/src/app/mod.rs
+@@ -596,6 +596,7 @@ impl App {
+             mouse_capture: config.ui.mouse_capture,
+             right_click_passthrough_modifiers: config.ui.right_click_passthrough_modifiers(),
+             right_click_passthrough: None,
++            right_click: config.ui.right_click,
+             redraw_on_focus_gained: config.ui.redraw_on_focus_gained,
+             mouse_scroll_lines: config.ui.mouse_scroll_lines(),
+             confirm_close: config.ui.confirm_close,
+@@ -1332,6 +1333,7 @@ impl App {
+                 self.state.mouse_scroll_lines = config.ui.mouse_scroll_lines();
+                 self.state.right_click_passthrough_modifiers =
+                     config.ui.right_click_passthrough_modifiers();
++                self.state.right_click = config.ui.right_click;
+                 self.state.confirm_close = config.ui.confirm_close;
+                 self.state.prompt_new_tab_name = config.ui.prompt_new_tab_name;
+                 self.state.pane_borders = config.ui.pane_borders;
+diff --git a/src/app/state.rs b/src/app/state.rs
+index b616daa..e3f98bf 100644
+--- a/src/app/state.rs
++++ b/src/app/state.rs
+@@ -1362,6 +1362,8 @@ pub struct AppState {
+     pub mouse_capture: bool,
+     pub right_click_passthrough_modifiers: Option<KeyModifiers>,
+     pub right_click_passthrough: Option<RightClickPassthroughGesture>,
++    /// Handle right-click at all. See `[ui] right_click`.
++    pub right_click: bool,
+     pub redraw_on_focus_gained: bool,
+     pub mouse_scroll_lines: usize,
+     pub confirm_close: bool,
+@@ -1722,6 +1724,7 @@ impl AppState {
+             mouse_capture: true,
+             right_click_passthrough_modifiers: None,
+             right_click_passthrough: None,
++            right_click: true,
+             redraw_on_focus_gained: true,
+             mouse_scroll_lines: crate::config::DEFAULT_MOUSE_SCROLL_LINES,
+             confirm_close: true,
+diff --git a/src/config/model.rs b/src/config/model.rs
+index fb36722..586a3e0 100644
+--- a/src/config/model.rs
++++ b/src/config/model.rs
+@@ -783,6 +783,9 @@ pub struct UiConfig {
+     pub mouse_capture: bool,
+     /// Modifier that lets right-click gestures pass through to pane apps. Empty disables it.
+     pub right_click_passthrough_modifier: RightClickPassthroughModifierConfig,
++    /// Handle right-click at all. False drops every right-button event: no
++    /// context menu, no passthrough to pane apps. Default: true.
++    pub right_click: bool,
+     /// Force a full host-terminal redraw when the outer terminal regains focus. Default: true.
+     pub redraw_on_focus_gained: bool,
+     /// Lines to scroll per mouse wheel notch. Default: 3.
+@@ -985,6 +988,7 @@ impl Default for UiConfig {
+             mobile_width_threshold: DEFAULT_MOBILE_WIDTH_THRESHOLD,
+             mouse_capture: true,
+             right_click_passthrough_modifier: RightClickPassthroughModifierConfig::default(),
++            right_click: true,
+             redraw_on_focus_gained: true,
+             mouse_scroll_lines: None,
+             confirm_close: true,
+@@ -1377,6 +1381,19 @@ mouse_capture = false
+         assert!(!config.ui.mouse_capture);
+     }
+ 
++    #[test]
++    fn right_click_default_on_and_parse() {
++        let default_config = Config::default();
++        assert!(default_config.ui.right_click);
++
++        let toml = r#"
++[ui]
++right_click = false
++"#;
++        let config: Config = toml::from_str(toml).unwrap();
++        assert!(!config.ui.right_click);
++    }
++
+     #[test]
+     fn right_click_passthrough_modifier_defaults_off_and_parses() {
+         let default_config = Config::default();
+diff --git a/src/main.rs b/src/main.rs
+index 0dba129..681b197 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -265,6 +265,11 @@ const DEFAULT_CONFIG: &str = r##"# herdr configuration
+ # Empty/off disables this. Shift is intentionally unsupported because terminals commonly reserve Shift+mouse.
+ # right_click_passthrough_modifier = ""
+ 
++# Handle right-click at all (pane, tab bar, and sidebar context menus).
++# Set false to disable right-click completely: no menu opens and the click is
++# not forwarded to pane apps either.
++# right_click = true
++
+ # Force a full redraw when the outer terminal regains focus.
+ # Set false to reduce visible flashing when switching back to Herdr.
+ # Trade-off: rare host terminal surface corruption may persist until the next full redraw.
