@@ -67,7 +67,8 @@ Ctrl g → ctrl+p ctrl+p ctrl+p ... → Ctrl g
 
 - 差分: `patches/0001-sticky-prefix.patch` (prefix_sticky オプション)、
   `patches/0002-lock-mode.patch` (lock アクション + LOCKED 表示)、
-  `patches/0003-prefix-cheatsheet.patch` (prefix_cheatsheet オプション)
+  `patches/0003-prefix-cheatsheet.patch` (prefix_cheatsheet オプション)、
+  `patches/0004-disable-right-click.patch` (right_click オプション)
 - 再ビルド: `bash build-patched.sh` (patches/*.patch を番号順に適用。rustup と zig@0.15 が必要、後者は自動インストール)
 - 戻す: `brew unpin herdr && brew reinstall herdr`
 - herdr のバージョンが上がったらパッチの再調整が必要 (スクリプトが version 不一致で止まる)
@@ -132,6 +133,28 @@ Ctrl g → ctrl+p ctrl+p ctrl+p ... → Ctrl g
 | `prefix+Shift+n/w/d` | ワークスペース 新規/名変更/閉じる (herdr デフォルト) | — |
 | `prefix+e` | スクロールバックをエディタで開く | Scroll モード → `e` |
 | `prefix+o` | 通知元へジャンプ (herdr デフォルト) | — |
+
+## マウス
+
+### 右クリック無効化 (自前パッチ)
+
+`[ui] right_click = false` (独自オプション) で **右クリックを完全に無効**にする。
+右ボタンの Down/Up/Drag をマウスハンドラの入口で捨てるので、
+
+- ペイン・タブバー・サイドバーのコンテキストメニューがどれも出ない
+- ペイン内アプリにも転送されない (マウス報告を有効にした TUI にも届かない)
+- 上流の `ui.right_click_passthrough_modifier` (修飾キー付き右クリックの
+  素通し) も併せて効かなくなる
+
+左クリックのペインフォーカス、分割線ドラッグ、タブクリック、ホイールスクロール
+といった他のマウス操作は従来どおり。ロックモード中の脱出ハッチも左クリック系は
+残る。反映は `herdr server reload-config` で足りる (再アタッチ不要)。
+
+- 端末 (Ghostty) 側の右クリックメニューを出したいときは **Shift+右クリック**。
+  端末のマウスバイパスなので herdr の設定に関係なく使える
+- herdr のマウス操作を全部やめて端末に任せたいなら `ui.mouse_capture = false`
+  (上流オプション)。ただし左クリックのフォーカス移動やドラッグ分割も失う
+- Arch 側は上流の非パッチ版なのでこのオプションは無い (`arch/.config/herdr/config.toml`)
 
 ## 日本語 IME との併用
 
