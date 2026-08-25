@@ -26,9 +26,14 @@ modifier = "Super_L"
 next = "Down"
 prev = "Up"
 
-# タブ内・タブ間とも最近使った順 (MRU) に並べる。macOS の Cmd+Tab の感覚に合わせる。
+# ワークスペースの行は niri 上の実際の並び (idx 順) で常に表示する。
+# 紛らわしいが mru_sort_in_workspace は「Mod+Tab (application) で表示した時の
+# ワークスペースの並び順を MRU にするか」の意味で、true だと今いるワークスペースが
+# 常に先頭に来てしまい、縦の常時表示が実際の配置とずれる。
+# アプリの並びはこの設定と無関係に常に MRU (_wm.get_windows が固定で MRU ソート)
+# なので、false にしても macOS の Cmd+Tab の感覚は変わらない。
 [workspace]
-mru_sort_in_workspace = true
+mru_sort_in_workspace = false
 mru_sort_across_workspace = true
 
 # 見た目は style.css で macOS の Cmd+Tab 風にしている。
