@@ -20,6 +20,7 @@ vim.opt.splitright = true   -- 垂直分割は右に
 vim.opt.scrolloff = 8       -- スクロール時の余白行数
 vim.opt.wrap = false        -- 行の折り返し無効
 vim.opt.autoread = true     -- 外部変更を自動検知
+vim.opt.guicursor = "a:ver25"  -- 全モードで縦線カーソル(太さ25%)
 
 -- 外部変更の自動リロード
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
