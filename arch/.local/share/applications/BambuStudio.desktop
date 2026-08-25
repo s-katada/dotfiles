@@ -1,0 +1,17 @@
+# /usr/share/applications/BambuStudio.desktop を上書きするローカルエントリ。2 つの回避策入り:
+# - gtk3 3.24.52 での起動クラッシュを避けるため LD_PRELOAD で GTK を先に初期化する
+#   (詳細は arch/.local/lib/bambu-gtkinit/gtkinit.c)。
+# - wxGLCanvas が GLX (X11 専用) を使うため、Wayland ネイティブだと 3D ビュー作成で
+#   segfault する。GDK_BACKEND=x11 で XWayland 上で動かす。
+[Desktop Entry]
+Name=Bambu Studio
+GenericName=3D Printing Software
+Icon=BambuStudio
+Exec=env GDK_BACKEND=x11 LD_PRELOAD=/home/saitama/.local/lib/bambu-gtkinit.so /usr/bin/bambu-studio %U
+Terminal=false
+Type=Application
+MimeType=model/stl;model/3mf;application/vnd.ms-3mfdocument;application/prs.wavefront-obj;application/x-amf;x-scheme-handler/bambustudio;
+Categories=Graphics;3DGraphics;Engineering;
+Keywords=3D;Printing;Slicer;
+StartupNotify=false
+StartupWMClass=BambuStudio
