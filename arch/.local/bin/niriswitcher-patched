@@ -8,9 +8,42 @@
 # パッケージ更新で消えない。niri の spawn-at-startup からこれを起動する。
 import sys
 
-from niriswitcher import _app, daemon
+# gtk4-layer-shell は libwayland より先にロードされている必要がある。
+# 本家 daemon() は Gtk を import する前に CDLL でプリロードするが、
+# このラッパーは monkeypatch のために先に _app を import してしまうので、
+# 同じプリロードをここで(あらゆる gi import より前に)やっておく。
+# これを怠ると layer surface の初期化に失敗して通常ウィンドウとして表示され、
+# niri のフォーカスリングが背後に描かれる。
+from ctypes import CDLL
+
+CDLL("libgtk4-layer-shell.so.0")
+
+import gi
+
+gi.require_version("Gtk4LayerShell", "1.0")
+gi.require_version("Gtk", "4.0")
+gi.require_version("Adw", "1")
+
+from niriswitcher import _app, _wm, daemon
 from niriswitcher._config import config
 from gi.repository import Gdk
+
+# 上流バグの修正: Window.__init__ が super().__init__() より前に self.app_info を
+# 参照するため常に else 側に落ち、name が空になる (アイコンはローカル変数を使う
+# ので正常に出る)。プロパティは init 後には正しく入っているので、init の後に
+# name を引き直す。macOS 風 UI で選択中アイコンの下に出すアプリ名に使われる。
+_orig_window_init = _wm.Window.__init__
+
+
+def _window_init_with_name(self, window, last_focus_time=None):
+    _orig_window_init(self, window, last_focus_time)
+    if self.app_info is not None:
+        self.name = self.app_info.get_display_name()
+    elif self.app_id:
+        self.name = self.app_id
+
+
+_wm.Window.__init__ = _window_init_with_name
 
 _orig_create_keybindings = _app.NiriswitcherWindow._create_keybindings
 
