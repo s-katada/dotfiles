@@ -301,6 +301,22 @@ spawn-at-startup "/usr/lib/hyprpolkitagent/hyprpolkitagent"
 // On-screen display for volume / mute / caps lock (swayosd).
 spawn-at-startup "swayosd-server"
 
+// macOS の Cmd+Tab 相当のアプリスイッチャー (niriswitcher, AUR)。
+// niri 25.11+ には組み込みの recent-windows スイッチャー (Mod+Tab がデフォルトで有効)
+// があるが、サムネイル表示のみでアプリアイコンが出ないため niriswitcher に置き換える。
+// 組み込み側は下の recent-windows { off } で無効化している。
+// 常駐デーモンで、Mod+Tab のバインドから D-Bus 経由で呼び出す。
+// Mod (Super) を押している間だけアイコン付きの一覧が出て、離すと確定する。
+// 監視する修飾キーは ~/.config/niriswitcher/config.toml で Super_L に合わせてある。
+// 素の niriswitcher ではなく、左右矢印キーでの選択を足したラッパーを起動する
+// (config.toml では Tab と矢印の併用を表現できないため。中身はラッパー参照)。
+spawn-at-startup "/home/saitama/.local/bin/niriswitcher-patched"
+
+// 組み込みの recent-windows スイッチャーを無効化 (niriswitcher と競合するため)。
+recent-windows {
+    off
+}
+
 // メールクライアント (Thunderbird)。
 // 新着通知を受けるには常駐している必要がある。
 //
@@ -454,6 +470,12 @@ binds {
     // macOS の Ctrl+Cmd+Space (絵文字ビューア) に合わせたキー。
     // vicinae 内蔵の絵文字検索を直接開く。選ぶとクリップボードに入るので貼り付ける。
     Mod+Ctrl+Space hotkey-overlay-title="Emoji Picker: vicinae" { spawn "vicinae" "cmd" "launch" "core:search-emojis"; }
+    // macOS の Cmd+Tab 相当のアプリスイッチャー (niriswitcher)。
+    // このバインドは「表示」の合図を D-Bus で送るだけで、以降の Tab での循環と
+    // Mod を離した時の確定は niriswitcher 側がキーボードを掴んで処理する。
+    // Shift+Tab で逆順。Esc でキャンセル、q で選択中のウィンドウを閉じる。
+    Mod+Tab repeat=false hotkey-overlay-title="Switch Apps: niriswitcher" { spawn "gdbus" "call" "--session" "--dest" "io.github.isaksamsten.Niriswitcher" "--object-path" "/io/github/isaksamsten/Niriswitcher" "--method" "io.github.isaksamsten.Niriswitcher.application"; }
+    Mod+Shift+Tab repeat=false { spawn "gdbus" "call" "--session" "--dest" "io.github.isaksamsten.Niriswitcher" "--object-path" "/io/github/isaksamsten/Niriswitcher" "--method" "io.github.isaksamsten.Niriswitcher.application"; }
     Mod+Shift+B hotkey-overlay-title="Restart waybar" { spawn-sh "pkill -x waybar; sleep 0.3; exec waybar"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 
