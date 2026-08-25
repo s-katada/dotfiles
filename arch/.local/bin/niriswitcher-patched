@@ -26,7 +26,98 @@ gi.require_version("Adw", "1")
 
 from niriswitcher import _app, _wm, daemon
 from niriswitcher._config import config
-from gi.repository import Gdk
+from gi.repository import Gdk, Gtk
+
+
+# 本家はワークスペースを Gtk.Stack で 1 つずつ表示し Super+↑↓ でスライドさせるが、
+# 全ワークスペースを縦に並べて常時表示したいので、Stack と同じインターフェイスを
+# 持つ縦並びの Box に差し替える。「表示中の子」の概念は「操作対象 (アクティブ) の
+# ワークスペース行」に読み替え、アクティブ行には CSS クラス active-workspace を
+# 付けて style.css 側でほんのり明るくする。Super+↑↓ は行の移動になる。
+class AllWorkspacesBox(Gtk.Box):
+    def __init__(self, max_width=None, min_width=None):
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        self.set_name("workspaces")
+        self.max_width = max_width
+        self.min_width = min_width
+        self.indicator = None
+        self._current = None
+        self._names = {}
+
+    # _app が Gtk.Stack 前提で呼ぶメソッド。全行表示なのでアニメーションは無い。
+    def set_transition_duration(self, duration):
+        pass
+
+    def set_transition_type(self, transition):
+        pass
+
+    def set_width(self, min_width, max_width):
+        self.min_width = min_width
+        self.max_width = max_width
+        for workspace_view in self:
+            workspace_view.set_width(min_width, max_width)
+
+    def set_indicator(self, indicator):
+        for indicator_child in list(indicator):
+            indicator.remove(indicator_child)
+        for workspace_view in self:
+            indicator.append_workspace(workspace_view.workspace)
+        self.indicator = indicator
+        self.indicator.connect("selection-changed", self.on_selection_changed)
+
+    def add_named(self, workspace_view, name):
+        self._names[name] = workspace_view
+        self.append(workspace_view)
+        # unified モード (separate_workspaces = false) ではインジケータからの
+        # selection-changed が来ないので、最初の行をアクティブにしておく。
+        if self._current is None:
+            self._set_current(workspace_view)
+
+    def add_workspace(self, workspace_view):
+        if self.indicator:
+            self.indicator.append_workspace(workspace_view.workspace)
+        self.add_named(workspace_view, workspace_view.workspace.identifier)
+
+    def get_child_by_name(self, name):
+        return self._names.get(name)
+
+    def get_visible_child(self):
+        return self._current
+
+    def remove(self, child):
+        self._names = {
+            name: view for name, view in self._names.items() if view is not child
+        }
+        if self._current is child:
+            self._current = None
+        super().remove(child)
+
+    def _set_current(self, workspace_view):
+        if self._current is workspace_view:
+            return
+        if self._current is not None:
+            self._current.remove_css_class("active-workspace")
+            # 全行が見えているので、離れる行のアプリ選択ハイライトは消す
+            # (current_application は保持されるので、戻れば select_current で復活)。
+            for application_view in self._current:
+                application_view.deselect()
+        self._current = workspace_view
+        workspace_view.add_css_class("active-workspace")
+
+    def on_selection_changed(self, widget, workspace, animate):
+        workspace_view = self._names.get(workspace.identifier)
+        if workspace_view is not None:
+            self._set_current(workspace_view)
+            workspace_view.select_current()
+
+    def __iter__(self):
+        current = self.get_first_child()
+        while current is not None:
+            yield current
+            current = current.get_next_sibling()
+
+
+_app.WorkspaceStack = AllWorkspacesBox
 
 # 上流バグの修正: Window.__init__ が super().__init__() より前に self.app_info を
 # 参照するため常に else 側に落ち、name が空になる (アイコンはローカル変数を使う

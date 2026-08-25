@@ -41,6 +41,16 @@
   background: transparent;
 }
 
+/* 全ワークスペースを縦に常時表示している (ラッパーの AllWorkspacesBox)。
+ * 操作対象 (Super+↑↓ で移動) の行はほんのり明るくして分かるようにする。 */
+.workspace {
+  border-radius: 22px;
+  padding: 2px 6px;
+}
+.workspace.active-workspace {
+  background-color: rgba(255, 255, 255, 0.07);
+}
+
 /* アプリアイコン。選択中は macOS 風の白っぽい角丸スクエアで囲む。 */
 .application-icon {
   padding: 14px;
