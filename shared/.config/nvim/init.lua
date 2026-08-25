@@ -132,6 +132,14 @@ require("lazy").setup({
     lazy = false,
     priority = 999,
     config = function()
+      require("tokyonight").setup({
+        -- 背景を描画せずターミナル側(Ghostty の background-opacity)を透かす
+        transparent = true,
+        styles = {
+          sidebars = "transparent",  -- ファイルツリー等のサイドバーも透過
+          floats = "transparent",    -- フローティングウィンドウも透過
+        },
+      })
       vim.cmd([[colorscheme tokyonight]])
     end,
   },
