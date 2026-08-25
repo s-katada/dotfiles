@@ -1,0 +1,64 @@
+/* niriswitcher を macOS の Cmd+Tab 風にするスタイル (Arch)。
+ * GTK4 の CSS で、同梱の style.css / style-dark.css より高い優先度で読まれる。
+ * 反映は niriswitcher の再起動 (pkill -f niriswitcher-patched → 再スポーン)。
+ *
+ * macOS に無い要素 (上部のウィンドウタイトル + ワークスペース名、左端の
+ * ワークスペースインジケータ) は GTK CSS に display:none が無いため、
+ * opacity: 0 とサイズ潰し (font-size: 1px 等) で見えなくしている。
+ * ワークスペースの切り替え自体 (Super+↑↓) は生きている。
+ */
+
+/* 角丸パネル。macOS はすりガラス (blur) だが niri に blur は無く、
+ * 半透明にすると背後の文字がそのまま透けて汚いので不透明の濃いグレーにする。 */
+#main-view {
+  background-color: rgb(35, 35, 39);
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  padding: 16px 20px;
+  box-shadow: 0 18px 50px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* 上部バー (選択中ウィンドウのタイトル + ワークスペース名) を潰す。 */
+#top-bar {
+  opacity: 0;
+}
+#application-title,
+#workspace-name {
+  font-size: 1px;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+}
+
+/* 左端のワークスペースインジケータ (縦線) を消す。
+ * ウィジェット側で幅 5px が予約されているため透明化のみ。 */
+#workspace-indicators {
+  opacity: 0;
+  margin: 0;
+}
+.workspace-indicator {
+  background: transparent;
+}
+
+/* アプリアイコン。選択中は macOS 風の白っぽい角丸スクエアで囲む。 */
+.application-icon {
+  padding: 14px;
+  border-radius: 24px;
+}
+.application.selected .application-icon {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+
+/* アプリ名は選択中のものだけ、アイコンの下に白文字で出す (macOS と同じ)。 */
+.application-name {
+  font-size: 13px;
+  margin-top: 6px;
+}
+.application.focused .application-name {
+  opacity: 0;
+}
+.application.selected .application-name {
+  opacity: 1;
+  color: rgba(255, 255, 255, 0.96);
+}

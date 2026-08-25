@@ -30,3 +30,10 @@ prev = "Up"
 [workspace]
 mru_sort_in_workspace = true
 mru_sort_across_workspace = true
+
+# 見た目は style.css で macOS の Cmd+Tab 風にしている。
+# デフォルトの min_width = 600 だとアプリが少ない時にパネルが横に間延びして
+# macOS らしくないので、内容に合わせて縮むようにする。
+[appearance]
+min_width = 0
+max_width = 1600
