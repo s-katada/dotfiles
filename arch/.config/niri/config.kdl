@@ -752,6 +752,8 @@ binds {
     // macOS-style screenshot binds.
     Mod+Shift+4 hotkey-overlay-title="Screenshot a Region" { screenshot; }
     Mod+Shift+3 hotkey-overlay-title="Screenshot the Screen" { screenshot-screen; }
+    // macOS の Cmd+Shift+5 相当。録画は Kooha (portal 経由なので xdg-desktop-portal-gnome が必要)。
+    Mod+Shift+5 hotkey-overlay-title="Screen Recording (Kooha)" { spawn "kooha"; }
 
     // Applications such as remote-desktop clients and software KVM switches may
     // request that niri stops processing the keyboard shortcuts defined here
@@ -770,4 +772,11 @@ binds {
     // Powers off the monitors. To turn them back on, do any input like
     // moving the mouse or pressing any other key.
     Mod+Shift+P { power-off-monitors; }
+}
+
+debug {
+    // Kooha (GStreamer pipewiresrc) が niri の screencast をネゴシエートできず
+    // 「no more input formats」で録画開始に失敗するため、DMA-BUF の明示的 modifier を
+    // 使わせない。OBS など modifier 対応の受け手しか使わないなら外してよい。
+    force-pipewire-invalid-modifier
 }
