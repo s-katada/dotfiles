@@ -1,0 +1,39 @@
+#!/usr/bin/python
+# niriswitcher に「左右矢印キーでの選択」を足して起動するラッパー。
+#
+# niriswitcher の config.toml は 1 アクションに 1 キーしか割り当てられない
+# (keys.switch の next/prev は単一文字列のみ。上流 main でも同じ) ため、
+# Tab と矢印キーを併用するには本体のキーバインド生成に差し込むしかない。
+# site-packages 側は書き換えず起動前に monkeypatch するので、
+# パッケージ更新で消えない。niri の spawn-at-startup からこれを起動する。
+import sys
+
+from niriswitcher import _app, daemon
+from niriswitcher._config import config
+from gi.repository import Gdk
+
+_orig_create_keybindings = _app.NiriswitcherWindow._create_keybindings
+
+
+def _create_keybindings_with_arrows(self):
+    mappings = _orig_create_keybindings(self)
+    # 修飾キー (Super) を押したまま Right/Left で次/前のアプリを選択。
+    mappings.append(
+        _app.KeybindingAction(
+            (Gdk.KEY_Right, config.keys.modifier_mask),
+            self.select_next_application,
+        )
+    )
+    mappings.append(
+        _app.KeybindingAction(
+            (Gdk.KEY_Left, config.keys.modifier_mask),
+            self.select_prev_application,
+        )
+    )
+    return mappings
+
+
+_app.NiriswitcherWindow._create_keybindings = _create_keybindings_with_arrows
+
+if __name__ == "__main__":
+    sys.exit(daemon())

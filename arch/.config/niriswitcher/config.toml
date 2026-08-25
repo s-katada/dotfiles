@@ -1,0 +1,32 @@
+# niriswitcher 設定 (Arch)
+# macOS の Cmd+Tab 相当の、アプリアイコン主体のスイッチャー。
+# niri 25.11+ の組み込み recent-windows (サムネイル表示・アイコン無し) の代替として使う。
+# 組み込み側は niri/config.kdl の recent-windows { off } で無効化してある。
+# 呼び出しは niri/config.kdl の Mod+Tab (D-Bus 経由)。
+# 常駐は niri の spawn-at-startup で、config.toml では表現できない
+# 左右矢印キー対応を足した ~/.local/bin/niriswitcher-patched を起動している。
+# 反映: pkill -f niriswitcher した後、手動で起動 (次回ログインからは自動起動)。
+#
+# 注意: トップレベルのキーは [セクション] より前に書くこと。後ろに書くと
+# 直前のセクションの値として解釈され、黙って無視される。
+
+# ワークスペースごとにタブ(グループ)を分けて表示する。
+# スイッチャーを開いたまま Super+↓ で次の、Super+↑ で前の
+# ワークスペースのタブに移動できる (アプリ選択は Tab / ←→)。
+separate_workspaces = true
+
+# 「押しっぱなしで循環 → 離すと確定」の判定に使う修飾キー。
+# niri の Mod は Super なので、既定の Alt_L から合わせて変更する。
+[keys]
+modifier = "Super_L"
+
+# ワークスペース移動を上下矢印に割り当てる (既定は grave / Shift+asciitilde)。
+# niri のワークスペースが縦に並ぶのに合わせて、↓ = 次、↑ = 前とする。
+[keys.workspace]
+next = "Down"
+prev = "Up"
+
+# タブ内・タブ間とも最近使った順 (MRU) に並べる。macOS の Cmd+Tab の感覚に合わせる。
+[workspace]
+mru_sort_in_workspace = true
+mru_sort_across_workspace = true
