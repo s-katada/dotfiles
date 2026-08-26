@@ -60,6 +60,28 @@
   background-color: rgba(255, 255, 255, 0.22);
 }
 
+/* 通知バッジ (macOS の Dock バッジ風、ラッパーがアイコン右上に重ねる)。
+ * メンション/DM 数は赤丸 + 数字、数字なしの注意喚起は小さい赤ドット。 */
+.notification-badge {
+  background-color: rgb(255, 59, 48);
+  color: rgb(255, 255, 255);
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 999px;
+  min-width: 12px;
+  min-height: 22px;
+  padding: 0 6px;
+  margin: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+.notification-badge.dot {
+  /* 空ラベルでも 1 行分の高さが出て縦長になるので font-size で潰して真円にする */
+  font-size: 1px;
+  min-width: 14px;
+  min-height: 14px;
+  padding: 0;
+}
+
 /* アプリ名は選択中のものだけ、アイコンの下に白文字で出す (macOS と同じ)。 */
 .application-name {
   font-size: 13px;

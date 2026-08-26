@@ -24,9 +24,92 @@ gi.require_version("Gtk4LayerShell", "1.0")
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 
-from niriswitcher import _app, _wm, daemon
+from niriswitcher import _app, _widgets, _wm, daemon
 from niriswitcher._config import config
-from gi.repository import Gdk, Gtk
+from gi.repository import Gdk, Gio, Gtk
+
+
+# macOS の Dock バッジ風の通知表示。
+# Slack / Discord などの Electron アプリはメンション・DM 数のバッジを
+# com.canonical.Unity.LauncherEntry の Update シグナル (D-Bus) で配信するので、
+# それを常時購読しておき、スイッチャーのアイコンに赤バッジとして重ねる。
+# - count (メンション/DM 数) がある → 赤丸 + 数字
+# - 数字なしの注意喚起 (LauncherEntry の urgent または niri の urgent) → 赤ドット
+# 注意: シグナルは変化時にしか流れないので、このデーモンの起動後に
+# 変化があったアプリのバッジだけが表示できる。
+_badges = {}
+
+
+def _normalize_badge_key(app_uri):
+    key = app_uri.lower()
+    if key.startswith("application://"):
+        key = key[len("application://") :]
+    if key.endswith(".desktop"):
+        key = key[: -len(".desktop")]
+    return key
+
+
+def _on_launcher_entry_update(conn, sender, path, iface, signal, params):
+    app_uri, props = params.unpack()
+    _badges.setdefault(_normalize_badge_key(app_uri), {}).update(props)
+
+
+Gio.bus_get_sync(Gio.BusType.SESSION, None).signal_subscribe(
+    None,
+    "com.canonical.Unity.LauncherEntry",
+    "Update",
+    None,
+    None,
+    Gio.DBusSignalFlags.NONE,
+    _on_launcher_entry_update,
+)
+
+
+def _badge_for_window(window):
+    # flatpak だと desktop id が com.slack.Slack のような逆ドメインになるので、
+    # 完全一致に加えて最後のドット区切り (slack) 同士でも突き合わせる。
+    keys = set()
+    if window.app_id:
+        keys.add(window.app_id.lower())
+    if window.app_info is not None:
+        keys.add(_normalize_badge_key(window.app_info.get_id() or ""))
+    for badge_key, entry in _badges.items():
+        short = badge_key.rsplit(".", 1)[-1]
+        for key in keys:
+            if badge_key == key or short == key or short == key.rsplit(".", 1)[-1]:
+                return entry
+    return None
+
+
+_orig_application_view_init = _widgets.ApplicationView.__init__
+
+
+def _application_view_init_with_badge(self, window, *, size):
+    _orig_application_view_init(self, window, size=size)
+    entry = _badge_for_window(window) or {}
+    count = entry.get("count", 0) if entry.get("count-visible", False) else 0
+    urgent = window.is_urgent or entry.get("urgent", False)
+    if count <= 0 and not urgent:
+        return
+    # アイコンを Gtk.Overlay で包み直して右上にバッジを重ねる。
+    icon = self.get_first_child()
+    self.remove(icon)
+    overlay = Gtk.Overlay()
+    overlay.set_child(icon)
+    badge = Gtk.Label()
+    badge.add_css_class("notification-badge")
+    if count > 0:
+        badge.set_label(str(count) if count < 100 else "99+")
+    else:
+        badge.add_css_class("dot")
+    badge.set_halign(Gtk.Align.END)
+    badge.set_valign(Gtk.Align.START)
+    badge.set_can_target(False)
+    overlay.add_overlay(badge)
+    self.prepend(overlay)
+
+
+_widgets.ApplicationView.__init__ = _application_view_init_with_badge
 
 
 # 本家はワークスペースを Gtk.Stack で 1 つずつ表示し Super+↑↓ でスライドさせるが、
