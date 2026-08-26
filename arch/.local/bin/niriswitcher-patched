@@ -6,6 +6,7 @@
 # Tab と矢印キーを併用するには本体のキーバインド生成に差し込むしかない。
 # site-packages 側は書き換えず起動前に monkeypatch するので、
 # パッケージ更新で消えない。niri の spawn-at-startup からこれを起動する。
+import re
 import sys
 
 # gtk4-layer-shell は libwayland より先にロードされている必要がある。
@@ -81,14 +82,40 @@ def _badge_for_window(window):
     return None
 
 
+_TITLE_COUNT_RE = re.compile(r"^\((\d+)\)")
+
+
+def _notification_state(window):
+    """(件数, ドント表示か) を返す。件数 > 0 なら数字バッジ、それ以外で True なら赤ドット。
+
+    LauncherEntry (D-Bus) を優先しつつ、ウィンドウタイトルでも補完する:
+    - Slack はメンション/DM しか LauncherEntry に載せず、非メンションの未読は
+      タイトル先頭の "*" でしか分からないので、それを赤ドットにする (macOS の
+      「新着アクティビティのドット」相当)。
+    - Discord はメンション数をタイトル先頭の "(3)" で示すので件数として拾う
+      (LauncherEntry が来ない環境でも動くように)。
+    タイトルは niri のイベントストリームで常に最新なので、デーモン起動前からの
+    未読でも拾える (LauncherEntry は変化時にしか流れないのを補う)。
+    """
+    entry = _badge_for_window(window) or {}
+    count = entry.get("count", 0) if entry.get("count-visible", False) else 0
+    urgent = bool(window.is_urgent or entry.get("urgent", False))
+    app_id = (window.app_id or "").lower()
+    title = window.title or ""
+    if count <= 0 and app_id == "discord":
+        if m := _TITLE_COUNT_RE.match(title):
+            count = int(m.group(1))
+    if count <= 0 and not urgent and app_id == "slack" and title.startswith("*"):
+        urgent = True
+    return count, urgent
+
+
 _orig_application_view_init = _widgets.ApplicationView.__init__
 
 
 def _application_view_init_with_badge(self, window, *, size):
     _orig_application_view_init(self, window, size=size)
-    entry = _badge_for_window(window) or {}
-    count = entry.get("count", 0) if entry.get("count-visible", False) else 0
-    urgent = window.is_urgent or entry.get("urgent", False)
+    count, urgent = _notification_state(window)
     if count <= 0 and not urgent:
         return
     # アイコンを Gtk.Overlay で包み直して右上にバッジを重ねる。
