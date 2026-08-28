@@ -123,6 +123,33 @@
     /bin/launchctl asuser "$(/usr/bin/id -u -- ${config.system.primaryUser})" \
       /usr/bin/sudo --user=${config.system.primaryUser} -- \
       /usr/bin/defaults delete -g AppleInterfaceStyle 2>/dev/null || true
+
+    # ---- Spotlight 系ショートカットを nix 管理下に置く ----
+    # システム設定 > キーボード > キーボードショートカット > Spotlight の2項目。
+    # 実機では ID 64 だけが手作業で無効化されており、宣言が dotfiles に残っていなかった。
+    #   ID 64 = ⌘Space「Spotlight 検索を表示」→ Raycast に譲るので無効
+    #   ID 65 = ⌥⌘Space「Finder の検索ウインドウを表示」→ 無効。⌥⌘Space は
+    #           Finder をホームで開く用に karabiner.json 側へ割り当て直した。
+    # AppleSymbolicHotKeys は全ホットキーが1つの辞書に入るため、system.defaults で
+    # 丸ごと書くと他のショートカットまで消える。-dict-add で該当 ID だけ差し替える。
+    # parameters = (ASCII, キーコード, 修飾フラグ)。49=Space / 1048576=⌘ / 1572864=⌘+⌥。
+    primary_uid="$(/usr/bin/id -u -- ${config.system.primaryUser})"
+
+    disable_symbolic_hotkey() {
+      /bin/launchctl asuser "$primary_uid" \
+        /usr/bin/sudo --user=${config.system.primaryUser} -- \
+        /usr/bin/defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add "$1" \
+        "<dict><key>enabled</key><false/><key>value</key><dict><key>parameters</key><array><integer>65535</integer><integer>$2</integer><integer>$3</integer></array><key>type</key><string>standard</string></dict></dict>"
+    }
+
+    disable_symbolic_hotkey 64 49 1048576 # ⌘Space
+    disable_symbolic_hotkey 65 49 1572864 # ⌥⌘Space
+
+    # 書き込んだホットキーは activateSettings を叩かないと再ログインまで反映されない。
+    /bin/launchctl asuser "$primary_uid" \
+      /usr/bin/sudo --user=${config.system.primaryUser} -- \
+      /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u \
+      2>/dev/null || true
   '';
 
   # macOS 入力デバイス設定
