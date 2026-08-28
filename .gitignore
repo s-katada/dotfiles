@@ -63,6 +63,12 @@ darwin/.config/herdr/config.toml.bak-*
 darwin/.config/herdr/release-notes.json
 # hunk - 最終確認 CLI バージョンを保持するだけの状態ファイル
 darwin/.config/hunk/state.json
+# 1Password - テレメトリ可否を表すだけの空マーカーファイル
+darwin/.config/1Password/
+# herdr - プラグイン解決結果のロック（起動のたびに書き直される）
+darwin/.config/herdr/.plugins.lock
+# qmd - インデックス状態（collections が使用のたびに書き換わる。models は既定値）
+darwin/.config/qmd/
 
 # Ubuntu - home-manager generated files
 ubuntu/.config/direnv/
