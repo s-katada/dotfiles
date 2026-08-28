@@ -1,4 +1,5 @@
-lsd font-family = Hack Nerd Font Mono
+font-family = Hack Nerd Font Mono
+font-family = Hiragino Sans
 command = /etc/profiles/per-user/awesomemr/bin/fish
 theme = Chester
 background-opacity = 0.9
@@ -7,7 +8,8 @@ macos-titlebar-proxy-icon = visible
 window-width = 1000
 window-height = 1000
 # term = "xterm-256color"
-font-feature = -dlig # 日本語の文字化け対応
+# 日本語の文字化け対応
+font-feature = -dlig
 custom-shader = /Users/awesomemr/.config/ghostty/ghostty-shaders/cursor_blaze.glsl
 custom-shader-animation = true
 
