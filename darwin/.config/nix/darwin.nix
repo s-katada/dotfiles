@@ -213,7 +213,7 @@
       autohide-time-modifier = 0.2; # Nix float。表示/非表示アニメ速度
       tilesize = 48;
       magnification = false;
-      orientation = "bottom"; # bottom|left|right
+      orientation = "left"; # bottom|left|right
       mineffect = "scale"; # genie|suck|scale
       minimize-to-application = true;
       show-recents = false;
