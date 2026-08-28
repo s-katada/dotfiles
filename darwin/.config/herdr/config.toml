@@ -12,11 +12,11 @@ prefix = "ctrl+p"
 # ペイン/タブ移動系だけ Enter か Esc を押すまでプレフィックスモードに留まり、
 # それ以外の操作 (分割・閉じる・ズーム等) は実行後すぐ抜ける (zellij と同じ)。
 # 自前パッチの独自オプション。ビルド手順: ./build-patched.sh、差分: ./patches/
-prefix_sticky = true
+# [0.8.2 で廃止] prefix_sticky = true
 
 # ロックモード (zellij の Ctrl g 相当、自前パッチの独自オプション)。
 # ロック中は解除キー以外の全キーがペインへ素通しになり、ctrl+p 連打も届く。
-lock = "ctrl+g"
+# [0.8.2 で廃止] lock = "ctrl+g"
 
 # ペイン操作 (zellij: Ctrl p → キー / Alt+キー)
 focus_pane_left = ["prefix+h", "alt+h", "alt+left"]
@@ -76,7 +76,7 @@ show_agent_labels_on_pane_borders = true
 
 # プレフィックスモード中、下部バーに zellij 風のキーバインドチートシートを表示
 # (自前パッチの独自オプション。実際のバインド設定から動的に生成される)
-prefix_cheatsheet = true
+# [0.8.2 で廃止] prefix_cheatsheet = true
 
 # 右クリックを完全に無効化 (自前パッチの独自オプション)。
 # ペイン・タブバー・サイドバーのコンテキストメニューが一切出ず、ペイン内アプリにも
@@ -84,7 +84,7 @@ prefix_cheatsheet = true
 # ドラッグでの分割線移動、ホイールスクロールなど他のマウス操作はそのまま使える。
 # 端末 (Ghostty) 側の右クリックメニューを出したいときは Shift+右クリックで
 # herdr のマウスキャプチャをバイパスする。
-right_click = false
+# [0.8.2 で廃止 -> mouse_capture / right_click_passthrough_modifier に再編] right_click = false
 
 [ui.toast]
 delivery = "herdr"
