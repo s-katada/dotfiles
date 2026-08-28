@@ -150,6 +150,13 @@
       /usr/bin/sudo --user=${config.system.primaryUser} -- \
       /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u \
       2>/dev/null || true
+
+    # ---- Finder の再起動 ----
+    # nix-darwin の activate は Dock しか killall しない（killall -qu <user> Dock）。
+    # そのため下の system.defaults.finder.* は rebuild 直後には反映されず、次に Finder が
+    # 再起動するまで古い設定のまま動き続ける。「rebuild したのに効かない」「後から急に
+    # 挙動が変わった」の原因になるので、ここで明示的に再起動して反映タイミングを揃える。
+    /usr/bin/killall -qu ${config.system.primaryUser} Finder || true
   '';
 
   # macOS 入力デバイス設定
