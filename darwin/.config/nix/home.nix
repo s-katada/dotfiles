@@ -62,6 +62,10 @@ in
 
       # atuin (シェル履歴。Ctrl-R を置き換え。上矢印は fish 既定の前方一致を維持)
       atuin init fish --disable-up-arrow | source
+
+      # カーソルをブロックではなくライン(|)にする
+      set -g fish_cursor_default line
+      set -g fish_cursor_external line
     '';
   };
 
