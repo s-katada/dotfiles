@@ -37,7 +37,9 @@
       "bitwarden"
       "chromedriver"
       "claude"
-      "claude-code"
+      # 本体が自己更新するため、バージョン固定の claude-code cask ではなく
+      # @latest を使う（stable cask とは同時インストール不可で衝突する）
+      "claude-code@latest"
       "cursor"
       "discord"
       "emacs-app"
