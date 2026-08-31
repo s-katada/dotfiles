@@ -1,0 +1,13 @@
+amd-ucode
+base
+efibootmgr
+git
+grub
+less
+linux
+linux-firmware
+networkmanager
+ntfs-3g
+os-prober
+sudo
+vim
