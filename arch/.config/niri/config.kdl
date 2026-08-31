@@ -312,13 +312,20 @@ spawn-at-startup "vicinae" "server"
 // Mod (Super) を押している間だけアイコン付きの一覧が出て、離すと確定する。
 // 監視する修飾キーは ~/.config/niriswitcher/config.toml で Super_L に合わせてある。
 //
-// 素の niriswitcher を起動する。arch/.local/bin/niriswitcher-patched という
-// ラッパー (左右矢印での選択、通知バッジ、全ワークスペースの縦並び表示を足したもの)
-// も dotfiles に残してあるが、本体の非公開モジュール (_app / _widgets / _wm) を
-// monkeypatch する作りで版上げに弱いため、既定では使わない。
-// 使いたくなったら下の行を spawn-sh-at-startup "~/.local/bin/niriswitcher-patched"
-// に差し替える (spawn は ~ を展開しないので spawn-sh が必要)。
-spawn-at-startup "niriswitcher"
+// 素の niriswitcher ではなくラッパーを起動する。本体は 1 アクション 1 キーしか
+// 割り当てられない (_config.py の switch_section.get("next", "Tab") が単一文字列で、
+// KeysConfig.next も単一タプル) ため、Tab と左右矢印を併用するには本体の
+// キーバインド生成に差し込むしかない。ラッパーはそれに加えて通知バッジ、
+// 全ワークスペースの縦並び表示、アプリ名が空になる上流バグの修正を足している。
+//
+// 本体の非公開モジュール (_app / _widgets / _wm / _config) を monkeypatch するので
+// 版上げで壊れうる。niriswitcher を更新したら Mod+Tab を一度試すこと。
+// 0.7.1 では 4 箇所すべて健在で、Super+Tab / Super+Right / Super+Left が
+// 効くことを確認済み。壊れていたら spawn-at-startup "niriswitcher" に
+// 差し替えれば切り替え自体は動く (矢印・バッジ・アプリ名は失う)。
+//
+// spawn はシェルを通さず ~ を展開しないので、ユーザー名を焼き込まないよう spawn-sh を使う。
+spawn-sh-at-startup "~/.local/bin/niriswitcher-patched"
 
 // 組み込みの recent-windows スイッチャーを無効化 (niriswitcher と競合するため)。
 recent-windows {
