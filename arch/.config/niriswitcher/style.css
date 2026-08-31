@@ -1,7 +1,7 @@
 /* niriswitcher を macOS の Cmd+Tab 風にするスタイル (Arch)。
  * GTK4 の CSS で、同梱の style.css / style-dark.css より高い優先度で読まれる。
- * 反映は niriswitcher の再起動 (pkill -x niriswitcher → 再スポーン)。
- * -f ではなく -x を使うこと (-f は自分のシェルにも一致して巻き込む)。
+ * 反映は niriswitcher の再起動 (pkill -f local/bin/niriswitcher-patched → 再スポーン)。
+ * パターンに "niriswitcher" だけを渡さないこと (その文字列を含む自分のシェルも巻き込む)。
  *
  * macOS に無い要素 (上部のウィンドウタイトル + ワークスペース名、左端の
  * ワークスペースインジケータ) は GTK CSS に display:none が無いため、
@@ -42,10 +42,9 @@
   background: transparent;
 }
 
-/* ワークスペースの行。素の niriswitcher は separate_workspaces = true のとき
- * 1 ワークスペースずつ表示し、Super+↑↓ で切り替える (config.toml の keys.workspace)。
- * active-workspace は全行を縦に並べるラッパー (arch/.local/bin/niriswitcher-patched)
- * だけが付けるクラスなので、素の本体では効かない。ラッパーに戻したときのために残す。 */
+/* 全ワークスペースを縦に常時表示している (ラッパーの AllWorkspacesBox)。
+ * 操作対象 (Super+↑↓ で移動) の行はほんのり明るくして分かるようにする。
+ * active-workspace はラッパーだけが付けるクラス。素の本体に戻すと効かない。 */
 .workspace {
   border-radius: 22px;
   padding: 2px 6px;
@@ -63,9 +62,9 @@
   background-color: rgba(255, 255, 255, 0.22);
 }
 
-/* 通知バッジ (macOS の Dock バッジ風)。アイコン右上に重ねるのはラッパー
- * (arch/.local/bin/niriswitcher-patched) の仕事なので、素の本体では出ない。
- * メンション/DM 数は赤丸 + 数字、数字なしの注意喚起は小さい赤ドット。 */
+/* 通知バッジ (macOS の Dock バッジ風、ラッパーがアイコン右上に重ねる)。
+ * メンション/DM 数は赤丸 + 数字、数字なしの注意喚起は小さい赤ドット。
+ * 素の本体に戻すとバッジは出ない。 */
 .notification-badge {
   background-color: rgb(255, 59, 48);
   color: rgb(255, 255, 255);
