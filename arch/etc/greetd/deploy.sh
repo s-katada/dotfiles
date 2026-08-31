@@ -13,7 +13,9 @@
 set -euo pipefail
 
 SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-WALLPAPER="${1:-/home/saitama/Pictures/Wallpapers/wallhaven-v9r97m.jpg}"
+# 壁紙の既定値は sudo 実行者のホームから解決する (ユーザー名を焼き込まない)。
+USER_HOME="$(getent passwd "${SUDO_USER:-$USER}" | cut -d: -f6)"
+WALLPAPER="${1:-$USER_HOME/Pictures/Wallpapers/wallhaven-v9r97m.jpg}"
 BACKGROUND=/usr/share/backgrounds/greeter.png
 
 if [ "$(id -u)" -ne 0 ]; then
@@ -30,7 +32,7 @@ install -Dm644 "$SRC_DIR/regreet.toml" /etc/greetd/regreet.toml
 install -Dm644 "$SRC_DIR/regreet.css"  /etc/greetd/regreet.css
 
 echo "==> 3/5 背景画像を生成 ($BACKGROUND)"
-# greeter ユーザーは /home/saitama (700) を読めないので、壁紙は /usr/share へコピーする。
+# greeter ユーザーはユーザーのホーム (700) を読めないので、壁紙は /usr/share へコピーする。
 # そのついでに ffmpeg でぼかして暗く焼き、フォームの文字が壁紙に埋もれないようにする。
 if [ -r "$WALLPAPER" ]; then
   if command -v ffmpeg >/dev/null; then
