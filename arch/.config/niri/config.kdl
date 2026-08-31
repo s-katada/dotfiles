@@ -301,6 +301,9 @@ spawn-at-startup "/usr/lib/hyprpolkitagent/hyprpolkitagent"
 // On-screen display for volume / mute / caps lock (swayosd).
 spawn-at-startup "swayosd-server"
 
+// ランチャー (Vicinae, AUR: vicinae-bin)。常駐サーバを立てておき、Mod+D の deeplink で開閉する。
+spawn-at-startup "vicinae" "server"
+
 // macOS の Cmd+Tab 相当のアプリスイッチャー (niriswitcher, AUR)。
 // niri 25.11+ には組み込みの recent-windows スイッチャー (Mod+Tab がデフォルトで有効)
 // があるが、サムネイル表示のみでアプリアイコンが出ないため niriswitcher に置き換える。
@@ -457,6 +460,8 @@ binds {
 
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+T hotkey-overlay-title="Open a Terminal: ghostty" { spawn "ghostty"; }
+    // deeplink は xdg-open 経由より vicinae バイナリ直呼びが推奨 (docs.vicinae.com/deeplinks)。
+    Mod+D hotkey-overlay-title="Run an Application: vicinae" { spawn "vicinae" "vicinae://toggle"; }
     Mod+Space hotkey-overlay-title="Run an Application: vicinae" { spawn "vicinae" "toggle"; }
     Mod+N hotkey-overlay-title="Notification Center: swaync" { spawn "swaync-client" "-t" "-sw"; }
     // macOS の Finder 相当 (設定は dotfiles の arch/setup/nautilus.sh で入れている)。
