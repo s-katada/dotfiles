@@ -311,10 +311,14 @@ spawn-at-startup "vicinae" "server"
 // 常駐デーモンで、Mod+Tab のバインドから D-Bus 経由で呼び出す。
 // Mod (Super) を押している間だけアイコン付きの一覧が出て、離すと確定する。
 // 監視する修飾キーは ~/.config/niriswitcher/config.toml で Super_L に合わせてある。
-// 素の niriswitcher ではなく、左右矢印キーでの選択を足したラッパーを起動する
-// (config.toml では Tab と矢印の併用を表現できないため。中身はラッパー参照)。
-// spawn はシェルを通さず ~ を展開しないので、ユーザー名を焼き込まないよう spawn-sh を使う。
-spawn-sh-at-startup "~/.local/bin/niriswitcher-patched"
+//
+// 素の niriswitcher を起動する。arch/.local/bin/niriswitcher-patched という
+// ラッパー (左右矢印での選択、通知バッジ、全ワークスペースの縦並び表示を足したもの)
+// も dotfiles に残してあるが、本体の非公開モジュール (_app / _widgets / _wm) を
+// monkeypatch する作りで版上げに弱いため、既定では使わない。
+// 使いたくなったら下の行を spawn-sh-at-startup "~/.local/bin/niriswitcher-patched"
+// に差し替える (spawn は ~ を展開しないので spawn-sh が必要)。
+spawn-at-startup "niriswitcher"
 
 // 組み込みの recent-windows スイッチャーを無効化 (niriswitcher と競合するため)。
 recent-windows {

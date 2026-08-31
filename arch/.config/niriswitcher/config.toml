@@ -3,9 +3,10 @@
 # niri 25.11+ の組み込み recent-windows (サムネイル表示・アイコン無し) の代替として使う。
 # 組み込み側は niri/config.kdl の recent-windows { off } で無効化してある。
 # 呼び出しは niri/config.kdl の Mod+Tab (D-Bus 経由)。
-# 常駐は niri の spawn-at-startup で、config.toml では表現できない
-# 左右矢印キー対応を足した ~/.local/bin/niriswitcher-patched を起動している。
-# 反映: pkill -f niriswitcher した後、手動で起動 (次回ログインからは自動起動)。
+# 常駐は niri の spawn-at-startup "niriswitcher" (素の本体)。
+# 反映: pkill -x niriswitcher した後、手動で起動 (次回ログインからは自動起動)。
+# -f ではなく -x を使うこと。-f だと "niriswitcher" を含む自分のシェルにも
+# 一致して、実行中のコマンドごと落ちる。
 #
 # 注意: トップレベルのキーは [セクション] より前に書くこと。後ろに書くと
 # 直前のセクションの値として解釈され、黙って無視される。
