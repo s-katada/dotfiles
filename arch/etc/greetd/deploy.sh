@@ -49,9 +49,10 @@ fi
 echo "==> 4/5 regreet の状態ディレクトリを作成"
 systemd-tmpfiles --create /usr/lib/tmpfiles.d/regreet.conf
 
-echo "==> 5/5 DM を sddm から greetd へ切り替え"
-# display-manager.service のエイリアスが競合するので、先に sddm を無効化する。
-systemctl disable sddm
+echo "==> 5/5 DM を greetd へ切り替え"
+# display-manager.service のエイリアスが競合するので、sddm が居れば先に無効化する。
+# 新規マシンには sddm 自体が入っていないので、無くても止まらないようにしておく。
+systemctl disable sddm 2>/dev/null || true
 systemctl enable greetd
 
 cat <<'MSG'
