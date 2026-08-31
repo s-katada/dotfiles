@@ -208,6 +208,14 @@ in
     "zellij".source        = link ".config/zellij";
     "gh/config.yml".source = link ".config/gh/config.yml"; # hosts.yml はトークンを含むので除外
     "git/ignore".source    = link ".config/git/ignore";   # git/config は programs.git が生成
+    "btop".source          = link ".config/btop";         # btop.conf は btop 終了時に書き戻される（diff が出る従来運用）
+    "herdr".source         = link ".config/herdr";        # 追跡は config.toml/patches のみ、実行時ファイルは gitignore 済み
+    "nix/nix.conf".source  = link ".config/nix/nix.conf";
+    # fisher 由来の completions/functions と fish_plugins は追跡済みの dotfiles。
+    # conf.d と fish_variables はマシン固有の実行時状態なので実 ~/.config/fish に置く（リンクしない）。
+    "fish/completions".source  = link ".config/fish/completions";
+    "fish/functions".source    = link ".config/fish/functions";
+    "fish/fish_plugins".source = link ".config/fish/fish_plugins";
   };
 
   # ~/ 直下のファイル（stow シンボリックリンクを置き換え）
