@@ -7,7 +7,7 @@
 Name=Bambu Studio
 GenericName=3D Printing Software
 Icon=BambuStudio
-Exec=env GDK_BACKEND=x11 LD_PRELOAD=/home/saitama/.local/lib/bambu-gtkinit.so /usr/bin/bambu-studio %U
+Exec=env GDK_BACKEND=x11 LD_PRELOAD=/home/s-katada/.local/lib/bambu-gtkinit.so /usr/bin/bambu-studio %U
 Terminal=false
 Type=Application
 MimeType=model/stl;model/3mf;application/vnd.ms-3mfdocument;application/prs.wavefront-obj;application/x-amf;x-scheme-handler/bambustudio;

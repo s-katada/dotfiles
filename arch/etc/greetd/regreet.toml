@@ -5,7 +5,7 @@ skip_selection = false
 
 [background]
 # 実体は arch/etc/greetd/ ではなく /usr/share/backgrounds/ に置く。
-# greeter ユーザーは /home/saitama (700) を読めないため。
+# greeter ユーザーはユーザーのホーム (700) を読めないため。
 path = "/usr/share/backgrounds/greeter.png"
 fit = "Cover"
 

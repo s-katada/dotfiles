@@ -310,7 +310,8 @@ spawn-at-startup "swayosd-server"
 // 監視する修飾キーは ~/.config/niriswitcher/config.toml で Super_L に合わせてある。
 // 素の niriswitcher ではなく、左右矢印キーでの選択を足したラッパーを起動する
 // (config.toml では Tab と矢印の併用を表現できないため。中身はラッパー参照)。
-spawn-at-startup "/home/saitama/.local/bin/niriswitcher-patched"
+// spawn はシェルを通さず ~ を展開しないので、ユーザー名を焼き込まないよう spawn-sh を使う。
+spawn-sh-at-startup "~/.local/bin/niriswitcher-patched"
 
 // 組み込みの recent-windows スイッチャーを無効化 (niriswitcher と競合するため)。
 recent-windows {
@@ -478,8 +479,8 @@ binds {
     // ~/.config/google-chrome/Local State の profile.info_cache で確認できる。
     // 既にそのプロファイルのウィンドウがあれば、新規に開かずフォーカスする
     // (Chrome は全プロファイルが同じ app_id になるため、判別は自前スクリプト側で行う)。
-    Mod+Shift+1 hotkey-overlay-title="Chrome: shunya.saitama@gmail.com" { spawn "/home/saitama/.local/bin/chrome-profile" "Default"; }
-    Mod+Shift+2 hotkey-overlay-title="Chrome: s-katada@mksc.jp" { spawn "/home/saitama/.local/bin/chrome-profile" "Profile 2"; }
+    Mod+Shift+1 hotkey-overlay-title="Chrome: shunya.saitama@gmail.com" { spawn-sh "~/.local/bin/chrome-profile Default"; }
+    Mod+Shift+2 hotkey-overlay-title="Chrome: s-katada@mksc.jp" { spawn-sh "~/.local/bin/chrome-profile 'Profile 2'"; }
 
     // メール (Thunderbird)。Chrome と違って単一インスタンスなので、
     // 起動済みなら既存のウィンドウが前に出る。専用スクリプトは要らない。
