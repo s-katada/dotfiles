@@ -540,19 +540,24 @@ binds {
     Mod+Q repeat=false { close-window; }
 
     // 矢印の上下はワークスペース移動に割り当てる (ワークスペースは縦に並ぶ)。
-    // 既定の「同一カラム内のウィンドウ間フォーカス移動」は hjkl 側に残す。
     Mod+Left  { focus-column-left; }
     Mod+Down  { focus-workspace-down; }
     Mod+Up    { focus-workspace-up; }
     Mod+Right { focus-column-right; }
+
+    // j/k は -or-workspace 版を使う。素の focus-window-down/up は「同一カラム内の
+    // ウィンドウ間」しか動かないので、1 カラム 1 ウィンドウ (通常の使い方) では
+    // 移動先が無く、押しても何も起きない。-or-workspace 版はカラムの端まで来たら
+    // 上下のワークスペースへ抜けるため、矢印と同じ感覚で縦に動ける。
+    // カラムに複数ウィンドウを積んでいるときはその中の移動が優先される。
     Mod+H     { focus-column-left; }
-    Mod+J     { focus-window-down; }
-    Mod+K     { focus-window-up; }
+    Mod+J     { focus-window-or-workspace-down; }
+    Mod+K     { focus-window-or-workspace-up; }
     Mod+L     { focus-column-right; }
 
-    // 矢印の Mod+Up/Down (= ワークスペース移動) の vim 版。
-    // j/k は上で「カラム内のウィンドウ間フォーカス移動」に埋まっているので、
-    // Alt を足して「ワークスペース」を表す。j/k = 縦方向という意味は保つ。
+    // カラムの中身に関係なく必ずワークスペースを移動する版 (矢印と完全に同じ動作)。
+    // j/k はカラム内に積んだウィンドウがあるとそちらが優先されるので、
+    // ワークスペースだけを送りたいときはこちらを使う。
     // Mod+U/I でも同じことができるが、u/i は vim の方向キーではないので併設する。
     Mod+Alt+J { focus-workspace-down; }
     Mod+Alt+K { focus-workspace-up; }
@@ -561,21 +566,17 @@ binds {
     Mod+Ctrl+Down  { move-column-to-workspace-down; }
     Mod+Ctrl+Up    { move-column-to-workspace-up; }
     Mod+Ctrl+Right { move-column-right; }
+    // Ctrl+j/k も上の j/k と揃えて -or-workspace 版にする。素の move-window-down/up
+    // はカラム内での積み替えしかできず、1 カラム 1 ウィンドウでは無反応になる。
     Mod+Ctrl+H     { move-column-left; }
-    Mod+Ctrl+J     { move-window-down; }
-    Mod+Ctrl+K     { move-window-up; }
+    Mod+Ctrl+J     { move-window-down-or-to-workspace-down; }
+    Mod+Ctrl+K     { move-window-up-or-to-workspace-up; }
     Mod+Ctrl+L     { move-column-right; }
 
-    // 矢印の Mod+Ctrl+Up/Down (= カラムを上下のワークスペースへ) の vim 版。
+    // カラムごと上下のワークスペースへ送る版 (矢印の Mod+Ctrl+Up/Down と同じ動作)。
+    // Ctrl+j/k はウィンドウ 1 枚だけを動かすので、カラムまるごと送りたいときはこちら。
     Mod+Ctrl+Alt+J { move-column-to-workspace-down; }
     Mod+Ctrl+Alt+K { move-column-to-workspace-up; }
-
-    // Alternative commands that move across workspaces when reaching
-    // the first or last window in a column.
-    // Mod+J     { focus-window-or-workspace-down; }
-    // Mod+K     { focus-window-or-workspace-up; }
-    // Mod+Ctrl+J     { move-window-down-or-to-workspace-down; }
-    // Mod+Ctrl+K     { move-window-up-or-to-workspace-up; }
 
     Mod+Home { focus-column-first; }
     Mod+End  { focus-column-last; }
