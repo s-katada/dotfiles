@@ -3,3 +3,25 @@ background-opacity = 0.9
 
 # カーソルの形。block(■) / bar(|) / underline(_)
 cursor-style = bar
+
+# --- コピー&ペースト (Ctrl+C / Ctrl+V) ---
+# 選択範囲があるときだけコピー。無いときは SIGINT (^C) がそのまま通る
+keybind = performable:ctrl+c=copy_to_clipboard
+
+# Ctrl+V は端末で処理せず、0x16 (本来の Ctrl+V) をアプリに送る。
+#
+# ghostty 自身に paste_from_clipboard させると、端末がクリップボードの「テキスト」を
+# pty に流し込んで完結してしまい、アプリはペーストされたことを知れない。
+# Claude Code は Ctrl+V を受け取ってから自分でクリップボードを読む
+# (wl-paste --type image/png 等) ので、画像を貼るには 0x16 が届く必要がある。
+# 画像しか入っていないクリップボードでは端末が送るテキストがゼロなので、
+# paste_from_clipboard だと完全な無反応になっていた。
+#
+# 各アプリ側の受け取り:
+#   Claude Code … 自前でクリップボードを読む (テキストも画像も貼れる)
+#   fish        … conf.d/keybind.fish で bind ctrl-v fish_clipboard_paste
+#   nvim        … 矩形ビジュアル (本来の挙動)。貼り付けは unnamedplus で p
+keybind = ctrl+v=text:\x16
+
+# 端末自身のペーストは Ctrl+Shift+V に置く (アプリが 0x16 を扱わない場合の逃げ道)
+keybind = ctrl+shift+v=paste_from_clipboard
