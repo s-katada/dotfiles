@@ -550,6 +550,13 @@ binds {
     Mod+K     { focus-window-up; }
     Mod+L     { focus-column-right; }
 
+    // 矢印の Mod+Up/Down (= ワークスペース移動) の vim 版。
+    // j/k は上で「カラム内のウィンドウ間フォーカス移動」に埋まっているので、
+    // Alt を足して「ワークスペース」を表す。j/k = 縦方向という意味は保つ。
+    // Mod+U/I でも同じことができるが、u/i は vim の方向キーではないので併設する。
+    Mod+Alt+J { focus-workspace-down; }
+    Mod+Alt+K { focus-workspace-up; }
+
     Mod+Ctrl+Left  { move-column-left; }
     Mod+Ctrl+Down  { move-column-to-workspace-down; }
     Mod+Ctrl+Up    { move-column-to-workspace-up; }
@@ -558,6 +565,10 @@ binds {
     Mod+Ctrl+J     { move-window-down; }
     Mod+Ctrl+K     { move-window-up; }
     Mod+Ctrl+L     { move-column-right; }
+
+    // 矢印の Mod+Ctrl+Up/Down (= カラムを上下のワークスペースへ) の vim 版。
+    Mod+Ctrl+Alt+J { move-column-to-workspace-down; }
+    Mod+Ctrl+Alt+K { move-column-to-workspace-up; }
 
     // Alternative commands that move across workspaces when reaching
     // the first or last window in a column.
@@ -570,6 +581,15 @@ binds {
     Mod+End  { focus-column-last; }
     Mod+Ctrl+Home { move-column-to-first; }
     Mod+Ctrl+End  { move-column-to-last; }
+
+    // 上の Home/End と同じ動作の vim 版。vim の gg (先頭) / G (末尾) に合わせた。
+    // vim の水平移動は ^ / $ だが、US 配列では Shift+6 / Shift+4 で入力するため
+    // バインドを Mod+Shift+Asciicircum のように書く必要があり、この設定の
+    // 「Shift = モニタ」という並びと紛らわしくなるので G を使う。
+    Mod+G            { focus-column-first; }
+    Mod+Shift+G      { focus-column-last; }
+    Mod+Ctrl+G       { move-column-to-first; }
+    Mod+Shift+Ctrl+G { move-column-to-last; }
 
     Mod+Shift+Left  { focus-monitor-left; }
     Mod+Shift+Down  { focus-monitor-down; }
@@ -614,6 +634,10 @@ binds {
     Mod+Shift+Page_Up   { move-workspace-up; }
     Mod+Shift+U         { move-workspace-down; }
     Mod+Shift+I         { move-workspace-up; }
+
+    // 上と同じ「ワークスペース自体を上下に並べ替える」の vim 版。
+    Mod+Shift+Alt+J     { move-workspace-down; }
+    Mod+Shift+Alt+K     { move-workspace-up; }
 
     // You can bind mouse wheel scroll ticks using the following syntax.
     // These binds will change direction based on the natural-scroll setting.
