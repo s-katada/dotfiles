@@ -437,6 +437,16 @@ window-rule {
 
 // satty (スクリーンショット注釈) は一時的な編集ウィンドウなので、
 // タイル列を崩さないよう浮遊で開く。
+// Nautilus の Space プレビュー (sushi = org.gnome.NautilusPreviewer)。
+// 既定ではタイルとして開いて 1 列を占有し、しかもフォーカスを奪うため
+// macOS の Quick Look と挙動が変わる。浮遊させ、かつフォーカスを Nautilus に
+// 残すことで、ファイル一覧側で上下キーを打つとプレビューが次々切り替わる。
+window-rule {
+    match app-id=r#"^org\.gnome\.NautilusPreviewer$"#
+    open-floating true
+    open-focused false
+}
+
 window-rule {
     match app-id=r#"^com\.gabm\.satty$"#
     open-floating true
