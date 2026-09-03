@@ -435,6 +435,13 @@ window-rule {
     open-floating true
 }
 
+// satty (スクリーンショット注釈) は一時的な編集ウィンドウなので、
+// タイル列を崩さないよう浮遊で開く。
+window-rule {
+    match app-id=r#"^com\.gabm\.satty$"#
+    open-floating true
+}
+
 // Example: block out two password managers from screen capture.
 // (This example rule is commented out with a "/-" in front.)
 /-window-rule {
@@ -783,11 +790,15 @@ binds {
     Ctrl+Print { screenshot-screen; }
     Alt+Print { screenshot-window; }
 
-    // macOS-style screenshot binds.
-    Mod+Shift+4 hotkey-overlay-title="Screenshot a Region" { screenshot; }
-    Mod+Shift+3 hotkey-overlay-title="Screenshot the Screen" { screenshot-screen; }
-    // macOS の Cmd+Shift+5 相当。録画は Kooha (portal 経由なので xdg-desktop-portal-gnome が必要)。
-    Mod+Shift+5 hotkey-overlay-title="Screen Recording (Kooha)" { spawn "kooha"; }
+    // macOS-style screenshot binds. 撮影後 satty で注釈 → Enter で
+    // クリップボード + ~/Pictures/Screenshots へ保存、Escape で破棄。
+    // 注釈なしで即保存したいときは素の niri 内蔵 (Print 系) を使う。
+    Mod+Shift+4 hotkey-overlay-title="Screenshot a Region (annotate)" { spawn-sh "~/.local/bin/niri-screenshot-annotate region"; }
+    Mod+Shift+3 hotkey-overlay-title="Screenshot the Screen (annotate)" { spawn-sh "~/.local/bin/niri-screenshot-annotate screen"; }
+    // macOS の Cmd+Shift+5 相当。録画は wf-recorder (wlr-screencopy 直叩きなので
+    // portal 不要)。同じキーをもう一度押すと停止し、パスがクリップボードに入る。
+    Mod+Shift+5 hotkey-overlay-title="Record a Region (toggle)" { spawn-sh "~/.local/bin/niri-screenrec region"; }
+    Mod+Ctrl+Shift+5 hotkey-overlay-title="Record the Screen (toggle)" { spawn-sh "~/.local/bin/niri-screenrec screen"; }
 
     // Applications such as remote-desktop clients and software KVM switches may
     // request that niri stops processing the keyboard shortcuts defined here
