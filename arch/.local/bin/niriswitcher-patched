@@ -1,9 +1,12 @@
 #!/usr/bin/python
-# niriswitcher に「左右矢印キーでの選択」を足して起動するラッパー。
+# niriswitcher に「矢印キーと vim (hjkl) での選択」を足して起動するラッパー。
 #
 # niriswitcher の config.toml は 1 アクションに 1 キーしか割り当てられない
 # (keys.switch の next/prev は単一文字列のみ。上流 main でも同じ) ため、
-# Tab と矢印キーを併用するには本体のキーバインド生成に差し込むしかない。
+# Tab・矢印・hjkl を併用するには本体のキーバインド生成に差し込むしかない。
+#   h / ←  前のアプリ      l / →  次のアプリ
+#   k / ↑  前のワークスペース  j / ↓  次のワークスペース
+# (↑↓ は config.toml の keys.workspace で本体が設定する。hjkl と ←→ はここで足す)
 # site-packages 側は書き換えず起動前に monkeypatch するので、
 # パッケージ更新で消えない。niri の spawn-at-startup からこれを起動する。
 import re
@@ -251,17 +254,38 @@ _orig_create_keybindings = _app.NiriswitcherWindow._create_keybindings
 
 def _create_keybindings_with_arrows(self):
     mappings = _orig_create_keybindings(self)
-    # 修飾キー (Super) を押したまま Right/Left で次/前のアプリを選択。
+    mask = config.keys.modifier_mask
+
+    # 修飾キー (Super) を押したまま次/前のアプリを選択。
+    # 矢印の ←→ と vim の h/l を同じ動作に割り当てる。KeybindingAction は
+    # mapping[0] に list を渡せば複数キーを 1 アクションに束ねられる
+    # (mapping[0] が __contains__ を持つかで分岐している)。
     mappings.append(
         _app.KeybindingAction(
-            (Gdk.KEY_Right, config.keys.modifier_mask),
+            ([Gdk.KEY_Right, Gdk.KEY_l], mask),
             self.select_next_application,
         )
     )
     mappings.append(
         _app.KeybindingAction(
-            (Gdk.KEY_Left, config.keys.modifier_mask),
+            ([Gdk.KEY_Left, Gdk.KEY_h], mask),
             self.select_prev_application,
+        )
+    )
+
+    # ワークスペース行の移動に vim の j/k を足す。↑↓ は config.toml の
+    # keys.workspace (next = "Down" / prev = "Up") で本体側が設定済みなので、
+    # ここは追加のみ。niri 側の Mod+J/K が縦移動なのと向きを揃えている。
+    mappings.append(
+        _app.KeybindingAction(
+            (Gdk.KEY_j, mask),
+            self.select_next_workspace,
+        )
+    )
+    mappings.append(
+        _app.KeybindingAction(
+            (Gdk.KEY_k, mask),
+            self.select_prev_workspace,
         )
     )
     return mappings
