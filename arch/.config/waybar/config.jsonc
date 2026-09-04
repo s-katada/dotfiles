@@ -13,7 +13,8 @@
 
   "niri/workspaces": { "format": "{value}", "all-outputs": false },
 
-  "tray": { "icon-size": 18, "spacing": 8 },
+  // spacing は 0。アイテム間の隙間は style.css の #tray > * の margin で作る。
+  "tray": { "icon-size": 18, "spacing": 0 },
 
   "custom/notification": {
     "tooltip": false,
