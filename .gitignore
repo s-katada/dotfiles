@@ -117,6 +117,9 @@ arch/.config/fcitx5/conf/cached_layouts
 arch/.config/herdr/*
 !arch/.config/herdr/config.toml
 
+# python のバイトコードキャッシュ（~/.local/bin の python スクリプトを実行すると生える）
+arch/**/__pycache__/
+
 # 各種ツールが作る自動バックアップ
 arch/**/*.bak
 arch/**/*.bak-*
