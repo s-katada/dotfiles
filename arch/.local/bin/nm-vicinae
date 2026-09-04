@@ -1,0 +1,181 @@
+#!/usr/bin/env python3
+"""networkmanager_dmenu の一覧を macOS の Wi-Fi メニュー風に描き直して vicinae に渡す。
+
+networkmanager_dmenu は「メニューに渡した行」と「メニューが返した行」を文字列一致で
+照合してアクションを決める (get_selection())。表示だけ変えたいので、ここでは
+
+  1. 受け取った行をそのまま控えておく
+  2. 見た目を整えた別の文字列を vicinae に見せる
+  3. vicinae が返した「選択位置」で、控えておいた元の行をそのまま返す
+
+という方式にしている。これなら表示をいくら変えても照合は壊れない。
+
+AP の行は config.ini の format 指定により `名前␟暗号化␟信号強度` の形で渡ってくる。
+区切りに U+241F (SYMBOL FOR UNIT SEPARATOR) を使っているのは、SSID に現れる
+可能性が事実上ないため。AP 以外 (保存済み接続・操作項目) には format が
+適用されないので、区切り文字の有無がそのまま両者の判別に使える。
+"""
+
+import re
+import subprocess
+import sys
+
+DELIM = "␟"
+ACTIVE_CHARS = "✓"  # config.ini の active_chars と一致させること
+PREFIX_LEN = len(ACTIVE_CHARS) + 1  # networkmanager_dmenu は必ず「印+空白」を前置する
+
+# 電波強度 (0-100) → Nerd Font のアイコン
+WIFI_ICONS = ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]
+LOCK = "󰌾"
+
+# 接続種別 (`名前:種別` の後半) → 表示アイコン
+TYPE_ICONS = {
+    "Eth": "󰈀",
+    "VPN": "󰦝",
+    "VLAN": "󰛳",
+    "Wireguard": "󰦝",
+    "GSM": "󰄜",
+    "Bluetooth": "󰂯",
+    "Hotspot": "󰀃",
+    "SAVED": "󰆓",
+}
+
+# 操作項目の英語ラベル → (アイコン, 日本語ラベル)
+ACTIONS = {
+    "Enable WiFi": ("󰖩", "Wi-Fi をオンにする"),
+    "Disable WiFi": ("󰖪", "Wi-Fi をオフにする"),
+    "Enable Networking": ("󰛳", "ネットワークをオンにする"),
+    "Disable Networking": ("󰲛", "ネットワークをオフにする"),
+    "Enable Bluetooth": ("󰂯", "Bluetooth をオンにする"),
+    "Disable Bluetooth": ("󰂲", "Bluetooth をオフにする"),
+    "Launch Connection Manager": ("󰒓", "ネットワーク設定を開く…"),
+    "Delete a Connection": ("󰅖", "接続を削除…"),
+    "Rescan WiFi Networks": ("󰑓", "再スキャン"),
+    "Show WiFi password": ("󰋗", "パスワードを表示…"),
+    "Saved connections": ("󰆓", "保存済みの接続…"),
+}
+
+# 「保存済み接続」として出てくるが人間が選ぶ意味のないもの。
+# ループバック、Docker/Podman のブリッジ、libvirt の仮想ブリッジなど。
+NOISE_SAVED = re.compile(
+    r"^(lo|docker\d*|br-[0-9a-f]{6,}|virbr\d+(-nic)?|veth[0-9a-z]*|podman\d*)$"
+)
+
+
+def signal_icon(raw):
+    """0-100 の信号強度を 5 段階のアイコンに落とす"""
+    try:
+        pct = int(float(raw))
+    except (TypeError, ValueError):
+        return WIFI_ICONS[0]
+    for threshold, icon in zip((20, 40, 60, 80), WIFI_ICONS):
+        if pct < threshold:
+            return icon
+    return WIFI_ICONS[4]
+
+
+def render(line):
+    """元の 1 行を、表示用の 1 行に変換する"""
+    mark = "✓" if line.startswith(ACTIVE_CHARS) else " "
+    body = line[PREFIX_LEN:] if len(line) >= PREFIX_LEN else ""
+
+    if not body.strip():
+        return "─" * 20  # 区切り行 (compact=False のとき現れる)
+
+    # --- アクセスポイント ---
+    if DELIM in body:
+        name, sec, signal = (body.split(DELIM) + ["", ""])[:3]
+        name = name.strip() or "（非公開ネットワーク）"
+        lock = "" if sec.strip() in ("--", "") else f"  {LOCK}"
+        return f"{mark}  {signal_icon(signal)}  {name}{lock}"
+
+    body = body.strip()
+
+    # --- 操作項目 ---
+    if body in ACTIONS:
+        icon, label = ACTIONS[body]
+        return f"{mark}  {icon}  {label}"
+
+    # --- 保存済み接続 / 有線 / VPN など (`名前:種別`) ---
+    name, sep, kind = body.rpartition(":")
+    if sep and kind in TYPE_ICONS:
+        return f"{mark}  {TYPE_ICONS[kind]}  {name}"
+
+    return f"{mark}  {body}"
+
+
+def build(lines):
+    """表示する行と、その「元の行での位置」の対応表を作る。
+
+    vicinae には間引いた後の一覧を見せるので、返ってくる選択位置も間引き後のもの。
+    元の行に戻せるよう位置の対応表を一緒に返す。
+    """
+    # いま電波が見えている AP の名前。同名の「保存済み接続」は重複なので出さない。
+    ap_names = set()
+    for line in lines:
+        body = line[PREFIX_LEN:]
+        if DELIM in body:
+            name = body.split(DELIM)[0].strip()
+            if name:
+                ap_names.add(name)
+
+    shown, index_map = [], []
+    for i, line in enumerate(lines):
+        body = line[PREFIX_LEN:].strip()
+        if not body:
+            continue  # 区切りの空行は出さない
+        name, sep, kind = body.rpartition(":")
+        if sep and kind == "SAVED" and (NOISE_SAVED.match(name) or name in ap_names):
+            continue
+        shown.append(render(line))
+        index_map.append(i)
+    return shown, index_map
+
+
+def main():
+    raw = sys.stdin.read().rstrip("\n")
+    if not raw:
+        return 1
+    lines = raw.split("\n")
+    shown, index_map = build(lines)
+    if not shown:
+        return 1
+
+    proc = subprocess.run(
+        [
+            "vicinae", "dmenu",
+            "-f", "index",
+            "-n", "ネットワーク",
+            "-s", "接続先 ({count})",
+            "--placeholder", "ネットワークを検索",
+            "--no-footer",
+        ],
+        input="\n".join(shown),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    out = proc.stdout.strip()
+    if not out:
+        return 1  # キャンセル
+
+    # -f index なので通常は選択位置が返る。将来 vicinae の出力形式が変わっても
+    # 壊れないよう、数値でなければ表示文字列からの逆引きにフォールバックする。
+    try:
+        pos = int(out.splitlines()[-1])
+    except ValueError:
+        try:
+            pos = shown.index(out)
+        except ValueError:
+            return 1
+
+    if not 0 <= pos < len(index_map):
+        return 1
+
+    print(lines[index_map[pos]])
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -511,6 +511,10 @@ binds {
     // macOS の Ctrl+Cmd+Space (絵文字ビューア) に合わせたキー。
     // vicinae 内蔵の絵文字検索を直接開く。選ぶとクリップボードに入るので貼り付ける。
     Mod+Ctrl+Space hotkey-overlay-title="Emoji Picker: vicinae" { spawn "vicinae" "cmd" "launch" "core:search-emojis"; }
+    // Wi-Fi の接続先切り替え (networkmanager_dmenu)。一覧の UI は vicinae の
+    // dmenu モードを使い、パスワード入力だけは pinentry に投げている。
+    // 設定は dotfiles の arch/.config/networkmanager-dmenu/config.ini。
+    Mod+Shift+W hotkey-overlay-title="Wi-Fi: networkmanager_dmenu" { spawn "networkmanager_dmenu"; }
     // macOS の Cmd+Tab 相当のアプリスイッチャー (niriswitcher)。
     // このバインドは「表示」の合図を D-Bus で送るだけで、以降の Tab での循環と
     // Mod を離した時の確定は niriswitcher 側がキーボードを掴んで処理する。
