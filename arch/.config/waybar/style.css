@@ -45,6 +45,7 @@ window#waybar {
 #custom-notification,
 #pulseaudio,
 #network,
+#bluetooth,
 #cpu,
 #memory,
 #clock {
@@ -61,6 +62,7 @@ window#waybar {
 #custom-notification:hover,
 #pulseaudio:hover,
 #network:hover,
+#bluetooth:hover,
 #cpu:hover,
 #memory:hover,
 #clock:hover {
@@ -81,6 +83,12 @@ window#waybar {
 #network              { font-size: 20px; color: #0b6f8c; }
 #network:hover        { font-size: 23px; color: #084f63; }
 #network.disconnected { color: #b3243c; }
+
+#bluetooth              { font-size: 20px; color: #2a4fd7; }
+#bluetooth:hover        { font-size: 23px; color: #1d38a0; }
+#bluetooth.connected    { color: #0b6f8c; }
+#bluetooth.disabled,
+#bluetooth.off          { color: #7c7c96; }
 
 /* CPU / メモリ：アイコン＋数値の2行 */
 #cpu       { font-size: 14px; color: #0b6f8c; }

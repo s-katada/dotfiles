@@ -301,6 +301,21 @@ spawn-at-startup "/usr/lib/hyprpolkitagent/hyprpolkitagent"
 // On-screen display for volume / mute / caps lock (swayosd).
 spawn-at-startup "swayosd-server"
 
+// Bluetooth。状態表示は waybar 内蔵の bluetooth モジュール (BlueZ の D-Bus を
+// 直接読む) に一本化している。アイコンのクリックで blueman-manager が開く。
+//
+// blueman-applet は常駐させる。トレイアイコンが目当てではなく、これが
+// org.blueman.Applet として BlueZ の "agent" (ペアリング時の PIN 入力・確認
+// ダイアログ) を提供しているため。止めると GUI からのペアリングが失敗しうる。
+// なお blueman-manager を開くと D-Bus activation で applet が自動起動するので、
+// そもそも止めきれない。
+//
+// トレイに Bluetooth アイコンが出て waybar 内蔵モジュールと二重になるのは、
+// applet の該当プラグインを切って回避している (gsettings なので dotfiles の
+// 管理外。新しいマシンでは下記を実行すること):
+//   gsettings set org.blueman.general plugin-list "['!StatusNotifierItem', '!StatusIcon']"
+spawn-at-startup "blueman-applet"
+
 // ランチャー (Vicinae, AUR: vicinae-bin) の常駐サーバ。開閉は Mod+Space (binds 参照)。
 spawn-at-startup "vicinae" "server"
 

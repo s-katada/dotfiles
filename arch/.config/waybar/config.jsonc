@@ -8,7 +8,7 @@
   "modules-left": ["niri/workspaces"],
   "modules-center": [],
   "modules-right": [
-    "tray", "custom/notification", "pulseaudio", "network", "cpu", "memory", "clock"
+    "tray", "custom/notification", "pulseaudio", "network", "bluetooth", "cpu", "memory", "clock"
   ],
 
   "niri/workspaces": { "format": "{value}", "all-outputs": false },
@@ -38,6 +38,9 @@
   "pulseaudio": {
     "format": "{icon}",
     "format-muted": "󰖁",
+    // Bluetooth 機器が出力先のときは専用アイコンにする (blueman / bluez 経由)。
+    "format-bluetooth": "󰂰",
+    "format-bluetooth-muted": "󰖁",
     "format-icons": { "default": ["󰕿", "󰖀", "󰕾"] },
     "tooltip-format": "{desc}\n{volume}%",
     "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
@@ -51,6 +54,18 @@
     "tooltip-format-wifi": "{essid}  ({signalStrength}%)\n{ipaddr}",
     "tooltip-format-ethernet": "{ifname}\n{ipaddr}",
     "tooltip-format-disconnected": "切断されています"
+  },
+
+  // Bluetooth。クリックで blueman-manager を開く (GUI 側は blueman-applet が常駐)。
+  "bluetooth": {
+    "format": "󰂯",
+    "format-disabled": "󰂲",
+    "format-off": "󰂲",
+    "format-connected": "󰂱",
+    "tooltip-format": "{controller_alias}\n{status}",
+    "tooltip-format-connected": "{controller_alias}\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}",
+    "on-click": "blueman-manager"
   },
 
   "cpu": { "format": "󰻠\n{usage}%", "interval": 3, "tooltip": true },
