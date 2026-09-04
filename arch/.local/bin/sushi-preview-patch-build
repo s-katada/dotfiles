@@ -121,6 +121,54 @@ p.write_text(s.replace(old, new))
 print("    patched")
 EOF
 
+echo "==> image.js に透過用の市松模様を当てる"
+python3 - "$jsdir/viewers/image.js" <<'EOF'
+import pathlib, sys
+p = pathlib.Path(sys.argv[1])
+s = p.read_text()
+
+old = """        let scaleFactor = this.get_scale_factor();
+        let offsetX = (width - this._scaledSurface.getWidth() / scaleFactor) / 2;
+        let offsetY = (height - this._scaledSurface.getHeight() / scaleFactor) / 2;
+
+        context.setSourceSurface(this._scaledSurface, offsetX, offsetY);
+        context.paint();"""
+
+new = """        let scaleFactor = this.get_scale_factor();
+        let imgW = this._scaledSurface.getWidth() / scaleFactor;
+        let imgH = this._scaledSurface.getHeight() / scaleFactor;
+        let offsetX = (width - imgW) / 2;
+        let offsetY = (height - imgH) / 2;
+
+        // ローカル改変: 画像の下に市松模様を敷く。素の sushi は背景を塗らずに
+        // paint() するだけなので、透過部分から GTK テーマのダークグレーが透ける。
+        // 「透明 + 黒インク」のロゴ (Web サイト用の PNG によくある) がそれだと
+        // ほぼ読めない。imv 側の background = checks と見た目を揃えている。
+        // 塗るのは画像の矩形だけ (clip) — 余白まで模様にすると煩いため。
+        const CHECK = 8;
+        context.save();
+        context.rectangle(offsetX, offsetY, imgW, imgH);
+        context.clip();
+        context.setSourceRGB(0.68, 0.68, 0.68);
+        context.paint();
+        context.setSourceRGB(0.53, 0.53, 0.53);
+        for (let cy = 0; cy < imgH; cy += CHECK) {
+            for (let cx = (cy / CHECK) % 2 ? CHECK : 0; cx < imgW; cx += CHECK * 2)
+                context.rectangle(offsetX + cx, offsetY + cy, CHECK, CHECK);
+        }
+        context.fill();
+        context.restore();
+
+        context.setSourceSurface(this._scaledSurface, offsetX, offsetY);
+        context.paint();"""
+
+if s.count(old) != 1:
+    sys.exit(f"ERROR: image.js の vfunc_draw 改変対象が {s.count(old)} 箇所。"
+             "上流が変わったので patch を見直すこと")
+p.write_text(s.replace(old, new))
+print("    patched")
+EOF
+
 echo "==> gresource を作り直す"
 {
     echo '<?xml version="1.0" encoding="UTF-8"?>'
