@@ -48,13 +48,16 @@
     "on-click-right": "pavucontrol"
   },
 
+  // ネットワーク。クリックで Wi-Fi の接続先ピッカーを開く (niri の Mod+Shift+W と同じ)。
+  // UI は vicinae の dmenu モード。設定は arch/.config/networkmanager-dmenu/config.ini。
   "network": {
     "format-wifi": "󰤨",
     "format-ethernet": "󰈀",
     "format-disconnected": "󰌢",
     "tooltip-format-wifi": "{essid}  ({signalStrength}%)\n{ipaddr}",
     "tooltip-format-ethernet": "{ifname}\n{ipaddr}",
-    "tooltip-format-disconnected": "切断されています"
+    "tooltip-format-disconnected": "切断されています",
+    "on-click": "networkmanager_dmenu"
   },
 
   // Bluetooth。クリックで blueman-manager を開く (GUI 側は blueman-applet が常駐)。
