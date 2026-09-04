@@ -33,5 +33,15 @@ if [ "${#dir}" -gt 44 ]; then
     esac
 fi
 
-printf '[%s/%s] %s   %s' \
-    "${imv_current_index:-?}" "${imv_file_count:-?}" "$name" "$dir"
+# 解像度。imv が画像をデコードし終える前は 0 / 未設定になりうるので、
+# 値が揃っているときだけ出す (でないと「0x0」が一瞬見える)。
+res=""
+w="${imv_width:-0}"
+h="${imv_height:-0}"
+case "$w$h" in
+*[!0-9]*) ;;
+*) [ "$w" -gt 0 ] && [ "$h" -gt 0 ] && res="  ${w}×${h}" ;;
+esac
+
+printf '[%s/%s] %s%s   %s' \
+    "${imv_current_index:-?}" "${imv_file_count:-?}" "$name" "$res" "$dir"
