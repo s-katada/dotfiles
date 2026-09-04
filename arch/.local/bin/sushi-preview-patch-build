@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Nautilus の Space プレビュー (sushi) の headerbar に「ファイル名 + ディレクトリ」
-# を出すためのローカル改変をビルドして入れる。
+# Nautilus の Space プレビュー (sushi) の headerbar に「ファイル名 + 解像度 +
+# ディレクトリ」を出すためのローカル改変をビルドして入れる。
 #
 # 素の sushi は mainWindow.js で `this.set_title(fileInfo.get_display_name())` と
 # ファイル名だけを出し、どのディレクトリを見ているのか分からない。GTK3 の
@@ -66,9 +66,28 @@ old = "        this.set_title(fileInfo.get_display_name());"
 new = '''        this.set_title(fileInfo.get_display_name());
 
         // ローカル改変: どのディレクトリのどのファイルかを headerbar に出す。
-        // window title (= ファイル名) は niri / waybar 側が使うのでそのまま残し、
-        // headerbar には title と subtitle を明示的に入れる。
-        this._titlebar.set_title(fileInfo.get_display_name());
+        // GTK3 は headerbar を titlebar に据えると両者の title を双方向に同期する
+        // ため、title は片方だけ別値にできない (set_title した側がもう一方を上書き
+        // する)。independent に使えるのは subtitle だけ。よって title には
+        // 「ファイル名 + 解像度」を入れ、これが window title にも出る前提で置く
+        // (niri / waybar / niriswitcher の表示もこの文字列になる)。
+        let _label = fileInfo.get_display_name();
+
+        // 画像なら解像度を添える。get_file_info はヘッダだけ読んで本体を
+        // デコードしないので、renderer の読み込み完了を待たなくてよい。
+        // 対応形式でなければ format が null で返る (非ローカルは path が null)。
+        let _ctype = fileInfo.get_content_type();
+        let _path = this.file.get_path();
+        if (_path && _ctype && _ctype.startsWith('image/')) {
+            try {
+                let [_fmt, _w, _h] = imports.gi.GdkPixbuf.Pixbuf.get_file_info(_path);
+                if (_fmt && _w > 0 && _h > 0)
+                    _label += '  ' + _w + '×' + _h;
+            } catch (e) {
+                // 壊れた画像などは解像度なしで出す
+            }
+        }
+        this._titlebar.set_title(_label);
         let _parent = this.file.get_parent();
         if (_parent) {
             let _dir = _parent.get_path();

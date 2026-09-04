@@ -12,7 +12,7 @@
 # config file.
 suppress_default_binds = true
 
-# 画面上部に「ファイル名 + ディレクトリ」を出す (d キーで表示/非表示をトグル)。
+# 画面上部に「ファイル名 + 解像度 + ディレクトリ」を出す (d キーで表示/非表示をトグル)。
 # overlay_text は shell 展開されるので、組み立てはヘルパースクリプトに任せる
 # (設定行に sed / パイプを詰め込むと壊れやすく、括弧は wordexp で問題になりうる)。
 overlay = true
