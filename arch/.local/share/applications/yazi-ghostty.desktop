@@ -1,0 +1,17 @@
+[Desktop Entry]
+# ディレクトリを xdg-open (fish の open) で開いたときの行き先。
+#
+# yazi 同梱の /usr/share/applications/yazi.desktop は Terminal=true で
+# 「システム既定のターミナル」に起動を任せるが、niri は DE ではないため
+# その解決 (xdg-terminal-exec / org.freedesktop.Terminal) が当てにならない。
+# ghostty を直接指定して確実に開く。
+Type=Application
+Name=Yazi (ghostty)
+GenericName=File Manager
+Comment=ghostty の中で yazi を開く
+Icon=yazi
+Terminal=false
+Exec=ghostty -e yazi %f
+MimeType=inode/directory;
+Categories=System;FileManager;ConsoleOnly;
+NoDisplay=true

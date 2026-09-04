@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# imv の overlay に出す 1 行を組む。imv が overlay_text を shell 展開する際に
+# 呼ばれ、$imv_current_file / $imv_current_index / $imv_file_count を
+# 環境変数として受け取る (imv(1) の ENVIRONMENT VARIABLES 参照)。
+#
+# ファイル名を先に置くのは、imv のウィンドウ幅で overlay が右端で切られるため。
+# フルパスを素に出すと、一番知りたいファイル名が切り落とされる。
+set -u
+
+f="${imv_current_file:-}"
+[ -n "$f" ] || exit 0
+
+name="${f##*/}"
+dir="${f%/*}"
+[ "$dir" = "$f" ] && dir="."
+
+case "$dir" in
+"$HOME") dir="~" ;;
+"$HOME"/*) dir="~${dir#"$HOME"}" ;;
+esac
+
+# 長いパスは末尾 2 階層を残して中央を省略する (末尾ほど情報量が多い)
+if [ "${#dir}" -gt 44 ]; then
+    head="${dir%%/*}"
+    rest="${dir#*/}"
+    case "$rest" in
+    */*/*)
+        last="${rest##*/}"
+        second="${rest%/*}"
+        second="${second##*/}"
+        dir="$head/…/$second/$last"
+        ;;
+    esac
+fi
+
+# 解像度。imv が画像をデコードし終える前は 0 / 未設定になりうるので、
+# 値が揃っているときだけ出す (でないと「0x0」が一瞬見える)。
+res=""
+w="${imv_width:-0}"
+h="${imv_height:-0}"
+case "$w$h" in
+*[!0-9]*) ;;
+*) [ "$w" -gt 0 ] && [ "$h" -gt 0 ] && res="  ${w}×${h}" ;;
+esac
+
+printf '[%s/%s] %s%s   %s' \
+    "${imv_current_index:-?}" "${imv_file_count:-?}" "$name" "$res" "$dir"

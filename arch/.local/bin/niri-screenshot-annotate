@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# 領域 / 画面をキャプチャして satty で注釈する (niri + Wayland)。
+#
+#   niri-screenshot-annotate [region|screen|all]
+#
+#   region  slurp で範囲選択 (既定)。ESC で中断すると何もせず終了
+#   screen  フォーカスしている出力の全体
+#   all     全出力を1枚に
+#
+# satty 側の操作: 保存先は $SCREENSHOT_DIR (既定 ~/Pictures/Screenshots)。
+# Enter でクリップボードとファイルの両方へ、Escape で破棄して終了。
+set -uo pipefail
+
+mode="${1:-region}"
+dir="${SCREENSHOT_DIR:-$HOME/Pictures/Screenshots}"
+mkdir -p "$dir"
+
+tmp="$(mktemp --tmpdir satty-XXXXXX.ppm)"
+trap 'rm -f "$tmp"' EXIT
+
+case "$mode" in
+region)
+    # slurp が非ゼロ (ESC / 右クリック) なら撮影せず終了
+    geom="$(slurp -d)" || exit 0
+    [ -n "$geom" ] || exit 0
+    grim -g "$geom" -t ppm "$tmp" || exit 1
+    ;;
+screen)
+    out="$(niri msg --json focused-output | jq -r '.name')" || exit 1
+    grim -o "$out" -t ppm "$tmp" || exit 1
+    ;;
+all)
+    grim -t ppm "$tmp" || exit 1
+    ;;
+*)
+    echo "usage: ${0##*/} [region|screen|all]" >&2
+    exit 2
+    ;;
+esac
+
+exec satty \
+    --filename "$tmp" \
+    --output-filename "$dir/Screenshot from %Y-%m-%d %H-%M-%S.png" \
+    --copy-command wl-copy \
+    --actions-on-enter save-to-clipboard \
+    --actions-on-enter save-to-file \
+    --actions-on-escape exit \
+    --early-exit all \
+    --initial-tool arrow \
+    --resize smart
