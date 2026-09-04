@@ -40,8 +40,35 @@ window#waybar {
 
 #workspaces button.active:hover { background: #d9bcf7; color: #2b2340; }
 
+/* ── トレイ ──
+   tray は「モジュール1個」なので、#tray に背景を敷くと 1Password と fcitx5 が
+   1枚の箱に同居してしまう。#tray 自体は透明にして、子要素 (SNI アイテム) の
+   ひとつひとつに箱を描くことで、他のモジュールと粒度を揃える。 */
+#tray {
+  background: transparent;
+  /* 左右の余白は親側で作る。子に margin を効かせても横方向はバー幅いっぱいに
+     引き伸ばされてしまい、他モジュールと箱の幅が揃わないため。 */
+  padding: 0 7px;
+  margin: 0;
+}
+
+#tray > * {
+  padding: 13px 0;
+  margin: 4px 0;
+  border-radius: 10px;
+  background: #dcd8ec;
+  transition: background-color 200ms ease, padding 200ms ease;
+}
+
+#tray > *:hover {
+  background: #c6c0e0;
+  padding: 18px 0;
+}
+
+/* SNI が「要注意」状態を上げてきたときだけ目立たせる */
+#tray > .needs-attention { background: #f0c0c8; }
+
 /* ── 下部モジュール ── */
-#tray,
 #custom-notification,
 #pulseaudio,
 #network,
@@ -58,7 +85,6 @@ window#waybar {
               padding 200ms ease, margin 200ms ease, font-size 200ms ease;
 }
 
-#tray:hover,
 #custom-notification:hover,
 #pulseaudio:hover,
 #network:hover,
