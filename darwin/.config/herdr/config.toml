@@ -70,6 +70,22 @@ type = "shell"
 command = '"$HERDR_BIN_PATH" server stop'
 description = "quit herdr (stop server)"
 
+[session]
+# herdr サーバーが再起動 (再起動・herdr server stop・マシン再起動) しても、AI
+# エージェントのペインを元の会話セッションに復帰させる。claude なら
+# `claude --resume <session-id>` 相当を自動で行うので、herdr を開き直すだけで
+# 会話の続きから再開できる。
+#
+# pane_history (下の [experimental]) は画面の見た目を保存するだけで、中身の
+# 会話は復元しない。会話まで戻すのはこちらの設定。
+#
+# 動作には「セッション ID を herdr に通知する」公式インテグレーションが必要:
+#   herdr integration install claude
+# これは ~/.claude/hooks/herdr-agent-state.sh を置き、~/.claude/settings.json に
+# SessionStart フックを追記する (どちらもこのリポジトリの管理外)。
+# 状態確認: herdr integration status
+resume_agents_on_restore = true
+
 [ui]
 agent_panel_sort = "priority"
 show_agent_labels_on_pane_borders = true
