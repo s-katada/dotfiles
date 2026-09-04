@@ -301,6 +301,21 @@ spawn-at-startup "/usr/lib/hyprpolkitagent/hyprpolkitagent"
 // On-screen display for volume / mute / caps lock (swayosd).
 spawn-at-startup "swayosd-server"
 
+// Bluetooth。状態表示は waybar 内蔵の bluetooth モジュール (BlueZ の D-Bus を
+// 直接読む) に一本化している。アイコンのクリックで blueman-manager が開く。
+//
+// blueman-applet は常駐させる。トレイアイコンが目当てではなく、これが
+// org.blueman.Applet として BlueZ の "agent" (ペアリング時の PIN 入力・確認
+// ダイアログ) を提供しているため。止めると GUI からのペアリングが失敗しうる。
+// なお blueman-manager を開くと D-Bus activation で applet が自動起動するので、
+// そもそも止めきれない。
+//
+// トレイに Bluetooth アイコンが出て waybar 内蔵モジュールと二重になるのは、
+// applet の該当プラグインを切って回避している (gsettings なので dotfiles の
+// 管理外。新しいマシンでは下記を実行すること):
+//   gsettings set org.blueman.general plugin-list "['!StatusNotifierItem', '!StatusIcon']"
+spawn-at-startup "blueman-applet"
+
 // ランチャー (Vicinae, AUR: vicinae-bin) の常駐サーバ。開閉は Mod+Space (binds 参照)。
 spawn-at-startup "vicinae" "server"
 
@@ -314,15 +329,22 @@ spawn-at-startup "vicinae" "server"
 //
 // 素の niriswitcher ではなくラッパーを起動する。本体は 1 アクション 1 キーしか
 // 割り当てられない (_config.py の switch_section.get("next", "Tab") が単一文字列で、
-// KeysConfig.next も単一タプル) ため、Tab と左右矢印を併用するには本体の
+// KeysConfig.next も単一タプル) ため、Tab・矢印・hjkl を併用するには本体の
 // キーバインド生成に差し込むしかない。ラッパーはそれに加えて通知バッジ、
 // 全ワークスペースの縦並び表示、アプリ名が空になる上流バグの修正を足している。
 //
+// スイッチャーを開いている間のキー (Mod を押したまま):
+//   h / ←  前のアプリ          l / →  次のアプリ        Tab / Shift+Tab  次/前のアプリ
+//   k / ↑  前のワークスペース   j / ↓  次のワークスペース
+//   Esc  キャンセル            q  選択中のウィンドウを閉じる
+// niri 側の Mod+H/L が横・Mod+J/K が縦なのと向きを揃えている。
+//
 // 本体の非公開モジュール (_app / _widgets / _wm / _config) を monkeypatch するので
 // 版上げで壊れうる。niriswitcher を更新したら Mod+Tab を一度試すこと。
-// 0.7.1 では 4 箇所すべて健在で、Super+Tab / Super+Right / Super+Left が
-// 効くことを確認済み。壊れていたら spawn-at-startup "niriswitcher" に
-// 差し替えれば切り替え自体は動く (矢印・バッジ・アプリ名は失う)。
+// 0.7.1 では 4 箇所すべて健在で、Super+Tab / Super+Right/Left / Super+h/j/k/l が
+// 正しいアクションに 1 件ずつ解決することを確認済み。壊れていたら
+// spawn-at-startup "niriswitcher" に差し替えれば切り替え自体は動く
+// (矢印・hjkl・バッジ・アプリ名は失う)。
 //
 // spawn はシェルを通さず ~ を展開しないので、ユーザー名を焼き込まないよう spawn-sh を使う。
 spawn-sh-at-startup "~/.local/bin/niriswitcher-patched"
@@ -435,6 +457,23 @@ window-rule {
     open-floating true
 }
 
+// satty (スクリーンショット注釈) は一時的な編集ウィンドウなので、
+// タイル列を崩さないよう浮遊で開く。
+// Nautilus の Space プレビュー (sushi = org.gnome.NautilusPreviewer)。
+// 既定ではタイルとして開いて 1 列を占有し、しかもフォーカスを奪うため
+// macOS の Quick Look と挙動が変わる。浮遊させ、かつフォーカスを Nautilus に
+// 残すことで、ファイル一覧側で上下キーを打つとプレビューが次々切り替わる。
+window-rule {
+    match app-id=r#"^org\.gnome\.NautilusPreviewer$"#
+    open-floating true
+    open-focused false
+}
+
+window-rule {
+    match app-id=r#"^com\.gabm\.satty$"#
+    open-floating true
+}
+
 // Example: block out two password managers from screen capture.
 // (This example rule is commented out with a "/-" in front.)
 /-window-rule {
@@ -479,6 +518,10 @@ binds {
     // macOS の Ctrl+Cmd+Space (絵文字ビューア) に合わせたキー。
     // vicinae 内蔵の絵文字検索を直接開く。選ぶとクリップボードに入るので貼り付ける。
     Mod+Ctrl+Space hotkey-overlay-title="Emoji Picker: vicinae" { spawn "vicinae" "cmd" "launch" "core:search-emojis"; }
+    // Wi-Fi の接続先切り替え (networkmanager_dmenu)。一覧の UI は vicinae の
+    // dmenu モードを使い、パスワード入力だけは pinentry に投げている。
+    // 設定は dotfiles の arch/.config/networkmanager-dmenu/config.ini。
+    Mod+Shift+W hotkey-overlay-title="Wi-Fi: networkmanager_dmenu" { spawn "networkmanager_dmenu"; }
     // macOS の Cmd+Tab 相当のアプリスイッチャー (niriswitcher)。
     // このバインドは「表示」の合図を D-Bus で送るだけで、以降の Tab での循環と
     // Mod を離した時の確定は niriswitcher 側がキーボードを掴んで処理する。
@@ -783,11 +826,15 @@ binds {
     Ctrl+Print { screenshot-screen; }
     Alt+Print { screenshot-window; }
 
-    // macOS-style screenshot binds.
-    Mod+Shift+4 hotkey-overlay-title="Screenshot a Region" { screenshot; }
-    Mod+Shift+3 hotkey-overlay-title="Screenshot the Screen" { screenshot-screen; }
-    // macOS の Cmd+Shift+5 相当。録画は Kooha (portal 経由なので xdg-desktop-portal-gnome が必要)。
-    Mod+Shift+5 hotkey-overlay-title="Screen Recording (Kooha)" { spawn "kooha"; }
+    // macOS-style screenshot binds. 撮影後 satty で注釈 → Enter で
+    // クリップボード + ~/Pictures/Screenshots へ保存、Escape で破棄。
+    // 注釈なしで即保存したいときは素の niri 内蔵 (Print 系) を使う。
+    Mod+Shift+4 hotkey-overlay-title="Screenshot a Region (annotate)" { spawn-sh "~/.local/bin/niri-screenshot-annotate region"; }
+    Mod+Shift+3 hotkey-overlay-title="Screenshot the Screen (annotate)" { spawn-sh "~/.local/bin/niri-screenshot-annotate screen"; }
+    // macOS の Cmd+Shift+5 相当。録画は wf-recorder (wlr-screencopy 直叩きなので
+    // portal 不要)。同じキーをもう一度押すと停止し、パスがクリップボードに入る。
+    Mod+Shift+5 hotkey-overlay-title="Record a Region (toggle)" { spawn-sh "~/.local/bin/niri-screenrec region"; }
+    Mod+Ctrl+Shift+5 hotkey-overlay-title="Record the Screen (toggle)" { spawn-sh "~/.local/bin/niri-screenrec screen"; }
 
     // Applications such as remote-desktop clients and software KVM switches may
     // request that niri stops processing the keyboard shortcuts defined here

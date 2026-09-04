@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# 既定アプリ (xdg-mime) を登録する。冪等なので何度流してもよい。
+#
+# なぜスクリプトなのか: 登録先の ~/.config/mimeapps.list には
+# userapp-Thunderbird-XXXXXX.desktop のようなマシン固有の生成 ID が混ざるため、
+# dotfiles で直接追跡すると別マシンで壊れる。意図だけをここに残す。
+#
+# 前提パッケージ: nautilus sushi gvfs imv mpv zathura zathura-pdf-mupdf
+set -euo pipefail
+
+command -v xdg-mime >/dev/null || { echo "ERROR: xdg-utils が無い" >&2; exit 1; }
+
+# ディレクトリ → Nautilus。ここが空だと xdg-open がブラウザ探索まで落ちて
+# 「no method available for opening」になる (実際にそうなっていた)。
+xdg-mime default org.gnome.Nautilus.desktop inode/directory
+
+# 画像 → imv。imv.desktop ではなく imv-dir.desktop を使う。中身が
+#   exec imv -n "$1" "$(dirname "$1")"
+# なので、開いたファイルの位置からディレクトリ内の画像を送り見できる
+# (macOS のプレビュー.app と同じ挙動)。
+xdg-mime default imv-dir.desktop \
+    image/png image/jpeg image/webp image/gif image/bmp \
+    image/tiff image/avif image/heif image/jxl image/x-portable-pixmap
+
+xdg-mime default mpv.desktop \
+    video/mp4 video/x-matroska video/webm video/quicktime \
+    video/x-msvideo video/mpeg
+
+xdg-mime default org.pwmt.zathura.desktop application/pdf
+
+echo "登録結果:"
+for m in inode/directory image/png image/jpeg video/mp4 application/pdf; do
+    printf '  %-20s -> %s\n' "$m" "$(xdg-mime query default "$m")"
+done

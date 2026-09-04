@@ -1,0 +1,172 @@
+#!/usr/bin/env bash
+# Nautilus の Space プレビュー (sushi) の headerbar に「ファイル名 + 解像度 +
+# ディレクトリ」を出すためのローカル改変をビルドして入れる。
+#
+# 素の sushi は mainWindow.js で `this.set_title(fileInfo.get_display_name())` と
+# ファイル名だけを出し、どのディレクトリを見ているのか分からない。GTK3 の
+# Gtk.HeaderBar は subtitle を持てるので、そこに親ディレクトリを入れる。
+#
+# パッケージのファイルは書き換えない (更新で消えるため)。代わりに:
+#   1. /usr/share/sushi の src.gresource から JS を展開
+#   2. mainWindow.js に改変を当てる
+#   3. ~/.local/share/sushi/ に gresource を作り直す
+#   4. ~/.local/lib/org.gnome.NautilusPreviewer を launcher として置く
+#      (gjs の package.js は「起動スクリプトのファイル名」から gresource 名を
+#       決めるので、この名前でなければならない)
+#   5. ~/.local/share/dbus-1/services/ の service ファイルで上書きし、
+#      Nautilus の Space が自前版を起動するようにする
+#
+# sushi を更新したら、このスクリプトを再実行すること。改変箇所が上流で変わって
+# いれば ERROR で止まる (黙って素の見た目に戻ることはない)。
+set -euo pipefail
+
+PREFIX="$HOME/.local"
+SYS_DATA=/usr/share/sushi
+GRESOURCE_NAME=org.gnome.NautilusPreviewer
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+
+command -v gjs >/dev/null || { echo "ERROR: gjs が無い" >&2; exit 1; }
+command -v glib-compile-resources >/dev/null || { echo "ERROR: glib-compile-resources が無い (glib2)" >&2; exit 1; }
+[ -f "$SYS_DATA/$GRESOURCE_NAME.src.gresource" ] || { echo "ERROR: sushi が入っていない" >&2; exit 1; }
+
+version="$(pacman -Q sushi 2>/dev/null | awk '{print $2}' | cut -d- -f1)"
+version="${version:-50.0}"
+echo "==> sushi $version の JS を展開"
+
+cat > "$tmp/extract.js" <<'EOF'
+const { Gio, GLib } = imports.gi;
+const res = Gio.Resource.load(ARGV[0]);
+const out = ARGV[1];
+function walk(p) {
+    let kids;
+    try { kids = res.enumerate_children(p, Gio.ResourceLookupFlags.NONE); } catch (e) { return; }
+    for (const k of kids) {
+        if (k.endsWith('/')) { walk(p + k); continue; }
+        const bytes = res.lookup_data(p + k, Gio.ResourceLookupFlags.NONE);
+        const dest = out + p + k;
+        GLib.mkdir_with_parents(GLib.path_get_dirname(dest), 0o755);
+        GLib.file_set_contents(dest, bytes.get_data());
+    }
+}
+walk('/');
+EOF
+gjs "$tmp/extract.js" "$SYS_DATA/$GRESOURCE_NAME.src.gresource" "$tmp/src"
+
+jsdir="$tmp/src/org/gnome/NautilusPreviewer/js"
+[ -f "$jsdir/ui/mainWindow.js" ] || { echo "ERROR: mainWindow.js が見つからない (上流構成が変わった)" >&2; exit 1; }
+
+echo "==> mainWindow.js に headerbar の subtitle 改変を当てる"
+python3 - "$jsdir/ui/mainWindow.js" <<'EOF'
+import pathlib, sys
+p = pathlib.Path(sys.argv[1])
+s = p.read_text()
+
+old = "        this.set_title(fileInfo.get_display_name());"
+new = '''        this.set_title(fileInfo.get_display_name());
+
+        // ローカル改変: どのディレクトリのどのファイルかを headerbar に出す。
+        // GTK3 は headerbar を titlebar に据えると両者の title を双方向に同期する
+        // ため、title は片方だけ別値にできない (set_title した側がもう一方を上書き
+        // する)。independent に使えるのは subtitle だけ。よって title には
+        // 「ファイル名 + 解像度」を入れ、これが window title にも出る前提で置く
+        // (niri / waybar / niriswitcher の表示もこの文字列になる)。
+        let _label = fileInfo.get_display_name();
+
+        // 画像なら解像度を添える。get_file_info はヘッダだけ読んで本体を
+        // デコードしないので、renderer の読み込み完了を待たなくてよい。
+        // 対応形式でなければ format が null で返る (非ローカルは path が null)。
+        let _ctype = fileInfo.get_content_type();
+        let _path = this.file.get_path();
+        if (_path && _ctype && _ctype.startsWith('image/')) {
+            try {
+                let [_fmt, _w, _h] = imports.gi.GdkPixbuf.Pixbuf.get_file_info(_path);
+                if (_fmt && _w > 0 && _h > 0)
+                    _label += '  ' + _w + '×' + _h;
+            } catch (e) {
+                // 壊れた画像などは解像度なしで出す
+            }
+        }
+        this._titlebar.set_title(_label);
+        let _parent = this.file.get_parent();
+        if (_parent) {
+            let _dir = _parent.get_path();
+            if (_dir) {
+                let _home = GLib.get_home_dir();
+                if (_dir === _home)
+                    _dir = '~';
+                else if (_dir.startsWith(_home + '/'))
+                    _dir = '~' + _dir.slice(_home.length);
+            } else {
+                _dir = _parent.get_uri();
+            }
+            // GTK3 の subtitle は末尾省略なので、そのままだと一番知りたい直近の
+            // ディレクトリ名が削られる。長い場合は中央を省略して末尾を残す。
+            if (_dir.length > 60) {
+                let _parts = _dir.split('/');
+                if (_parts.length > 3)
+                    _dir = _parts[0] + '/…/' + _parts.slice(-2).join('/');
+            }
+            this._titlebar.set_subtitle(_dir);
+        } else {
+            this._titlebar.set_subtitle(null);
+        }'''
+
+if s.count(old) != 1:
+    sys.exit("ERROR: 改変対象 `this.set_title(fileInfo.get_display_name());` が "
+             f"{s.count(old)} 箇所。上流が変わったので patch を見直すこと")
+if "const {Gdk, Gio, GLib" not in s:
+    sys.exit("ERROR: GLib が import されていない。patch を見直すこと")
+p.write_text(s.replace(old, new))
+print("    patched")
+EOF
+
+echo "==> gresource を作り直す"
+{
+    echo '<?xml version="1.0" encoding="UTF-8"?>'
+    echo '<gresources>'
+    echo "  <gresource prefix=\"/org/gnome/NautilusPreviewer/js\">"
+    (cd "$jsdir" && find . -name '*.js' | sed 's|^\./||' | sort \
+        | sed 's|.*|    <file>&</file>|')
+    echo '  </gresource>'
+    echo '</gresources>'
+} > "$tmp/gresource.xml"
+
+mkdir -p "$PREFIX/share/sushi"
+glib-compile-resources --sourcedir="$jsdir" \
+    --target="$PREFIX/share/sushi/$GRESOURCE_NAME.src.gresource" "$tmp/gresource.xml"
+
+echo "==> pkgdatadir / pkglibdir の残りをシステムへ symlink"
+for f in "$SYS_DATA"/*; do
+    b="$(basename "$f")"
+    [ "$b" = "$GRESOURCE_NAME.src.gresource" ] && continue   # 自前版を使う
+    ln -sfn "$f" "$PREFIX/share/sushi/$b"
+done
+mkdir -p "$PREFIX/lib"
+ln -sfn /usr/lib/sushi "$PREFIX/lib/sushi"
+
+echo "==> launcher を書く"
+cat > "$PREFIX/lib/$GRESOURCE_NAME" <<EOF
+#!/usr/bin/gjs
+// sushi-preview-patch-build が生成。直接編集しないこと。
+imports.package.init({
+    name: 'sushi',
+    version: '$version',
+    prefix: '$PREFIX',
+    libdir: '$PREFIX/lib',
+});
+imports.package.run(imports.ui.main);
+EOF
+chmod +x "$PREFIX/lib/$GRESOURCE_NAME"
+
+echo "==> D-Bus service を上書き"
+mkdir -p "$PREFIX/share/dbus-1/services"
+cat > "$PREFIX/share/dbus-1/services/$GRESOURCE_NAME.service" <<EOF
+[D-BUS Service]
+Name=$GRESOURCE_NAME
+Exec=$PREFIX/lib/$GRESOURCE_NAME
+EOF
+
+echo
+echo "完了。動いている previewer を落とせば次の Space から自前版が起動する:"
+echo "    pgrep -f '$PREFIX/lib/$GRESOURCE_NAME|/usr/lib/$GRESOURCE_NAME'"
