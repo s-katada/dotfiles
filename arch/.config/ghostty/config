@@ -4,6 +4,26 @@ background-opacity = 0.9
 # カーソルの形。block(■) / bar(|) / underline(_)
 cursor-style = bar
 
+# --- フォント ---
+# 日本語を UDEV Gothic (BIZ UD Gothic + JetBrains Mono の合成) で描く。
+#
+# 指定前はこうなっていた:
+#   英数字 … JetBrains Mono        (半角幅 80)
+#   日本語 … Noto Sans Mono CJK JP (全角幅 133)
+# 設計の違う 2 書体が混ざるので日本語が浮くうえ、半角:全角が 80:133 (1:1.66) で
+# 全角が 2 セルにちょうど収まらない。UDEV Gothic なら英数字は JetBrains Mono の
+# ままで、半角:全角が 67:133 (1:2) になる。
+# (この環境に入っている日本語フォントは Noto CJK だけだったので追加した。
+#  AUR の ttf-udev-gothic。arch/state/pacman-aur.txt に記録済み)
+#
+# 変種は素の "UDEV Gothic" を選んだ。実測した違い:
+#   35     半角:全角 = 80:133 (3:5)。JetBrains Mono の素の字幅だが 2 セルに収まらない
+#   HS     全角スペースだけ字形が違う (可視化される)
+#   NF     Nerd Fonts 同梱。Symbols Nerd Font が既に入っているので不要
+#   LG     リガチャ有効版。端末では素のままでよい
+#   JPDOC  曖昧幅の扱いが違う。字形は素と同じだった
+font-family = "UDEV Gothic"
+
 # --- コピー&ペースト (Ctrl+C / Ctrl+V) ---
 # 選択範囲があるときだけコピー。無いときは SIGINT (^C) がそのまま通る
 keybind = performable:ctrl+c=copy_to_clipboard
