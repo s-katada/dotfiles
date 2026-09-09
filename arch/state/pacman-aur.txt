@@ -1,0 +1,13 @@
+1password
+claude-code
+cursor-bin
+google-chrome
+herdr
+hunk
+niriswitcher
+paru
+paru-debug
+slack-desktop
+sunshine-bin
+ttf-udev-gothic
+vicinae-bin
