@@ -1,0 +1,14 @@
+avahi-daemon.service
+avahi-daemon.socket
+bluetooth.service
+docker.service
+getty@.service
+greetd.service
+NetworkManager-dispatcher.service
+NetworkManager.service
+NetworkManager-wait-online.service
+nix-daemon.socket
+ollama.service
+remote-fs.target
+systemd-userdbd.socket
+tailscaled.service

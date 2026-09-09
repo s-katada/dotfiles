@@ -1,0 +1,8 @@
+app-dev.lizardbyte.app.Sunshine.service
+gnome-keyring-daemon.socket
+p11-kit-server.socket
+pipewire-pulse.service
+pipewire-pulse.socket
+pipewire.socket
+wireplumber.service
+xdg-user-dirs.service
