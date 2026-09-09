@@ -1,5 +1,10 @@
 #!/usr/bin/python
-# niriswitcher に「矢印キーと vim (hjkl) での選択」を足して起動するラッパー。
+# niriswitcher に以下を足して起動するラッパー。
+#   - 矢印キーと vim (hjkl) での選択
+#   - 通知バッジ (macOS の Dock 風)
+#   - 全ワークスペースの常時縦並び表示
+#   - アプリの並びを MRU から niri のウィンドウの並び順に変更
+# それぞれ該当箇所のコメントに理由を書いてある。
 #
 # niriswitcher の config.toml は 1 アクションに 1 キーしか割り当てられない
 # (keys.switch の next/prev は単一文字列のみ。上流 main でも同じ) ため、
@@ -9,7 +14,10 @@
 # (↑↓ は config.toml の keys.workspace で本体が設定する。hjkl と ←→ はここで足す)
 # site-packages 側は書き換えず起動前に monkeypatch するので、
 # パッケージ更新で消えない。niri の spawn-at-startup からこれを起動する。
+import json
+import logging
 import re
+import socket
 import sys
 
 # gtk4-layer-shell は libwayland より先にロードされている必要がある。
@@ -248,6 +256,98 @@ def _window_init_with_name(self, window, last_focus_time=None):
 
 
 _wm.Window.__init__ = _window_init_with_name
+
+# アプリの並びを niri 上のウィンドウの並び (左から右、列の中は上から下) にする。
+# 本家の _wm.get_windows は last_focus_time の降順 (MRU) 固定なので、niri IPC の
+# Windows で取れる layout.pos_in_scrolling_layout ([列, 列内の行]) で並べ替える。
+# イベントストリームの窓データにも layout は入っているが Window は保持せず、
+# 列を動かした時の WindowLayoutsChanged も本家は無視するため、スイッチャーを
+# 開くたびに引き直す (ローカルの UNIX ソケット 1 往復なので体感には出ない)。
+# 並びが MRU でなくなるので、初期選択は「今フォーカスしているウィンドウ」に固定する
+# (本家は MRU 先頭 = フォーカス中が初期選択で、populate 側がそこから select_next
+# する作りなので、これで Tab 1 回が「右隣のウィンドウ」になる)。
+_FLOATING_POS = (1 << 30, 0)  # フローティングは pos が null なので末尾に置く
+
+_layout_pos = {}
+_focused_window_id = None
+
+
+def _refresh_layout_pos():
+    """niri に現在のウィンドウ配置を問い合わせて _layout_pos / _focused_window_id を更新する。"""
+    global _focused_window_id
+    try:
+        with _wm.connect_niri_socket() as niri_socket:
+            with niri_socket.makefile("rw") as socket_file:
+                socket_file.write(json.dumps("Windows"))
+                socket_file.write("\n")
+                socket_file.flush()
+                niri_socket.shutdown(socket.SHUT_WR)
+                windows = json.loads(socket_file.readline())["Ok"]["Windows"]
+    except Exception:
+        # 取れなければ前回の配置のまま並べる (最悪 MRU に戻るだけ)。
+        logging.getLogger(__name__).debug("Failed to query niri windows", exc_info=True)
+        return
+
+    _layout_pos.clear()
+    _focused_window_id = None
+    for window in windows:
+        if window.get("is_focused"):
+            _focused_window_id = window["id"]
+        pos = (window.get("layout") or {}).get("pos_in_scrolling_layout")
+        _layout_pos[window["id"]] = tuple(pos) if pos else _FLOATING_POS
+
+
+def _with_layout_refresh(populate):
+    def wrapper(self, *args, **kwargs):
+        _refresh_layout_pos()
+        return populate(self, *args, **kwargs)
+
+    return wrapper
+
+
+_app.NiriswitcherWindow.populate_separate_workspaces = _with_layout_refresh(
+    _app.NiriswitcherWindow.populate_separate_workspaces
+)
+_app.NiriswitcherWindow.populate_unified_workspace = _with_layout_refresh(
+    _app.NiriswitcherWindow.populate_unified_workspace
+)
+
+_orig_get_windows = _wm.NiriWindowManager.get_windows
+
+
+def _get_windows_in_layout_order(self, *args, **kwargs):
+    def key(window):
+        # unified モード (separate_workspaces = false) では 1 行に全ワークスペースの
+        # ウィンドウが並ぶので、ワークスペースの順番も見る。
+        workspace = self.get_workspace(window.workspace_id)
+        return (
+            workspace.idx if workspace is not None else 0,
+            _layout_pos.get(window.id, _FLOATING_POS),
+            -window.last_focus_time,
+        )
+
+    return sorted(_orig_get_windows(self, *args, **kwargs), key=key)
+
+
+_wm.NiriWindowManager.get_windows = _get_windows_in_layout_order
+
+_orig_get_initial_selection = _widgets.WorkspaceView.get_initial_selection
+
+
+def _get_initial_selection_at_focus(self):
+    views = list(self)
+    if not views:
+        return _orig_get_initial_selection(self)
+    for view in views:
+        if view.window.id == _focused_window_id:
+            return view
+    # 他のワークスペースの行にはフォーカス中のウィンドウが無いので、
+    # その行で最後に使ったウィンドウを選ぶ (本家の MRU 先頭と同じ)。
+    return max(views, key=lambda view: view.window.last_focus_time)
+
+
+_widgets.WorkspaceView.get_initial_selection = _get_initial_selection_at_focus
+
 
 _orig_create_keybindings = _app.NiriswitcherWindow._create_keybindings
 
