@@ -4,7 +4,8 @@
 # 組み込み側は niri/config.kdl の recent-windows { off } で無効化してある。
 # 呼び出しは niri/config.kdl の Mod+Tab (D-Bus 経由)。
 # 常駐は niri の spawn-at-startup で、config.toml では表現できない
-# 左右矢印キー対応を足した ~/.local/bin/niriswitcher-patched を起動している。
+# 左右矢印キー対応やアプリの並び順の変更を足した
+# ~/.local/bin/niriswitcher-patched を起動している。
 # (本体は 1 アクション 1 キー。next/prev に "Right"/"Left" を書くと Tab が使えなくなる)
 # 反映: pkill -f local/bin/niriswitcher-patched した後、手動で起動
 #       (次回ログインからは自動起動)。
@@ -34,8 +35,8 @@ prev = "Up"
 # 紛らわしいが mru_sort_in_workspace は「Mod+Tab (application) で表示した時の
 # ワークスペースの並び順を MRU にするか」の意味で、true だと今いるワークスペースが
 # 常に先頭に来てしまい、縦の常時表示が実際の配置とずれる。
-# アプリの並びはこの設定と無関係に常に MRU (_wm.get_windows が固定で MRU ソート)
-# なので、false にしても macOS の Cmd+Tab の感覚は変わらない。
+# アプリの並びは niriswitcher-patched 側で niri のウィンドウの並び (左から右) に
+# 差し替えているので、この設定とは無関係。
 [workspace]
 mru_sort_in_workspace = false
 mru_sort_across_workspace = true
