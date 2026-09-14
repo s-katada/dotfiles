@@ -60,6 +60,7 @@
       "libreoffice"
       "lm-studio"
       "microsoft-remote-desktop"
+      "moonlight"  # Arch 機の Sunshine に接続するゲームストリーミングクライアント
       "neardrop"
       "notion"
       "obsidian"
