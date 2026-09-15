@@ -35,12 +35,10 @@
       "Task"
     ],
     "deny": [
-      "Bash(rm -rf /)*",
       "Bash(sudo rm *)"
     ],
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5[1m]",
   "hooks": {
     "SessionStart": [
       {
