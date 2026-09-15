@@ -4,8 +4,10 @@
 # Usage data is read from `.rate_limits` in the statusline JSON Claude Code
 # pipes to us — same numbers /usage shows in the UI. No external tools, no
 # network calls.
-# Cursor CLI (../.cursor/statusline-command.sh) からも exec される共通実装。
-# cursor-agent は .rate_limits を渡さないので 5h/7d は自動的に消え、
+# Cursor CLI (../.cursor/statusline-command.sh) からも呼ばれる共通実装。
+# cursor-agent は .rate_limits を渡さないので 5h/7d は自動的に消える。
+# 代わりに cursor 側ラッパーが月次 included usage を .rate_limits.monthly に
+# 注入してくるので "mo" セグメントとして描画する (Claude Code では出ない)。
 # .model.param_summary (cursor 独自) があれば model の後ろに添える。
 
 set -uo pipefail
@@ -162,6 +164,18 @@ if [ -n "$week_pct" ]; then
     week_segment="${C_PINK}7d${RESET} ${color}$(bar "$week_pct")${RESET} ${color}${pct_int}%${RESET}${reset_part:+ ${reset_part}}"
 fi
 
+# ── Monthly limit segment (Cursor included usage; wrapper が注入) ────────
+month_pct=$(printf '%s' "$input"   | jq -r '.rate_limits.monthly.used_percentage // empty')
+month_reset=$(printf '%s' "$input" | jq -r '.rate_limits.monthly.resets_display // empty')
+month_segment=""
+if [ -n "$month_pct" ]; then
+    pct_int=$(printf '%.0f' "$month_pct")
+    color=$(used_color "$month_pct")
+    reset_part=""
+    [ -n "$month_reset" ] && reset_part="${C_OVERLAY}↻${month_reset}${RESET}"
+    month_segment="${C_BLUE}mo${RESET} ${color}$(bar "$month_pct")${RESET} ${color}${pct_int}%${RESET}${reset_part:+ ${reset_part}}"
+fi
+
 # ── Model segment ─────────────────────────────────────────────────────────
 model_segment=""
 if [ -n "$model" ]; then
@@ -189,6 +203,7 @@ parts=("$dir_segment")
 [ -n "$git_segment" ]   && parts+=("$git_segment")
 [ -n "$five_segment" ]  && parts+=("$five_segment")
 [ -n "$week_segment" ]  && parts+=("$week_segment")
+[ -n "$month_segment" ] && parts+=("$month_segment")
 [ -n "$model_segment" ] && parts+=("$model_segment")
 [ -n "$ctx_segment" ]   && parts+=("$ctx_segment")
 parts+=("$time_segment")
