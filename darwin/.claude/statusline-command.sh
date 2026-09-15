@@ -4,6 +4,9 @@
 # Usage data is read from `.rate_limits` in the statusline JSON Claude Code
 # pipes to us — same numbers /usage shows in the UI. No external tools, no
 # network calls.
+# Cursor CLI (../.cursor/statusline-command.sh) からも exec される共通実装。
+# cursor-agent は .rate_limits を渡さないので 5h/7d は自動的に消え、
+# .model.param_summary (cursor 独自) があれば model の後ろに添える。
 
 set -uo pipefail
 
@@ -12,6 +15,8 @@ input=$(cat)
 # ── Inputs ────────────────────────────────────────────────────────────────
 cwd=$(printf '%s' "$input"        | jq -r '.workspace.current_dir // .cwd // ""')
 model=$(printf '%s' "$input"      | jq -r '.model.display_name // ""')
+# Cursor CLI only: selected model parameters ("thinking · 300k · high" etc.)
+model_params=$(printf '%s' "$input" | jq -r '.model.param_summary // empty')
 ctx_remaining=$(printf '%s' "$input" | jq -r '
     .context_window.remaining_percentage // (
         if (.context_window.used_percentage // null) != null
@@ -159,7 +164,10 @@ fi
 
 # ── Model segment ─────────────────────────────────────────────────────────
 model_segment=""
-[ -n "$model" ] && model_segment="${C_MAUVE}󰚩 ${model}${RESET}"
+if [ -n "$model" ]; then
+    model_segment="${C_MAUVE}󰚩 ${model}${RESET}"
+    [ -n "$model_params" ] && model_segment="${model_segment} ${C_OVERLAY}${model_params}${RESET}"
+fi
 
 # ── Context segment ───────────────────────────────────────────────────────
 ctx_segment=""
