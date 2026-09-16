@@ -63,6 +63,15 @@ type = "shell"
 command = '"$HERDR_BIN_PATH" pane move "$HERDR_ACTIVE_PANE_ID" --new-tab --focus'
 description = "break pane to new tab"
 
+# 分割方向をトグル (上下 ↔ 左右)。herdr には分割方向を変える組み込みアクションが
+# 無い (0.9.0 時点) ため、一時タブへ退避 → 反対方向で戻す 2段階 move を
+# スクリプトで行う (./rotate-split.sh)。2ペイン構成のタブのみ対応。
+[[keys.command]]
+key = "prefix+shift+r"
+type = "shell"
+command = 'bash "$HOME/.config/herdr/rotate-split.sh"'
+description = "rotate split (上下 ↔ 左右)"
+
 # herdr 終了 (zellij: Ctrl o → q の Quit 相当。確認なしで即停止する点に注意)
 [[keys.command]]
 key = "prefix+shift+q"
