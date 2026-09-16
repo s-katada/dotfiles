@@ -87,6 +87,7 @@ Ctrl g → ctrl+p ctrl+p ctrl+p ... → Ctrl g
 | `prefix+p` / `prefix+Tab` | 次のペインへフォーカス切替 | `p` と同一 |
 | `prefix+Shift+Tab` | 前のペインへ | — |
 | `prefix+Shift+h/j/k/l` | ペイン入替 | zellij Move モード (`Ctrl m` → h/j/k/l) の代替 |
+| `prefix+Shift+r` | 分割方向トグル 上下↔左右 (カスタムコマンド、2ペインのタブのみ。`rotate-split.sh`) | スワップレイアウト (`Alt [/]`) の部分代替 |
 
 ## Alt 直接チョード (zellij のグローバル Alt 系)
 
@@ -175,7 +176,8 @@ Ctrl g → ctrl+p ctrl+p ctrl+p ... → Ctrl g
 - **フローティングペイン** (`Alt f`, Pane モード `w`/`e`) — なし。`alt+f` は意図的に未割当
 - **スタックペイン / ピン留め / ペインフレーム切替** (Pane モード `s`/`i`/`z`) — なし
 - **タブの並べ替え** (`Alt i/o`) / **隣のタブへのペイン移動** (Tab モード `[`/`]`) — なし
-- **スワップレイアウト** (`Alt [/]`) / **タブ同期** (Tab モード `s`) — なし
+- **スワップレイアウト** (`Alt [/]`) / **タブ同期** (Tab モード `s`) — なし。
+  2ペイン構成の縦横トグルだけは `prefix+Shift+r` (rotate-split.sh) でカバー
 - **コピーモード内検索** (Scroll → `s`) — なし。`prefix+e` で $EDITOR に落として検索する
 - ~~**Locked モード** (`Ctrl g`)~~ — **lock パッチで解消** (上記参照)
 - **`Ctrl n` / `Ctrl s` の横取り** — zellij 同様ペイン内アプリに届かない (ロック中を除く)
