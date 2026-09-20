@@ -22,5 +22,7 @@ custom-shader-animation = true
 keybind = shift+enter=text:\x1b\r
 keybind = ctrl+w=text:\x17
 keybind = ctrl+u=text:\x15
+# ctrl+h を backspace (DEL) にする。cursor-agent など 0x08 を無視する TUI 向け。
+keybind = ctrl+h=text:\x7f
 auto-update-channel = tip
 macos-option-as-alt = true
