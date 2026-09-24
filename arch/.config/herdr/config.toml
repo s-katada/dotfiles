@@ -60,6 +60,13 @@ toggle_sidebar = "prefix+b"
 focus_agent = "prefix+alt+1..9"
 switch_workspace = "prefix+shift+1..9"
 
+# worktrunk: worktree を今の workspace 内のタブとして開く/作成
+[[keys.command]]
+key = "prefix+shift+g"
+type = "plugin_action"
+command = "worktrunk.open"
+description = "worktree picker (tab mode)"
+
 # reviewr: エージェントの diff レビューペインを開閉
 [[keys.command]]
 key = "prefix+v"
