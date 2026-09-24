@@ -1,0 +1,3 @@
+# Worktree の置き場所: 実行したリポジトリ配下に集約
+# 例: ~/dotfiles + branch second → ~/dotfiles/worktrees/second
+worktree-path = "{{ repo_path }}/worktrees/{{ branch | sanitize }}"
