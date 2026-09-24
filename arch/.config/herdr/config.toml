@@ -21,7 +21,7 @@ focus_pane_down = ["prefix+j", "alt+j", "alt+down"]
 focus_pane_up = ["prefix+k", "alt+k", "alt+up"]
 focus_pane_right = ["prefix+l", "alt+l", "alt+right"]
 split_horizontal = ["prefix+d", "prefix+minus"]
-split_vertical = ["prefix+r", "prefix+n", "prefix+v", "alt+n"]
+split_vertical = ["prefix+r", "prefix+n", "alt+n"]
 close_pane = "prefix+x"
 zoom = ["prefix+f", "prefix+z"]
 rename_pane = "prefix+c"
@@ -52,6 +52,65 @@ switch_tab = ["prefix+1..9", "alt+1..9"]
 # セッション (zellij: Ctrl o → d / w 相当)
 detach = "prefix+q"
 workspace_picker = "prefix+w"
+goto = "prefix+g"
+open_notification_target = "prefix+o"
+toggle_sidebar = "prefix+b"
+
+# エージェント / ワークスペース番号ジャンプ (並列時の「探す」を減らす)
+focus_agent = "prefix+alt+1..9"
+switch_workspace = "prefix+shift+1..9"
+
+# reviewr: エージェントの diff レビューペインを開閉
+[[keys.command]]
+key = "prefix+v"
+type = "plugin_action"
+command = "persiyanov.reviewr.toggle"
+description = "toggle reviewr"
+
+# herdr-sidebar: ファイルツリー（必要なときだけ。auto_open はオフ推奨）
+[[keys.command]]
+key = "prefix+shift+e"
+type = "plugin_action"
+command = "herdr-sidebar.open-sidebar"
+description = "toggle file sidebar"
+
+# annotate: 画面テキスト / エージェント返答への付箋
+# (公式例の prefix+o は通知ジャンプと衝突するため prefix+alt+o にずらしている)
+[[keys.command]]
+key = "prefix+a"
+type = "plugin_action"
+command = "annotate.capture"
+description = "annotate selection"
+
+[[keys.command]]
+key = "prefix+shift+a"
+type = "plugin_action"
+command = "annotate.copy-context"
+description = "copy annotations as context"
+
+[[keys.command]]
+key = "prefix+ctrl+a"
+type = "plugin_action"
+command = "annotate.copy-archive"
+description = "copy annotations and archive"
+
+[[keys.command]]
+key = "prefix+m"
+type = "plugin_action"
+command = "annotate.manage"
+description = "manage annotations"
+
+[[keys.command]]
+key = "prefix+shift+o"
+type = "plugin_action"
+command = "annotate.last"
+description = "annotate agent's last message"
+
+[[keys.command]]
+key = "prefix+alt+o"
+type = "plugin_action"
+command = "annotate.open"
+description = "annotate: review docs here"
 
 # ペインを新規タブに分離 (zellij: Ctrl t → b の BreakPane 相当)
 [[keys.command]]
@@ -83,12 +142,53 @@ description = "quit herdr (stop server)"
 # 状態確認: herdr integration status
 resume_agents_on_restore = true
 
+[theme]
+name = "catppuccin"
+
 [ui]
+# blocked → working → done の順。要対応が常に上に来る。
 agent_panel_sort = "priority"
+# 色だけでなく形で状態を区別 (blocked / working / done / idle)。
+status_indicators = "symbols"
+# 単一ペインでも枠を出し、エージェントラベルが見えるようにする。
+pane_borders = "always"
+pane_outer_borders = true
 show_agent_labels_on_pane_borders = true
+# 外側端末のタブ / ウィンドウタイトルでも今どこか分かる。
+window_title = "{workspace} · {tab}"
+tab_bar_right = [
+  { type = "zoom" },
+  { type = "datetime", format = "%H:%M" },
+]
+tab_bar_right_separator = " · "
+
+# サイドバー Agents: どのプロジェクトの何をしているかを一行で把握する。
+[ui.sidebar.agents]
+row_gap = 0
+rows = [
+  ["state_icon", "workspace", "tab"],
+  ["agent"],
+  ["terminal_title_stripped"],
+]
+
+# サイドバー Spaces: リポジトリ単位のロールアップ + git 状態。
+[ui.sidebar.spaces]
+row_gap = 0
+rows = [
+  ["state_icon", "workspace"],
+  ["branch", "git_status"],
+]
 
 [ui.toast]
+# バックグラウンドの要対応を in-app toast で知らせる。
 delivery = "herdr"
+delay_seconds = 1
+
+[ui.toast.herdr]
+position = "bottom-right"
+
+[ui.sound]
+enabled = true
 
 [experimental]
 pane_history = true
