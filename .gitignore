@@ -67,6 +67,11 @@ darwin/.config/hunk/state.json
 darwin/.config/1Password/
 # herdr - プラグイン解決結果のロック（起動のたびに書き直される）
 darwin/.config/herdr/.plugins.lock
+# herdr - インストール済みプラグイン本体と解決結果（herdr plugin install で復元）
+darwin/.config/herdr/plugins/
+darwin/.config/herdr/plugins.json
+# Claude Code - マシンローカルな権限オーバーライド
+.claude/settings.local.json
 # qmd - インデックス状態（collections が使用のたびに書き換わる。models は既定値）
 darwin/.config/qmd/
 
