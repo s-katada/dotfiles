@@ -1,0 +1,16 @@
+# herdr に入れるプラグイン一覧（宣言ファイル）
+# 復元: bash ~/.config/herdr/install-plugins.sh
+# 形式: herdr plugin install に渡せる GitHub 指定（owner/repo または owner/repo/subdir）
+#
+# annotate — 画面テキスト / エージェント返答への付箋
+plannotator/herdr-annotate
+# タブ名の自動リネーム
+qu8n/herdr-automatic-rename
+# VS Code 風ファイルツリー（auto_open は設定でオフ推奨）
+alexarthurs/herdr-sidebar/plugins/herdr-sidebar
+# diff レビュー → エージェントへコメント返送（prefix+v）
+persiyanov/herdr-reviewr
+# 分割時にペイン幅を自動等分（prefix+= で手動も可）
+shibayu36/herdr-equalize-panes
+# worktree を tab モードで開く（prefix+shift+g）
+devashish2203/herdr-worktrunk

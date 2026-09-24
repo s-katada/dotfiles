@@ -67,6 +67,13 @@ type = "plugin_action"
 command = "worktrunk.open"
 description = "worktree picker (tab mode)"
 
+# ペイン幅を等分（分割時は自動。手動リサイズ後に戻す用）
+[[keys.command]]
+key = "prefix+="
+type = "plugin_action"
+command = "shibayu36.equalize-panes.equalize"
+description = "equalize panes"
+
 # reviewr: エージェントの diff レビューペインを開閉
 [[keys.command]]
 key = "prefix+v"
