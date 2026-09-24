@@ -1,0 +1,3 @@
+# worktree を子 workspace ではなく、今の workspace 内のタブとして開く
+open_mode = "tab"
+show_remote_branches = false
