@@ -47,7 +47,7 @@ close_tab = "prefix+shift+x"
 rename_tab = "prefix+shift+t"
 previous_tab = "alt+shift+h"
 next_tab = "alt+shift+l"
-switch_tab = ["prefix+1..9", "alt+1..9"]
+switch_tab = ["prefix+shift+1..9", "alt+1..9"]
 
 # セッション (zellij: Ctrl o → d / w 相当)
 detach = "prefix+q"
@@ -58,7 +58,7 @@ toggle_sidebar = "prefix+b"
 
 # エージェント / ワークスペース番号ジャンプ (並列時の「探す」を減らす)
 focus_agent = "prefix+alt+1..9"
-switch_workspace = "prefix+shift+1..9"
+switch_workspace = "prefix+1..9"
 
 # worktrunk: worktree を今の workspace 内のタブとして開く/作成
 [[keys.command]]
@@ -80,6 +80,13 @@ key = "prefix+v"
 type = "plugin_action"
 command = "persiyanov.reviewr.toggle"
 description = "toggle reviewr"
+
+# hunk: 右分割して side-by-side diff を開く（reviewr 風）
+[[keys.command]]
+key = "prefix+shift+v"
+type = "shell"
+command = 'bash "$HOME/.config/herdr/open-hunk.sh"'
+description = "open hunk side-by-side (split)"
 
 # herdr-sidebar: ファイルツリー（必要なときだけ。auto_open はオフ推奨）
 [[keys.command]]

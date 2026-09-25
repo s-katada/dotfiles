@@ -124,7 +124,8 @@ arch/.config/fcitx5/conf/cached_layouts
 # 追跡するものだけを明示的に許可する方式（新しい実行時ファイルが増えても漏れない）
 arch/.config/herdr/*
 !arch/.config/herdr/config.toml
-
+!arch/.config/herdr/open-hunk.sh
+!arch/.config/herdr/pair-agents.sh
 # python のバイトコードキャッシュ（~/.local/bin の python スクリプトを実行すると生える）
 arch/**/__pycache__/
 
