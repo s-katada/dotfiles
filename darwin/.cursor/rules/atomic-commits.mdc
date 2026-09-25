@@ -1,0 +1,15 @@
+---
+description: Prefer fine-grained commits when the user asks to commit
+alwaysApply: true
+---
+
+# Fine-grained commits
+
+When the user asks to commit (or commit & push):
+
+- Prefer **many small commits** over one large commit. The user reviews each commit separately.
+- Split by independent concern (keybind vs script vs skill vs unrelated config). One logical change per commit.
+- Do not bundle unrelated files just because they changed in the same session.
+- If the split is ambiguous, propose a short commit list once, then proceed that way.
+- Still only commit when explicitly asked. Never push unless asked.
+- Keep each message scoped to that slice’s why (1–2 sentences).
