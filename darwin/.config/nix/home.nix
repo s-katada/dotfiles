@@ -221,19 +221,30 @@ in
   # ~/ 直下のファイル（stow シンボリックリンクを置き換え）
   home.file.".aerospace.toml".source = link ".aerospace.toml";
   home.file.".emacs.d".source        = link ".emacs.d";
-  # Claude の静的設定（~/.claude はアプリ管理の実ディレクトリなので個別ファイルのみリンク）
+  # Claude / Cursor 共通: 細粒度コミット等の横断ルールは
+  # darwin/.cursor/rules/*.mdc が単一ソース。CLAUDE.md は同ファイルへの相対リンク。
+  home.file.".claude/CLAUDE.md".source             = link ".claude/CLAUDE.md";
   home.file.".claude/settings.json".source         = link ".claude/settings.json";
   home.file.".claude/statusline-command.sh".source = link ".claude/statusline-command.sh";
   home.file.".claude/skills/hunk-review".source    = link ".skills/hunk-review";
   home.file.".claude/skills/pr-create".source      = link ".skills/pr-create";
   home.file.".claude/skills/review-fix-loop".source = link ".skills/review-fix-loop";
 
-  # Cursor Agent のグローバルスキル（~/.cursor はアプリ管理の実ディレクトリなので個別リンク）
+  # Cursor: アプリ管理の ~/.cursor へ個別リンク（skills / グローバル rules）
   home.file.".cursor/skills/hunk-review".source    = link ".skills/hunk-review";
   home.file.".cursor/skills/pr-create".source      = link ".skills/pr-create";
   home.file.".cursor/skills/review-fix-loop".source = link ".skills/review-fix-loop";
+  home.file.".cursor/rules/atomic-commits.mdc".source = link ".cursor/rules/atomic-commits.mdc";
+  home.file.".config/cursor/sync-user-rules.sh".source = link ".config/cursor/sync-user-rules.sh";
 
   # スクリーンショット保存先（system.defaults.screencapture.location 用に作成）
   home.activation.makeScreenshotsDir =
     lib.hm.dag.entryAfter [ "writeBoundary" ] ''run mkdir -p "$HOME/Screenshots"'';
+
+  # Cursor IDE のローカル User Rules キャッシュを ~/.cursor/rules から同期
+  # （ファイル実体 = ソース・オブ・トゥルース。クラウド UI とは別系統）
+  home.activation.syncCursorUserRules =
+    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      run bash "${repoDarwin}/.config/cursor/sync-user-rules.sh" || true
+    '';
 }
