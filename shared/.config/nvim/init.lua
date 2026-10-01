@@ -22,6 +22,26 @@ vim.opt.wrap = false        -- 行の折り返し無効
 vim.opt.autoread = true     -- 外部変更を自動検知
 vim.opt.guicursor = "a:ver25"  -- 全モードで縦線カーソル(太さ25%)
 
+-- 終了/サスペンド時にカーソル形状を端末の既定へ戻す (DECSCUSR 0)。
+-- nvim は終了時に形状を戻さない。herdr 配下では代替画面から抜けた際に
+-- ブロックカーソルが Ghostty へ送られてしまうため、明示的にリセットする。
+-- TUI は終了処理で 'guicursor' の形状を送り直すので、先に空にしてからリセットを送る。
+-- 空にすると TUI が端末の terminfo (Se = ブロック) を出すので、それが済むのを待ってから送る。
+local guicursor = vim.o.guicursor
+local function reset_cursor_shape()
+  if #vim.api.nvim_list_uis() == 0 then return end
+  vim.o.guicursor = ""
+  vim.cmd("sleep 30m")
+  vim.fn.chansend(vim.v.stderr, "\27[0 q")
+end
+vim.api.nvim_create_autocmd({ "VimLeave", "VimSuspend" }, {
+  callback = reset_cursor_shape,
+})
+-- サスペンドから復帰したら縦線カーソルに戻す
+vim.api.nvim_create_autocmd("VimResume", {
+  callback = function() vim.o.guicursor = guicursor end,
+})
+
 -- 外部変更の自動リロード
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
   command = "checktime",
