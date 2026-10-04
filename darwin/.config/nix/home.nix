@@ -118,6 +118,7 @@ in
     zellij
     tmux
     ollama
+    antigravity-cli
     heroku
     mas  # Mac App Store CLI
     terminal-notifier
