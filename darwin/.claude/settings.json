@@ -58,7 +58,16 @@
   "enabledPlugins": {
     "clangd-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true
+    "typescript-lsp@claude-plugins-official": true,
+    "typesafe@typesafe-ai": true
+  },
+  "extraKnownMarketplaces": {
+    "typesafe-ai": {
+      "source": {
+        "source": "github",
+        "repo": "typesafe-ai/skills"
+      }
+    }
   },
   "effortLevel": "xhigh",
   "pluginConfigs": {
