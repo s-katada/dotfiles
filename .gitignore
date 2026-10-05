@@ -24,6 +24,7 @@ darwin/.emacs.d/elpaca/
 darwin/.emacs.d/auto-save-list/
 darwin/.emacs.d/backups/
 darwin/.emacs.d/*.elc
+darwin/.emacs.d/eln-cache/
 darwin/.emacs.d/recentf
 darwin/.emacs.d/transient/
 darwin/.emacs.d/tree-sitter/
