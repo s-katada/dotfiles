@@ -60,6 +60,9 @@ darwin/.config/herdr/herdr-client.log
 darwin/.config/herdr/herdr-server.log
 darwin/.config/herdr/session.json
 darwin/.config/herdr/session-history.json
+darwin/.config/herdr/session-snapshots/
+# herdr - 起動のたびに張り直される launchd ソケットへの symlink
+darwin/.config/herdr/herdr.sock.agent
 # herdr - キーバインド移行時の自動バックアップ（config.toml と同内容）
 darwin/.config/herdr/config.toml.bak-*
 # herdr - 起動時に取得するリリースノートのキャッシュ
