@@ -1,0 +1,4 @@
+# ~/.codex/config.toml のトップレベル（最初の [section] より前）に取り込む。
+# 新規 CLI セッションを Full Access・承認なしで開始する。
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
