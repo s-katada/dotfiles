@@ -1,0 +1,11 @@
+# Claude Code に合わせた Catppuccin Mocha 配色。
+# 利用枠の残量を先頭に置き、狭い画面でも優先して表示する。
+# 5h → 7d → permissions → approval → dir → git → model → ctx。
+# 利用枠は残り割合 (% left)。サーバーから値が返らない枠は非表示。
+# 標準 statusline は数値表示。バーとリセット日時は /status で確認する。
+# ~/.codex/config.toml の [tui] に取り込む設定。
+# config.toml 全体はアプリが更新するため、dotfiles のリンク対象にしない。
+[tui]
+status_line = ["five-hour-limit", "weekly-limit", "permissions", "approval-mode", "current-dir", "git-branch", "model-with-reasoning", "context-remaining"]
+status_line_use_colors = true
+theme = "catppuccin-mocha"
