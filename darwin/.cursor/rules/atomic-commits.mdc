@@ -18,4 +18,5 @@ When the user asks to commit (or commit & push):
 
 - When acting as Codex, include `Co-authored-by: Codex <noreply@openai.com>` at the end of each commit message you create or edit.
 - Separate the trailer block from the message body with a blank line. Preserve existing co-author trailers and do not duplicate the Codex trailer.
-- Other agents should use their own attribution, not the Codex identity.
+- When acting as Gemini / Antigravity, include `Co-authored-by: Antigravity <noreply@google.com>` at the end of each commit message you create or edit, using the same trailer-block rules.
+- Other agents should use their own attribution, not the Codex or Antigravity identity.
