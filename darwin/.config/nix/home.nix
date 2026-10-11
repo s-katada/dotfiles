@@ -222,10 +222,11 @@ in
   # ~/ 直下のファイル（stow シンボリックリンクを置き換え）
   home.file.".aerospace.toml".source = link ".aerospace.toml";
   home.file.".emacs.d".source        = link ".emacs.d";
-  # Codex / Claude / Cursor 共通: 細粒度コミット等の横断ルールは
-  # darwin/.cursor/rules/*.mdc が単一ソース。AGENTS.md / CLAUDE.md は同ファイルへの相対リンク。
+  # Codex / Claude / Gemini / Cursor 共通: 細粒度コミット等の横断ルールは
+  # darwin/.cursor/rules/*.mdc が単一ソース。AGENTS.md / CLAUDE.md / GEMINI.md は同ファイルへの相対リンク。
   home.file.".codex/AGENTS.md".source             = link ".codex/AGENTS.md";
   home.file.".claude/CLAUDE.md".source             = link ".claude/CLAUDE.md";
+  home.file.".gemini/GEMINI.md".source             = link ".gemini/GEMINI.md";
   home.file.".claude/settings.json".source         = link ".claude/settings.json";
   home.file.".claude/statusline-command.sh".source = link ".claude/statusline-command.sh";
   home.file.".claude/skills/hunk-review".source    = link ".skills/hunk-review";
