@@ -27,6 +27,8 @@
       "font-hack-nerd-font"
       # アプリ
       "1password"
+      # op。Mac の公式配布は cask（nixpkgs の pin は現行より古い）
+      "1password-cli"
       "adobe-acrobat-reader"
       "alacritty"
       "android-studio"
@@ -40,6 +42,8 @@
       # 本体が自己更新するため、バージョン固定の claude-code cask ではなく
       # @latest を使う（stable cask とは同時インストール不可で衝突する）
       "claude-code@latest"
+      "codex" # OpenAI Codex CLI (Herdr の --kind codex 等)
+      "chatgpt" # OpenAI ChatGPT デスクトップアプリ
       "cursor"
       "discord"
       "emacs-app"
