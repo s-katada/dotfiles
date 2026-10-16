@@ -1,12 +1,15 @@
 # herdr 設定 (Arch)
-# darwin/.config/herdr/config.toml から再構成したもの。
+# darwin/.config/herdr/config.toml から再構成したもの。キーバインドとプラグイン
+# (plugins.list) は darwin と同じ構成にそろえている。
 # キーバインドは zellij の操作感に寄せている。
 # 対応表と妥協点は darwin/.config/herdr/README.md を参照。
 # 反映: herdr server reload-config
+# プラグインの復元: bash ~/.config/herdr/install-plugins.sh
 #
-# darwin との差分: Arch の herdr は上流の非パッチ版なので、darwin 側の自前パッチ
-# 専用オプション (prefix_sticky / lock / prefix_cheatsheet) と macOS 専用の
-# 入力ソース切替は外してある。プレフィックスは 1 アクションで抜ける one-shot。
+# darwin との差分: macOS 専用の入力ソース切替は外してある。darwin 側に残っている
+# 自前パッチ専用オプション (prefix_sticky / lock / prefix_cheatsheet / right_click) は
+# herdr 0.8.2 以降 darwin でもコメントアウト済みなので書いていない。
+# プレフィックスは 1 アクションで抜ける one-shot (darwin も同じ)。
 
 onboarding = false
 
@@ -59,6 +62,11 @@ toggle_sidebar = "prefix+b"
 # エージェント / ワークスペース番号ジャンプ (並列時の「探す」を減らす)
 focus_agent = "prefix+alt+1..9"
 switch_workspace = "prefix+1..9"
+
+# マシン (Local / SSH) をまたいでワークスペースを前後に移動。タブの alt+shift+h/l に揃えた縦方向。
+# 番号ジャンプ (switch_workspace) は表示中のマシンの中だけなので、マシン移動はこちらを使う。
+previous_workspace = "alt+shift+k"
+next_workspace = "alt+shift+j"
 
 # worktrunk: worktree を今の workspace 内のタブとして開く/作成
 # (標準の herdr worktree = 子 workspace ではなく、plugin config の open_mode=tab)
@@ -140,6 +148,15 @@ key = "prefix+shift+b"
 type = "shell"
 command = '"$HERDR_BIN_PATH" pane move "$HERDR_ACTIVE_PANE_ID" --new-tab --focus'
 description = "break pane to new tab"
+
+# 分割方向をトグル (上下 ↔ 左右)。herdr には分割方向を変える組み込みアクションが
+# 無い (0.9.0 時点) ため、一時タブへ退避 → 反対方向で戻す 2段階 move を
+# スクリプトで行う (./rotate-split.sh)。2ペイン構成のタブのみ対応。
+[[keys.command]]
+key = "prefix+shift+r"
+type = "shell"
+command = 'bash "$HOME/.config/herdr/rotate-split.sh"'
+description = "rotate split (上下 ↔ 左右)"
 
 # herdr 終了 (zellij: Ctrl o → q の Quit 相当。確認なしで即停止する点に注意)
 [[keys.command]]
