@@ -229,6 +229,7 @@ in
   home.file.".gemini/GEMINI.md".source             = link ".gemini/GEMINI.md";
   home.file.".claude/settings.json".source         = link ".claude/settings.json";
   home.file.".claude/statusline-command.sh".source = link ".claude/statusline-command.sh";
+  home.file.".gemini/statusline-command.sh".source = link ".gemini/statusline-command.sh";
   home.file.".claude/skills/hunk-review".source    = link ".skills/hunk-review";
   home.file.".claude/skills/pr-create".source      = link ".skills/pr-create";
   home.file.".claude/skills/review-fix-loop".source = link ".skills/review-fix-loop";
