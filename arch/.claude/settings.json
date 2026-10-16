@@ -70,6 +70,11 @@
     }
   },
   "effortLevel": "xhigh",
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "xhigh"
+    }
+  },
   "pluginConfigs": {
     "agents-md@builtin": {
       "options": {
@@ -82,7 +87,7 @@
   "skipWorkflowUsageWarning": true,
   "theme": "dark",
   "preferredNotifChannel": "ghostty",
+  "switchModelsOnFlag": false,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true,
-  "switchModelsOnFlag": false
+  "voiceEnabled": true
 }
