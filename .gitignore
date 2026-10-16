@@ -130,6 +130,7 @@ arch/.config/herdr/*
 !arch/.config/herdr/config.toml
 !arch/.config/herdr/open-hunk.sh
 !arch/.config/herdr/pair-agents.sh
+!arch/.config/herdr/rotate-split.sh
 !arch/.config/herdr/install-plugins.sh
 !arch/.config/herdr/plugins.list
 !arch/.config/herdr/plugins.lock.toml
