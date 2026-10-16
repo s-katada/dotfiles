@@ -12,6 +12,7 @@ btop
 cage
 claude-code
 cursor-bin
+cursor-cli
 direnv
 docker
 docker-compose
@@ -57,6 +58,7 @@ npm
 ntfs-3g
 nvidia-open
 nvidia-utils
+nvme-cli
 obsidian
 ollama-cuda
 openssh
@@ -68,6 +70,7 @@ paru-debug
 pipewire-alsa
 pipewire-jack
 pipewire-pulse
+qcad
 ruby
 satty
 slack-desktop

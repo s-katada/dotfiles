@@ -5,7 +5,7 @@ arch/setup/export-state.sh が生成。新マシンの初期設定で同じ選�
 ## 基本
 ```
 hostname : ArchLinux
-kernel   : 7.2.2-arch1-1
+kernel   : 7.2.8-arch1-2
 timezone : Asia/Tokyo
 locale   : LANG=en_US.UTF-8 
 shell    : /bin/bash
@@ -25,7 +25,7 @@ ja_JP.UTF-8 UTF-8
 	Kernel driver in use: nvidia
 01:00.1 Audio device: NVIDIA Corporation GB203 High Definition Audio Controller (rev a1)
 --
-16:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Granite Ridge [Radeon Graphics] (rev c5)
+16:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Granite Ridge [Radeon 610M] (rev c5)
 	Subsystem: Micro-Star International Co., Ltd. [MSI] Device 7e16
 	Kernel driver in use: amdgpu
 16:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Radeon High Definition Audio Controller
