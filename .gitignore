@@ -130,6 +130,13 @@ arch/.config/herdr/*
 !arch/.config/herdr/config.toml
 !arch/.config/herdr/open-hunk.sh
 !arch/.config/herdr/pair-agents.sh
+!arch/.config/herdr/install-plugins.sh
+!arch/.config/herdr/plugins.list
+!arch/.config/herdr/plugins.lock.toml
+# プラグイン本体 (plugins/github/) は plugins.list から復元するので、設定 (plugins/config/) だけ追跡する
+!arch/.config/herdr/plugins/
+arch/.config/herdr/plugins/*
+!arch/.config/herdr/plugins/config/
 # python のバイトコードキャッシュ（~/.local/bin の python スクリプトを実行すると生える）
 arch/**/__pycache__/
 
