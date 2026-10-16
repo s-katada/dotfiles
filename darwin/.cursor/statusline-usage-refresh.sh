@@ -21,7 +21,7 @@ mkdir -p "$(dirname "$CACHE_FILE")"
 LOCK_DIR="$CACHE_FILE.lock"
 if ! mkdir "$LOCK_DIR" 2>/dev/null; then
     # 古い lock は掃除して次回に賭ける (クラッシュ残骸対策)
-    if [ -d "$LOCK_DIR" ] && [ $(( $(date +%s) - $(stat -f %m "$LOCK_DIR" 2>/dev/null || echo 0) )) -gt 120 ]; then
+    if [ -d "$LOCK_DIR" ] && [ $(( $(date +%s) - $(/usr/bin/stat -f %m "$LOCK_DIR" 2>/dev/null || echo 0) )) -gt 120 ]; then
         rmdir "$LOCK_DIR" 2>/dev/null || true
     fi
     exit 0
@@ -49,9 +49,13 @@ out=$(printf '%s' "$resp" | jq -c '
     def num: if . == null then null elif (type == "string") then tonumber else . end;
     (.planUsage // .plan_usage) as $p
     | (($p.totalPercentUsed // $p.total_percent_used) | num) as $pct
+    | (($p.autoPercentUsed // $p.auto_percent_used) | num) as $auto
+    | (($p.apiPercentUsed // $p.api_percent_used) | num) as $api
     | ((.billingCycleEnd // .billing_cycle_end) | num) as $end
     | select($pct != null)
     | {used_percentage: $pct}
+      + (if $auto != null then {auto_percentage: $auto} else {} end)
+      + (if $api != null then {api_percentage: $api} else {} end)
       + (if $end != null then
             {resets_epoch: (if $end > 100000000000 then ($end / 1000 | floor) else $end end)}
          else {} end)
@@ -64,7 +68,7 @@ fi
 # resets_epoch → 表示用 "MM/DD" (ローカルタイム)
 epoch=$(printf '%s' "$out" | jq -r '.resets_epoch // empty')
 if [ -n "$epoch" ]; then
-    disp=$(date -r "$epoch" '+%m/%d' 2>/dev/null || true)
+    disp=$(date -d "@$epoch" '+%m/%d' 2>/dev/null || date -r "$epoch" '+%m/%d' 2>/dev/null || true)
     [ -n "$disp" ] && out=$(printf '%s' "$out" | jq -c --arg d "$disp" '. + {resets_display: $d}')
 fi
 
