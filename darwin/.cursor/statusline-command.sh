@@ -16,7 +16,9 @@ cache="${CURSOR_USAGE_CACHE:-${XDG_CACHE_HOME:-$HOME/.cache}/cursor-statusline-u
 input=$(cat)
 
 now=$(date +%s)
-mtime=$(stat -f %m "$cache" 2>/dev/null || echo 0)
+# PATH 上の stat が GNU coreutils (Nix) の場合 -f の意味が変わり多行テキストが返るため、
+# macOS 標準の /usr/bin/stat を明示する（darwin 専用スクリプトのため固定でよい）
+mtime=$(/usr/bin/stat -f %m "$cache" 2>/dev/null || echo 0)
 
 # キャッシュが無い/10分より古い → バックグラウンドで更新 (描画はブロックしない)
 if [ $((now - mtime)) -gt 600 ]; then
