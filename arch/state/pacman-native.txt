@@ -50,6 +50,7 @@ npm
 ntfs-3g
 nvidia-open
 nvidia-utils
+nvme-cli
 obsidian
 ollama-cuda
 openssh
@@ -59,6 +60,7 @@ papirus-icon-theme
 pipewire-alsa
 pipewire-jack
 pipewire-pulse
+qcad
 ruby
 satty
 slurp
