@@ -55,9 +55,13 @@ out=$(printf '%s' "$resp" | jq -c '
     def num: if . == null then null elif (type == "string") then tonumber else . end;
     (.planUsage // .plan_usage) as $p
     | (($p.totalPercentUsed // $p.total_percent_used) | num) as $pct
+    | (($p.autoPercentUsed // $p.auto_percent_used) | num) as $auto
+    | (($p.apiPercentUsed // $p.api_percent_used) | num) as $api
     | ((.billingCycleEnd // .billing_cycle_end) | num) as $end
     | select($pct != null)
     | {used_percentage: $pct}
+      + (if $auto != null then {auto_percentage: $auto} else {} end)
+      + (if $api != null then {api_percentage: $api} else {} end)
       + (if $end != null then
             {resets_epoch: (if $end > 100000000000 then ($end / 1000 | floor) else $end end)}
          else {} end)

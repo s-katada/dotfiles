@@ -7,7 +7,7 @@
 # Cursor CLI (../.cursor/statusline-command.sh) からも呼ばれる共通実装。
 # cursor-agent は .rate_limits を渡さないので 5h/7d は自動的に消える。
 # 代わりに cursor 側ラッパーが月次 included usage を .rate_limits.monthly に
-# 注入してくるので "mo" セグメントとして描画する (Claude Code では出ない)。
+# 注入してくるので auto / api セグメントとして描画する (Claude Code では出ない)。
 # .model.param_summary (cursor 独自) があれば model の後ろに添える。
 #
 # darwin/.claude/statusline-command.sh の arch 版。差分は fmt_reset の date の
@@ -177,14 +177,34 @@ if [ -n "$week_pct" ]; then
 fi
 
 # ── Monthly limit segment (Cursor included usage; wrapper が注入) ────────
+# auto = Cursor 側の Auto 枠 (composer / default など)。
+# api  = 名前付きモデル枠 (Claude / GPT / Gemini などはここに合算。モデル別は無い)。
+# 両方無い古いキャッシュだけ、合計の mo に戻す。
+auto_pct=$(printf '%s' "$input"    | jq -r '.rate_limits.monthly.auto_percentage // empty')
+api_pct=$(printf '%s' "$input"     | jq -r '.rate_limits.monthly.api_percentage // empty')
 month_pct=$(printf '%s' "$input"   | jq -r '.rate_limits.monthly.used_percentage // empty')
 month_reset=$(printf '%s' "$input" | jq -r '.rate_limits.monthly.resets_display // empty')
+auto_segment=""
+api_segment=""
 month_segment=""
-if [ -n "$month_pct" ]; then
+reset_part=""
+[ -n "$month_reset" ] && reset_part="${C_OVERLAY}↻${month_reset}${RESET}"
+if [ -n "$auto_pct" ] || [ -n "$api_pct" ]; then
+    if [ -n "$auto_pct" ]; then
+        pct_int=$(printf '%.0f' "$auto_pct")
+        color=$(used_color "$auto_pct")
+        auto_segment="${C_BLUE}auto${RESET} ${color}$(bar "$auto_pct")${RESET} ${color}${pct_int}%${RESET}"
+    fi
+    if [ -n "$api_pct" ]; then
+        pct_int=$(printf '%.0f' "$api_pct")
+        color=$(used_color "$api_pct")
+        api_segment="${C_PEACH}api${RESET} ${color}$(bar "$api_pct")${RESET} ${color}${pct_int}%${RESET}${reset_part:+ ${reset_part}}"
+    elif [ -n "$reset_part" ]; then
+        auto_segment="${auto_segment} ${reset_part}"
+    fi
+elif [ -n "$month_pct" ]; then
     pct_int=$(printf '%.0f' "$month_pct")
     color=$(used_color "$month_pct")
-    reset_part=""
-    [ -n "$month_reset" ] && reset_part="${C_OVERLAY}↻${month_reset}${RESET}"
     month_segment="${C_BLUE}mo${RESET} ${color}$(bar "$month_pct")${RESET} ${color}${pct_int}%${RESET}${reset_part:+ ${reset_part}}"
 fi
 
@@ -215,6 +235,8 @@ parts=("$dir_segment")
 [ -n "$git_segment" ]   && parts+=("$git_segment")
 [ -n "$five_segment" ]  && parts+=("$five_segment")
 [ -n "$week_segment" ]  && parts+=("$week_segment")
+[ -n "$auto_segment" ]  && parts+=("$auto_segment")
+[ -n "$api_segment" ]   && parts+=("$api_segment")
 [ -n "$month_segment" ] && parts+=("$month_segment")
 [ -n "$model_segment" ] && parts+=("$model_segment")
 [ -n "$ctx_segment" ]   && parts+=("$ctx_segment")
