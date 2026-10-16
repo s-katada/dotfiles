@@ -79,6 +79,7 @@
     }
   },
   "tui": "fullscreen",
+  "autoMemoryEnabled": true,
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
   "preferredNotifChannel": "ghostty",
