@@ -1,0 +1,38 @@
+# herdr プラグインのインストール記録（絶対パスなし・再現用）
+# plugins.list をソース・オブ・トゥルースとし、ここは実際に入った commit のメモ。
+
+[[plugin]]
+id = "annotate"
+install = "plannotator/herdr-annotate"
+version = "0.5.0"
+commit = "d02b0b42cf1955a3b206959659f1833622f213b8"
+
+[[plugin]]
+id = "herdr-automatic-rename"
+install = "qu8n/herdr-automatic-rename"
+version = "0.11.1"
+commit = "081489b4d961d0d9c0c8b6a02d472e5cfe125ad5"
+
+[[plugin]]
+id = "herdr-sidebar"
+install = "alexarthurs/herdr-sidebar/plugins/herdr-sidebar"
+version = "0.13.0"
+commit = "1a5d37ef84edc91e5b3d3d4e39daa32952e6ecf2"
+
+[[plugin]]
+id = "persiyanov.reviewr"
+install = "persiyanov/herdr-reviewr"
+version = "0.39.0"
+commit = "cd618b48dc1f4d2cc092f3f26827ac72fb44773e"
+
+[[plugin]]
+id = "shibayu36.equalize-panes"
+install = "shibayu36/herdr-equalize-panes"
+version = "0.1.0"
+commit = "0c1d940e9af09c632a48a5b179753ef25056ff13"
+
+[[plugin]]
+id = "worktrunk"
+install = "devashish2203/herdr-worktrunk"
+version = "0.1.0"
+commit = "8ceca541de8fb0d6006727e172534e1e2af17224"
