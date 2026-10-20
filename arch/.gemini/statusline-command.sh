@@ -1,0 +1,1 @@
+../../darwin/.gemini/statusline-command.sh
