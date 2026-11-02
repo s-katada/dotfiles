@@ -17,7 +17,6 @@
     };
     taps = [
       "grishka/grishka"
-      "nikitabobko/tap"
     ];
     brews = [
       "herdr"  # ターミナル常駐のエージェントマルチプレクサ。nixpkgs未収録のため brew で管理
@@ -32,7 +31,6 @@
       "1password-cli"
       "alacritty"
       "android-studio"
-      "nikitabobko/tap/aerospace"
       "arduino-ide"
       "bambu-studio"
       "chromedriver"
@@ -237,7 +235,6 @@
       mineffect = "scale"; # genie|suck|scale
       minimize-to-application = true;
       show-recents = false;
-      mru-spaces = false; # Spaces の自動並び替え無効（aerospace 向け）
       expose-group-apps = false;
       showhidden = true;
       show-process-indicators = true;
@@ -289,12 +286,12 @@
       DisableConsoleAccess = true; # '>console' ログインを禁止
     };
 
-    # ---- Window Manager（aerospace 運用のため macOS 側タイリングを無効化）----
+    # ---- Window Manager（macOS 標準のタイリングを使う）----
     WindowManager = {
       GloballyEnabled = false; # Stage Manager オフ
       EnableStandardClickToShowDesktop = false;
-      EnableTilingByEdgeDrag = false;
-      EnableTopTilingByEdgeDrag = false;
+      EnableTilingByEdgeDrag = true; # 画面端へのドラッグで左右/四隅にタイル
+      EnableTopTilingByEdgeDrag = true; # 上端へのドラッグでフルスクリーン化（最大化）
       EnableTiledWindowMargins = false;
     };
 

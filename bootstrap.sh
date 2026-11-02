@@ -56,7 +56,7 @@ cat <<'EOF'
 
 ==> 完了。残りは GUI でしかできない手作業です:
   - 各アプリを一度起動して権限を承認:
-      Accessibility / Input Monitoring (Karabiner / Aerospace / Homerow / Raycast),
+      Accessibility / Input Monitoring (Karabiner / Homerow / Raycast),
       Screen Recording (Shottr)
   - Karabiner: 設定 > 一般 > ログイン項目と機能拡張 でドライバ機能拡張を Allow -> 再起動
   - サインイン: iCloud / 1Password (+SSH agent) / Tailscale / Google Drive / 各アプリ
