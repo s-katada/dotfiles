@@ -30,14 +30,11 @@
       "1password"
       # op。Mac の公式配布は cask（nixpkgs の pin は現行より古い）
       "1password-cli"
-      "adobe-acrobat-reader"
       "alacritty"
       "android-studio"
       "nikitabobko/tap/aerospace"
-      "arc"
       "arduino-ide"
       "bambu-studio"
-      "bitwarden"
       "chromedriver"
       "claude"
       # 本体が自己更新するため、バージョン固定の claude-code cask ではなく
@@ -48,12 +45,9 @@
       "cursor"
       "discord"
       "emacs-app"
-      "firefox"
       "ghostty"
-      "gitify"
       "google-chrome"
       "google-drive"
-      "handbrake-app"
       "homerow"
       # karabiner-elements の cask は auto_updates 指定のため、通常の brew upgrade では
       # 更新対象から外れる。その結果アプリ自身の自動更新だけがバージョンを上げ、
@@ -62,45 +56,29 @@
       # 登録が引き継がれず「GUI にはルールが見えるのに一切効かない」状態になる。
       # greedy = true で brew 管理下に戻し、更新時に公式 pkg（デーモン登録を含む）を通す。
       { name = "karabiner-elements"; greedy = true; }
-      "libreoffice"
       "lm-studio"
       "microsoft-remote-desktop"
-      "moonlight"  # Arch 機の Sunshine に接続するゲームストリーミングクライアント
       "neardrop"
-      "notion"
       "obsidian"
       "orbstack"
       "raycast"
       "rustdesk"
       "slack"
       "spotify"
-      "teamviewer"
       "tailscale-app"
       "vial"
-      "visual-studio-code"
-      "void"
       "wezterm"
       "zoom"
       "shottr"
       "autodesk-fusion"
-      "balenaetcher"
-      "cmux"
       "kicad"
       "azookey"
     ];
 
     # Mac App Store アプリ（mas 経由。事前に App Store.app へサインインが必要）
     masApps = {
-      "GarageBand" = 682658836;
-      "iMovie" = 408981434;
-      "Keynote" = 409183694;
       "Kindle" = 302584613;
       "LINE" = 539883307;
-      "Numbers" = 409203825;
-      "Pages" = 409201541;
-      "Perplexity" = 6714467650;
-      "Telephone" = 406825478;
-      "The Unarchiver" = 425424353;
     };
   };
 
