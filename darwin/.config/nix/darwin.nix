@@ -7,7 +7,7 @@
   environment.shells = [ pkgs.fish ];
   programs.fish.enable = true;
 
-  # Homebrew (GUI アプリのみ)
+  # Homebrew (GUI アプリと一部の CLI ツール)
   homebrew = {
     enable = true;
     onActivation = {
@@ -21,6 +21,7 @@
     ];
     brews = [
       "herdr"  # ターミナル常駐のエージェントマルチプレクサ。nixpkgs未収録のため brew で管理
+      "mise"
     ];
     casks = [
       # フォント
