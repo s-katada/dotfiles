@@ -96,7 +96,7 @@ in
     bat
     tree
     fzf  # pecoより高速
-    silver-searcher  # the_silver_searcher
+    silver-searcher-ng  # the_silver_searcher の PCRE2 対応 fork（旧版は nixpkgs から削除）
     zoxide
 
     # ビルドツール
@@ -125,7 +125,7 @@ in
     tesseract
     graphviz
     dos2unix
-    awscli
+    awscli2  # v1（awscli）は nixpkgs で botocore とのバージョン不整合によりビルド不可
     terraform
     mas
     neovim
