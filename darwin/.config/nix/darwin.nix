@@ -29,7 +29,6 @@
       "1password"
       # op。Mac の公式配布は cask（nixpkgs の pin は現行より古い）
       "1password-cli"
-      "alacritty"
       "android-studio"
       "arduino-ide"
       "bambu-studio"
@@ -65,7 +64,6 @@
       "spotify"
       "tailscale-app"
       "vial"
-      "wezterm"
       "zoom"
       "shottr"
       "autodesk-fusion"
