@@ -537,8 +537,8 @@ binds {
     // ~/.config/google-chrome/Local State の profile.info_cache で確認できる。
     // 既にそのプロファイルのウィンドウがあれば、新規に開かずフォーカスする
     // (Chrome は全プロファイルが同じ app_id になるため、判別は自前スクリプト側で行う)。
-    Mod+Shift+1 hotkey-overlay-title="Chrome: shunya.saitama@gmail.com" { spawn-sh "~/.local/bin/chrome-profile Default"; }
-    Mod+Shift+2 hotkey-overlay-title="Chrome: work@example.invalid" { spawn-sh "~/.local/bin/chrome-profile 'Profile 2'"; }
+    Mod+Shift+1 hotkey-overlay-title="Chrome: 個人" { spawn-sh "~/.local/bin/chrome-profile Default"; }
+    Mod+Shift+2 hotkey-overlay-title="Chrome: 仕事" { spawn-sh "~/.local/bin/chrome-profile 'Profile 2'"; }
 
     // メール (Thunderbird)。Chrome と違って単一インスタンスなので、
     // 起動済みなら既存のウィンドウが前に出る。専用スクリプトは要らない。
