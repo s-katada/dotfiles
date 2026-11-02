@@ -31,7 +31,7 @@ MSG
   exit 1
 fi
 
-echo "==> 3/6 Rosetta 2 (x86 cask 用: teamviewer/android-studio 等)"
+echo "==> 3/6 Rosetta 2 (x86 のみ配布の cask 用)"
 softwareupdate --install-rosetta --agree-to-license || true
 
 echo "==> 4/6 Homebrew (nix-darwin は brew 本体を入れない)"
