@@ -220,7 +220,6 @@ in
   };
 
   # ~/ 直下のファイル（stow シンボリックリンクを置き換え）
-  home.file.".aerospace.toml".source = link ".aerospace.toml";
   home.file.".emacs.d".source        = link ".emacs.d";
   # Codex / Claude / Gemini / Cursor 共通: 細粒度コミット等の横断ルールは
   # darwin/.cursor/rules/*.mdc が単一ソース。AGENTS.md / CLAUDE.md / GEMINI.md は同ファイルへの相対リンク。
