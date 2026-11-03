@@ -58,6 +58,15 @@
                 };
               });
             })
+            # Terraform が同梱する go-getter v1.8.6 → v1.8.10。HCSEC-2026-39（CVE-2026-88922、v1.8.9 で修正）と
+            # HCSEC-2026-44（CVE-2026-19585、v1.8.10 で修正）。Terraform 本体の修正版（go-getter を上げた版）が nixpkgs に入ったら外す。
+            # go-getter v1.8.10 の要求で AWS SDK・GCP などの依存も上がる（go get と go mod tidy の結果をそのままパッチにした）
+            (final: prev: {
+              terraform = prev.terraform.overrideAttrs (old: {
+                patches = (old.patches or [ ]) ++ [ ./patches/terraform-go-getter-1.8.10.patch ];
+                vendorHash = "sha256-maLbnDzuHweWVnZXKE0c8VX+L0sK77MhAWPSEbY/D3s=";
+              });
+            })
             # awscli2 2.36.31 → 2.39.3。nixpkgs が 2.38.4 以上に追いついたらこの上書きを外す。
             # 上流は 2.38.4（aws-cli PR #10786）で、鍵が侵害された eMudhra 中間 CA に相互署名した AAA Certificate Services を同梱の
             # cacert.pem から削った。nixpkgs 版は元から nss-cacert と NIX_SSL_CERT_FILE を使うので影響はないが、上流に合わせる多層防御として上げる
