@@ -61,6 +61,7 @@
             # Terraform が同梱する go-getter v1.8.6 → v1.8.10。HCSEC-2026-39（CVE-2026-88922、v1.8.9 で修正）と
             # HCSEC-2026-44（CVE-2026-19585、v1.8.10 で修正）。Terraform 本体の修正版（go-getter を上げた版）が nixpkgs に入ったら外す。
             # go-getter v1.8.10 の要求で AWS SDK・GCP などの依存も上がる（go get と go mod tidy の結果をそのままパッチにした）
+            # パッチと vendorHash は Terraform 1.17.0 の go.mod・go.sum に合わせたもの。nixpkgs の terraform の版が変わったら作り直す（合わないとビルドが失敗する）
             (final: prev: {
               terraform = prev.terraform.overrideAttrs (old: {
                 patches = (old.patches or [ ]) ++ [ ./patches/terraform-go-getter-1.8.10.patch ];
