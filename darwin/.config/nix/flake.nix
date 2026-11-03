@@ -58,6 +58,33 @@
                 };
               });
             })
+            # awscli2 2.36.31 → 2.39.3。nixpkgs が 2.38.4 以上に追いついたらこの上書きを外す。
+            # 2.39.x は awscrt 0.38.0 を要求するので、awscli2 の内部の Python パッケージ集合でだけ awscrt を上げる
+            (final: prev: {
+              awscli2 =
+                (prev.awscli2.override {
+                  python3 = prev.python3 // {
+                    pkgs = prev.python3.pkgs.overrideScope (pyFinal: pyPrev: {
+                      awscrt = pyPrev.awscrt.overridePythonAttrs (old: {
+                        version = "0.38.0";
+                        src = pyPrev.fetchPypi {
+                          pname = "awscrt";
+                          version = "0.38.0";
+                          hash = "sha256-SoQjxKdjkMblxPOG4+Nn3M3PZ9bRoLwcWXdrsUzcKtk=";
+                        };
+                      });
+                    });
+                  };
+                }).overridePythonAttrs (old: {
+                  version = "2.39.3";
+                  src = old.src.override {
+                    tag = "2.39.3";
+                    hash = "sha256-HEQ73GYAi/MS24mNYoC3Cth4fZcLw5Q8hV7/ZF0GByU=";
+                  };
+                  # 2.39 で増えた tests/blackbox は配布物に含まれないテスト用モジュール（localstub）を要求し、収集で落ちるので外す
+                  disabledTestPaths = (old.disabledTestPaths or [ ]) ++ [ "tests/blackbox" ];
+                });
+            })
           ];
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
