@@ -59,6 +59,8 @@
               });
             })
             # awscli2 2.36.31 → 2.39.3。nixpkgs が 2.38.4 以上に追いついたらこの上書きを外す。
+            # 上流は 2.38.4（aws-cli PR #10786）で、鍵が侵害された eMudhra 中間 CA に相互署名した AAA Certificate Services を同梱の
+            # cacert.pem から削った。nixpkgs 版は元から nss-cacert と NIX_SSL_CERT_FILE を使うので影響はないが、上流に合わせる多層防御として上げる
             # 2.39.x は awscrt 0.38.0 を要求するので、awscli2 の内部の Python パッケージ集合でだけ awscrt を上げる
             (final: prev: {
               awscli2 =
@@ -81,7 +83,7 @@
                     tag = "2.39.3";
                     hash = "sha256-HEQ73GYAi/MS24mNYoC3Cth4fZcLw5Q8hV7/ZF0GByU=";
                   };
-                  # 2.39 で増えた tests/blackbox は配布物に含まれないテスト用モジュール（localstub）を要求し、収集で落ちるので外す
+                  # 2.39 で増えた tests/blackbox は nixpkgs に無いテスト専用の依存（localstub。ローカルの HTTP サーバー・TLS プロキシも使う）を要求し、収集で落ちるので外す
                   disabledTestPaths = (old.disabledTestPaths or [ ]) ++ [ "tests/blackbox" ];
                 });
             })
