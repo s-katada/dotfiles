@@ -17,6 +17,14 @@ let
   # ここで作った CPython は home.packages にだけ入れる（awscli2 などの内部の Python は nixpkgs のまま）。
   python3Patched = (pkgs.python314.override {
     self = python3Patched;  # python3Patched.pkgs / withPackages もこの CPython を使うように
+    # ビルド用のコピー（pythonOnBuildForHost など）にも同じ CPython を使わせる。指定しないと sourceVersion が伝わらず、
+    # withPackages で「3.14.8 の URL に 3.14.10 のハッシュ」の tarball を取りに行って失敗する
+    __splices = {
+      pythonOnBuildForBuild = python3Patched;
+      pythonOnBuildForHost = python3Patched;
+      pythonOnHostForHost = python3Patched;
+      pythonOnBuildForTarget = python3Patched;
+    };
     sourceVersion = { major = "3"; minor = "14"; patch = "10"; suffix = ""; };
     # python.org のリリースページの SHA-256 と一致を確認済み
     hash = "sha256-3kFKVxGavvUnhNiZPjQdU67WNfwrBcJgfZ+YosW3IDI=";
