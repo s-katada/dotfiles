@@ -98,7 +98,7 @@ in
   home.packages = with pkgs; [
     # 開発言語・ランタイム
     bun
-    nodejs_26  # Active LTS。nixpkgs の nodejs は LTS の切り替えに追随が遅いので系列を明示する
+    nodejs_26  # Active LTS。nixpkgs の nodejs は LTS の切り替えに追随が遅いので系列を明示する（次の LTS の 28 が Active になったら見直す）
     ruby
     python3Patched  # 上の let を参照（脆弱性修正のため 3.14.10）
     uv  # Python パッケージマネージャ
