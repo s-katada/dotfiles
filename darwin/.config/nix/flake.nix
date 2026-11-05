@@ -30,6 +30,73 @@
                 config.allowUnfree = true;
               }).antigravity-cli;
             })
+            # bun 1.4.2 → 1.4.4。nixpkgs が 1.4.4 以上に追いついたらこの上書きを外す。
+            # 理由: GHSA-663w-cv8g-jj2p（同梱 brotli、CVE-2026-111497、CISA KEV）、
+            #       GHSA-26q8-h657-pf84（eMudhra 中間 CA を信頼）、GHSA-cf8x-9m69-3gg3
+            # nixpkgs の bun は src を passthru.sources から引くので、version と sources を差し替える
+            # （ハッシュは公式リリースの SHASUMS256.txt と一致を確認済み）
+            (final: prev: {
+              bun = prev.bun.overrideAttrs (finalAttrs: old: {
+                version = "1.4.4";
+                # 元の定義と同じく passthru.sources から選ぶ（未対応プラットフォームでは元の throw になる）
+                src = finalAttrs.passthru.sources.${prev.stdenvNoCC.hostPlatform.system} or old.src;
+                passthru = old.passthru // {
+                  sources = {
+                    "aarch64-darwin" = prev.fetchurl {
+                      url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-darwin-aarch64.zip";
+                      hash = "sha256-wkDX8My5DCY6hJ/NsJt+5iYw2SE0jtaq/ahrnVd7xRA=";
+                    };
+                    "aarch64-linux" = prev.fetchurl {
+                      url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-linux-aarch64.zip";
+                      hash = "sha256-uqa7NvUdblhWHgK76oJQOKnfRU9nPW13bou/hvjHhQ4=";
+                    };
+                    "x86_64-linux" = prev.fetchurl {
+                      url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-linux-x64-baseline.zip";
+                      hash = "sha256-4ERutVmVdy65iUvrrppr42jZhai5Jx7hJEhvmUbu3XY=";
+                    };
+                  };
+                };
+              });
+            })
+            # Terraform が同梱する go-getter v1.8.6 → v1.8.10。HCSEC-2026-39（CVE-2026-88922、v1.8.9 で修正）と
+            # HCSEC-2026-44（CVE-2026-19585、v1.8.10 で修正）。Terraform 本体の修正版（go-getter を上げた版）が nixpkgs に入ったら外す。
+            # go-getter v1.8.10 の要求で AWS SDK・GCP などの依存も上がる（go get と go mod tidy の結果をそのままパッチにした）
+            # パッチと vendorHash は Terraform 1.17.0 の go.mod・go.sum に合わせたもの。nixpkgs の terraform の版が変わったら作り直す（合わないとビルドが失敗する）
+            (final: prev: {
+              terraform = prev.terraform.overrideAttrs (old: {
+                patches = (old.patches or [ ]) ++ [ ./patches/terraform-go-getter-1.8.10.patch ];
+                vendorHash = "sha256-maLbnDzuHweWVnZXKE0c8VX+L0sK77MhAWPSEbY/D3s=";
+              });
+            })
+            # awscli2 2.36.31 → 2.39.3。nixpkgs が 2.38.4 以上に追いついたらこの上書きを外す。
+            # 上流は 2.38.4（aws-cli PR #10786）で、鍵が侵害された eMudhra 中間 CA に相互署名した AAA Certificate Services を同梱の
+            # cacert.pem から削った。nixpkgs 版は元から nss-cacert と NIX_SSL_CERT_FILE を使うので影響はないが、上流に合わせる多層防御として上げる
+            # 2.39.x は awscrt 0.38.0 を要求するので、awscli2 の内部の Python パッケージ集合でだけ awscrt を上げる
+            (final: prev: {
+              awscli2 =
+                (prev.awscli2.override {
+                  python3 = prev.python3 // {
+                    pkgs = prev.python3.pkgs.overrideScope (pyFinal: pyPrev: {
+                      awscrt = pyPrev.awscrt.overridePythonAttrs (old: {
+                        version = "0.38.0";
+                        src = pyPrev.fetchPypi {
+                          pname = "awscrt";
+                          version = "0.38.0";
+                          hash = "sha256-SoQjxKdjkMblxPOG4+Nn3M3PZ9bRoLwcWXdrsUzcKtk=";
+                        };
+                      });
+                    });
+                  };
+                }).overridePythonAttrs (old: {
+                  version = "2.39.3";
+                  src = old.src.override {
+                    tag = "2.39.3";
+                    hash = "sha256-HEQ73GYAi/MS24mNYoC3Cth4fZcLw5Q8hV7/ZF0GByU=";
+                  };
+                  # 2.39 で増えた tests/blackbox は nixpkgs に無いテスト専用の依存（localstub。ローカルの HTTP サーバー・TLS プロキシも使う）を要求し、収集で落ちるので外す
+                  disabledTestPaths = (old.disabledTestPaths or [ ]) ++ [ "tests/blackbox" ];
+                });
+            })
           ];
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
