@@ -10,6 +10,31 @@ let
   link = relPath: config.lib.file.mkOutOfStoreSymlink "${repoDarwin}/${relPath}";
   # darwin と arch で中身を共有する設定は shared/ に置き、両方からここを指す。
   linkShared = relPath: config.lib.file.mkOutOfStoreSymlink "${repoRoot}/shared/${relPath}";
+
+  # 手元で使う python3 だけを CPython 3.14.10 にする（nixpkgs は 3.14.8）。nixpkgs が 3.14.10 以上に追いついたら外し、pkgs.python3 に戻す。
+  # 理由: CVE-2026-115557（ssl が侵害された eMudhra 中間 CA を拒否しない）、CVE-2026-114583（tarfile）
+  # overlay で python3 ごと差し替えると Python に依存する全パッケージがソースから再ビルドになるので、
+  # ここで作った CPython は home.packages にだけ入れる（awscli2 などの内部の Python は nixpkgs のまま）。
+  python3Patched = (pkgs.python314.override {
+    self = python3Patched;  # python3Patched.pkgs / withPackages もこの CPython を使うように
+    # ビルド用のコピー（pythonOnBuildForHost など）にも同じ CPython を使わせる。指定しないと sourceVersion が伝わらず、
+    # withPackages で「3.14.8 の URL に 3.14.10 のハッシュ」の tarball を取りに行って失敗する
+    __splices = {
+      pythonOnBuildForBuild = python3Patched;
+      pythonOnBuildForHost = python3Patched;
+      pythonOnHostForHost = python3Patched;
+      pythonOnBuildForTarget = python3Patched;
+    };
+    sourceVersion = { major = "3"; minor = "14"; patch = "10"; suffix = ""; };
+    # python.org のリリースページの SHA-256 と一致を確認済み
+    hash = "sha256-3kFKVxGavvUnhNiZPjQdU67WNfwrBcJgfZ+YosW3IDI=";
+  }).overrideAttrs (old: {
+    # 3.14.10 で Lib/mimetypes.py の knownfiles が if/else の中に移り、nixpkgs の mimetypes.patch が当たらない。
+    # 同じ内容（mailcap の mime.types だけを見る）を 3.14.10 向けに書き直したパッチに差し替える
+    patches = map
+      (p: if lib.hasSuffix "/mimetypes.patch" (toString p) then ./patches/cpython-3.14.10-mimetypes.patch else p)
+      old.patches;
+  });
 in
 {
   home.stateVersion = "24.05";
@@ -73,9 +98,9 @@ in
   home.packages = with pkgs; [
     # 開発言語・ランタイム
     bun
-    nodejs
+    nodejs_26  # Active LTS。nixpkgs の nodejs は LTS の切り替えに追随が遅いので系列を明示する（次の LTS の 28 が Active になったら見直す）
     ruby
-    python3
+    python3Patched  # 上の let を参照（脆弱性修正のため 3.14.10）
     uv  # Python パッケージマネージャ
 
     # シェル
