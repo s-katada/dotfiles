@@ -114,6 +114,10 @@ darwin/.config/gh/hosts.yml
 # シークレット: gh の OAuth トークンを含む
 arch/.config/gh/hosts.yml
 
+# GTK ブックマークは絶対パス（私用ディレクトリ名を含む）のみで相対化できない
+arch/.config/gtk-3.0/bookmarks
+arch/.config/gtk-4.0/bookmarks
+
 # mozc の学習データ（入力した文章そのものを含む。公開リポジトリには絶対に入れない）
 # config1.db だけが設定で、それ以外は履歴・学習結果。
 arch/.config/mozc/*.db
