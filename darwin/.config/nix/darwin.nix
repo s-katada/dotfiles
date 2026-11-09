@@ -15,9 +15,6 @@
       upgrade = true;
       cleanup = "none";  # Homebrew Bundle の cleanup は手動で確認してから行う
     };
-    taps = [
-      "grishka/grishka"
-    ];
     brews = [
       "herdr"  # ターミナル常駐のエージェントマルチプレクサ。nixpkgs未収録のため brew で管理
       "mise"
@@ -55,11 +52,9 @@
       { name = "karabiner-elements"; greedy = true; }
       "lm-studio"
       "microsoft-remote-desktop"
-      "neardrop"
       "obsidian"
       "orbstack"
       "raycast"
-      "rustdesk"
       "slack"
       "spotify"
       "tailscale-app"
