@@ -59,6 +59,7 @@
       "spotify"
       "tailscale-app"
       "vial"
+      "wireshark-app"
       "zoom"
       "shottr"
       "autodesk-fusion"
