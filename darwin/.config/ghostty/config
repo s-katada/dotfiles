@@ -10,11 +10,11 @@ window-height = 1000
 # term = "xterm-256color"
 # 日本語の文字化け対応
 font-feature = -dlig
-custom-shader = /Users/awesomemr/.config/ghostty/ghostty-shaders/cursor_blaze.glsl
+custom-shader = ~/.config/ghostty/ghostty-shaders/cursor_blaze.glsl
 custom-shader-animation = true
 
 # Background image settings
-# background-image = /Users/awesomemr/Downloads/background.png
+# background-image = ~/Downloads/background.png
 # background-image-opacity = 1
 # background-image-position = center
 # background-image-fit = cover
