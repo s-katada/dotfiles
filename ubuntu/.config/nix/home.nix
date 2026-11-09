@@ -124,6 +124,5 @@
     LANG = "ja_JP.UTF-8";
     EDITOR = "code";
     TERM = "xterm-256color";
-    # PGPASSWORD は平文で置かない（削除済み）
   };
 }
